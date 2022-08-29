@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:zedmusic/screens/auth/auth.dart';
 import '../../constants/colors.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   static const routeName = '/splash';
@@ -14,6 +18,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   var contentIndex = 0;
+  final double _kSize = 100;
+  var isLoading = false;
   var splashContents = [
     {
       'first_line': 'ENJOY THE BEST',
@@ -38,7 +44,13 @@ class _SplashScreenState extends State<SplashScreen> {
         contentIndex++;
       });
     } else {
-      print('end of screen');
+      setState(() {
+        isLoading = true;
+      });
+      // navigate to auth screen
+      Timer(const Duration(seconds: 4), () {
+        Navigator.of(context).pushNamed(AuthScreen.routeName);
+      });
     }
   }
 
@@ -61,6 +73,7 @@ class _SplashScreenState extends State<SplashScreen> {
             image: DecorationImage(
               image: AssetImage('assets/images/pattern.png'),
               fit: BoxFit.cover,
+              // opacity:0.3,
             ),
           ),
           child: Padding(
@@ -92,20 +105,26 @@ class _SplashScreenState extends State<SplashScreen> {
                   splashContents[contentIndex]['img']!,
                   fit: BoxFit.cover,
                 ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: DotsIndicator(
-                        dotsCount: splashContents.length,
-                        position: double.parse(contentIndex.toString()),
-                        decorator: const DotsDecorator(
-                          activeColor: secondaryColor,
-                          spacing: EdgeInsets.all(10.0),
+                isLoading
+                    ? Center(
+                        child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: secondaryColor,
+                          size: _kSize,
+                        ),
+                      )
+                    : Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: DotsIndicator(
+                            dotsCount: splashContents.length,
+                            position: double.parse(contentIndex.toString()),
+                            decorator: const DotsDecorator(
+                              activeColor: secondaryColor,
+                              spacing: EdgeInsets.all(10.0),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                ),
-
               ],
             ),
           ),
