@@ -23,6 +23,8 @@ class _EntryScreenState extends State<EntryScreen> {
     super.initState();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
