@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zedmusic/screens/auth/auth.dart';
+import '../../components/loading.dart';
 import '../../constants/colors.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -18,7 +19,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   var contentIndex = 0;
-  final double _kSize = 100;
   var isLoading = false;
   var splashContents = [
     {
@@ -107,12 +107,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   fit: BoxFit.cover,
                 ),
                 isLoading
-                    ? Center(
-                        child: LoadingAnimationWidget.staggeredDotsWave(
-                          color: Colors.white,
-                          size: _kSize,
-                        ),
-                      )
+                    ? const Loading()
                     : Expanded(
                         child: Align(
                           alignment: Alignment.bottomCenter,

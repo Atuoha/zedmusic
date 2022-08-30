@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../components/k_richtext.dart';
+import '../../components/loading.dart';
 import '../../constants/colors.dart';
+import 'forgot_password.dart';
 
 class AuthScreen extends StatefulWidget {
   static const routeName = '/auth';
@@ -15,6 +19,7 @@ class AuthScreen extends StatefulWidget {
 enum Field { username, password, phone }
 
 class _AuthScreenState extends State<AuthScreen> {
+  var isLoading = false;
   var isLogin = true;
   var obscure = true;
   final formKey = GlobalKey<FormState>();
@@ -30,17 +35,29 @@ class _AuthScreenState extends State<AuthScreen> {
     super.initState();
   }
 
+  // loading fnc
+  isLoadingFnc() {
+    setState(() {
+      isLoading = true;
+    });
+    Timer(const Duration(seconds: 5), () {
+      Navigator.of(context).pushNamed('');
+    });
+  }
+
   // submit form
   _submitForm() {
     var valid = formKey.currentState!.validate();
     if (valid) {
       switch (isLogin) {
         case true:
-        // TODO: Implement Login
+          // TODO: Implement Login
+          isLoadingFnc();
           break;
 
         case false:
-        // TODO: Implement Register
+          // TODO: Implement Register
+          isLoadingFnc();
           break;
       }
     } else {
@@ -50,10 +67,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
   // custom widget for all textInput
   Widget kTextField(
-      String title,
-      TextEditingController controller,
-      Field field,
-      ) {
+    String title,
+    TextEditingController controller,
+    Field field,
+  ) {
     return Column(
       children: [
         Text(
@@ -67,7 +84,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 10),
         TextFormField(
           keyboardType:
-          field == Field.phone ? TextInputType.phone : TextInputType.text,
+              field == Field.phone ? TextInputType.phone : TextInputType.text,
           controller: controller,
           validator: (value) {
             switch (field) {
@@ -94,28 +111,29 @@ class _AuthScreenState extends State<AuthScreen> {
           },
           textInputAction: isLogin
               ? field == Field.password
-              ? TextInputAction.done
-              : TextInputAction.next
+                  ? TextInputAction.done
+                  : TextInputAction.next
               : field == Field.phone
-              ? TextInputAction.done
-              : TextInputAction.next,
+                  ? TextInputAction.done
+                  : TextInputAction.next,
           obscureText: field == Field.password ? obscure : false,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(left: 5),
             hintText: field == Field.phone ? '+234' : null,
             suffixIcon: passwordController.text.isNotEmpty
                 ? field == Field.password
-                ? IconButton(
-              onPressed: () {
-                setState(() {
-                  obscure = !obscure;
-                });
-              },
-              icon: Icon(
-                obscure ? Icons.visibility_off : Icons.visibility,
-              ),
-            )
-                : null
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            obscure = !obscure;
+                          });
+                        },
+                        icon: Icon(
+                          obscure ? Icons.visibility_off : Icons.visibility,
+                          color:secondaryColor,
+                        ),
+                      )
+                    : null
                 : null,
             filled: true,
             fillColor: Colors.white,
@@ -135,6 +153,7 @@ class _AuthScreenState extends State<AuthScreen> {
       ],
     );
   }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -145,8 +164,6 @@ class _AuthScreenState extends State<AuthScreen> {
         statusBarIconBrightness: Brightness.light,
       ),
     );
-
-
 
     return Scaffold(
       backgroundColor: primaryColor,
@@ -175,75 +192,79 @@ class _AuthScreenState extends State<AuthScreen> {
               children: [
                 Image.asset('assets/images/only_logo.png'),
                 const SizedBox(height: 50),
-                Form(
-                  key: formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        kTextField(
-                          'Username',
-                          usernameController,
-                          Field.username,
-                        ),
-                        kTextField(
-                          'Password',
-                          passwordController,
-                          Field.password,
-                        ),
-                        isLogin
-                            ? const Text('')
-                            : kTextField(
-                                'Phone Number',
-                                phoneNumberController,
-                                Field.phone,
+                isLoading
+                    ? const Loading()
+                    : Form(
+                        key: formKey,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              kTextField(
+                                'Username',
+                                usernameController,
+                                Field.username,
                               ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: btnBg,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.all(15),
+                              kTextField(
+                                'Password',
+                                passwordController,
+                                Field.password,
+                              ),
+                              isLogin
+                                  ? const Text('')
+                                  : kTextField(
+                                      'Phone Number',
+                                      phoneNumberController,
+                                      Field.phone,
+                                    ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: btnBg,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.all(15),
+                                ),
+                                child: Text(
+                                  isLogin ? 'Log in' : 'Sign up',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                onPressed: () => _submitForm(),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pushNamed(
+                                      ForgotPasswordScreen.routeName,
+                                    ),
+                                    child: const KRichText(
+                                      firstText: 'Forgot',
+                                      secondText: 'Password?',
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => setState(() {
+                                      isLogin = !isLogin;
+                                    }),
+                                    child: KRichText(
+                                      firstText: isLogin ? 'Sign' : 'Log',
+                                      secondText: isLogin ? 'up' : 'in',
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
                           ),
-                          child: Text(
-                            isLogin ? 'Log in' : 'Sign up',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                          onPressed: () => _submitForm(),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: () {},
-                              child: const KRichText(
-                                firstText: 'Forgot',
-                                secondText: 'Password?',
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  isLogin = !isLogin;
-                                });
-                              },
-                              child: KRichText(
-                                firstText: isLogin ? 'Sign' : 'Log',
-                                secondText: isLogin ? 'up' : 'in',
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ],
             ),
           ),
