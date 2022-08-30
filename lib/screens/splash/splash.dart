@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
       'img': 'assets/images/spl_img2.png'
     },
     {
-      'first_line': 'DOWNLOAD',
+      'first_line': 'DOWNLOADS',
       'second_line': 'YOUR MUSIC',
       'img': 'assets/images/spl_img3.png'
     },
@@ -61,13 +61,14 @@ class _SplashScreenState extends State<SplashScreen> {
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
+          statusBarIconBrightness: Brightness.light,
       ),
     );
     return Scaffold(
       body: GestureDetector(
         onTap: () => incrementIndex(),
         child: Container(
-          constraints: const BoxConstraints.expand(),
+          // constraints: const BoxConstraints.expand(),
           decoration: const BoxDecoration(
             color: primaryColor,
             image: DecorationImage(
@@ -77,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(top: 40.0),
+            padding: const EdgeInsets.only(top: 43.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -108,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 isLoading
                     ? Center(
                         child: LoadingAnimationWidget.staggeredDotsWave(
-                          color: secondaryColor,
+                          color: Colors.white,
                           size: _kSize,
                         ),
                       )

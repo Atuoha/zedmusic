@@ -32,9 +32,11 @@ class _EntryScreenState extends State<EntryScreen> {
         statusBarColor: Colors.transparent,
         systemNavigationBarColor: Colors.white,
         systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
       ),
     );
     return Scaffold(
+
       body: Container(
         constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
