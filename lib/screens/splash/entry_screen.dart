@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zedmusic/screens/splash/splash.dart';
+import '../../components/kBackground.dart';
 import '../../constants/colors.dart';
 
 class EntryScreen extends StatefulWidget {
@@ -23,8 +24,6 @@ class _EntryScreenState extends State<EntryScreen> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -36,16 +35,8 @@ class _EntryScreenState extends State<EntryScreen> {
       ),
     );
     return Scaffold(
-
-      body: Container(
-        constraints: const BoxConstraints.expand(),
-        decoration: const BoxDecoration(
-          color: primaryColor,
-          image: DecorationImage(
-            image: AssetImage('assets/images/pattern.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+      body: KBackground(
+        fade: false,
         child: Image.asset(
           'assets/images/logo.png',
         ),

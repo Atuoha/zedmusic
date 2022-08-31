@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zedmusic/screens/auth/auth.dart';
-import '../../components/k_richtext.dart';
+import '../../components/kBackground.dart';
+import '../../components/kRichtext.dart';
 import '../../components/loading.dart';
 import '../../constants/colors.dart';
 
@@ -60,16 +60,8 @@ class _AuthScreenState extends State<ForgotPasswordScreen> {
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
-      body: Container(
-        constraints: const BoxConstraints.expand(),
-        decoration: const BoxDecoration(
-          color: primaryColor,
-          image: DecorationImage(
-            image: AssetImage('assets/images/pattern.png'),
-            fit: BoxFit.cover,
-            opacity: 0.1,
-          ),
-        ),
+      body:KBackground(
+        fade: true,
         child: Padding(
           padding: const EdgeInsets.only(
             right: 18,

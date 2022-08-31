@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zedmusic/screens/auth/auth.dart';
+import '../../components/kBackground.dart';
 import '../../components/loading.dart';
 import '../../constants/colors.dart';
 import 'package:dots_indicator/dots_indicator.dart';
@@ -67,16 +68,8 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: GestureDetector(
         onTap: () => incrementIndex(),
-        child: Container(
-          // constraints: const BoxConstraints.expand(),
-          decoration: const BoxDecoration(
-            color: primaryColor,
-            image: DecorationImage(
-              image: AssetImage('assets/images/pattern.png'),
-              fit: BoxFit.cover,
-              // opacity:0.3,
-            ),
-          ),
+        child: KBackground(
+          fade: false,
           child: Padding(
             padding: const EdgeInsets.only(top: 43.0),
             child: Column(
