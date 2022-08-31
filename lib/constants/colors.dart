@@ -9,3 +9,4 @@ const Color btnBg = Color(0XFF5C0E86);
 const Color playBtnBg = Color(0XFF232137);
 const Color textColor = Color(0XFFe3e3e3);
 const Color ambientBg = Color(0XFFBFFEFF);
+const Color settingsColor = Color(0XFFB7ADEF);

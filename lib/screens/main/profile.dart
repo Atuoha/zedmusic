@@ -1,9 +1,48 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zedmusic/components/kListTile.dart';
 
+import '../../constants/colors.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
+
+  _editProfile(){
+    // TODO: Edit Profile
+    if (kDebugMode) {
+      print('Edit Profile');
+    }
+  }
+
+  _settings(){
+    // TODO: Settings
+    if (kDebugMode) {
+      print('Settings');
+    }
+  }
+
+
+  _soundEffect(){
+    // TODO: Sound Effects
+    if (kDebugMode) {
+      print('Sound effects');
+    }
+  }
+
+  _about(){
+    // TODO: About app
+    if (kDebugMode) {
+      print('About app');
+    }
+  }
+
+  _logout(){
+    // TODO: logout
+    if (kDebugMode) {
+      print('Logout');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,28 +88,53 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 40),
           KListTile(
             title: 'Edit profile',
-            icon: CupertinoIcons.square_pencil,
-            action: () {},
+            leadChild: const Icon(
+              CupertinoIcons.square_pencil,
+              size: 30,
+              color: ambientBg,
+            ),
+            action: _editProfile,
+            trailingChild: const Text(''),
           ),
           KListTile(
             title: 'Settings',
-            icon: Icons.settings,
-            action: () {},
+            leadChild: const Icon(
+              Icons.settings,
+              size: 30,
+              color: ambientBg,
+            ),
+            action: _settings,
+            trailingChild: const Text(''),
           ),
           KListTile(
             title: 'Sound effects',
-            icon: Icons.volume_down_outlined,
-            action: () {},
+            leadChild: const Icon(
+              Icons.volume_down_outlined,
+              size: 30,
+              color: ambientBg,
+            ),
+            action: _soundEffect,
+            trailingChild: const Text(''),
           ),
           KListTile(
             title: 'About app',
-            icon: Icons.info_outline,
-            action: () {},
+            leadChild: const Icon(
+              Icons.info_outline,
+              size: 30,
+              color: ambientBg,
+            ),
+            action: _about,
+            trailingChild: const Text(''),
           ),
           KListTile(
             title: 'Log out',
-            icon: Icons.logout,
-            action: () {},
+            leadChild: const Icon(
+              Icons.logout,
+              size: 30,
+              color: ambientBg,
+            ),
+            action: _logout,
+            trailingChild: const Text(''),
           ),
         ],
       ),
