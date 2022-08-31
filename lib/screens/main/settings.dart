@@ -15,9 +15,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   var notificationStatus = true;
 
-
-
-
   _notifications() {
     // TODO: Notifications
     if (kDebugMode) {
@@ -74,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: TextStyle(
                 fontWeight: FontWeight.w300,
                 color: settingsColor,
-                fontSize: 22,
+                fontSize: 20,
               ),
               children: [
                 TextSpan(
@@ -82,7 +79,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     color: settingsColor,
-                    fontSize: 22,
+                    fontSize: 20,
                   ),
                 ),
               ],
@@ -98,9 +95,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             action: _notifications,
             trailingChild: Checkbox(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               activeColor: secondaryColor,
               checkColor: Colors.white,
-             side: const BorderSide(width: 1, color:Colors.white,),
+              side: const BorderSide(
+                width: 1,
+                color: Colors.white,
+              ),
               value: notificationStatus,
               onChanged: (value) {
                 setState(() {
@@ -109,7 +112,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
           ),
-
           KListTile(
             title: 'Display language',
             leadChild: const Icon(
@@ -140,7 +142,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             action: _terms,
             trailingChild: const Text(''),
           ),
-
           KListTile(
             title: 'Version 0.1',
             leadChild: const Icon(
