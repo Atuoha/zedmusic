@@ -5,43 +5,145 @@ import 'package:zedmusic/components/kListTile.dart';
 
 import '../../constants/colors.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
-  _editProfile(){
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  _editProfile() {
     // TODO: Edit Profile
     if (kDebugMode) {
       print('Edit Profile');
     }
   }
 
-  _settings(){
+  _settings() {
     // TODO: Settings
     if (kDebugMode) {
       print('Settings');
     }
   }
 
-
-  _soundEffect(){
+  _soundEffect() {
     // TODO: Sound Effects
     if (kDebugMode) {
       print('Sound effects');
     }
   }
 
-  _about(){
+  _about() {
     // TODO: About app
-    if (kDebugMode) {
-      print('About app');
-    }
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Wrap(
+          children: const [
+            Icon(
+              Icons.music_note,
+              size: 30,
+              color: primaryColor,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'ZedMusic',
+              style: TextStyle(
+                color: primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+          ],
+        ),
+        content: const Text(
+          'Music App using a prototype by Turkan Aliyeva on Behance',
+        ),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: btnBg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(5),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Dismiss',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  _logout(){
+  _logout() {
     // TODO: logout
-    if (kDebugMode) {
-      print('Logout');
-    }
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Wrap(
+          children: const [
+            Icon(
+              Icons.music_note,
+              size: 30,
+              color: primaryColor,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'ZedMusic',
+              style: TextStyle(
+                color: primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+          ],
+        ),
+        content: const Text(
+          'Do you want to logout account?',
+        ),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: btnBg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(5),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Confirm',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: btnBg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(5),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Dismiss',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
