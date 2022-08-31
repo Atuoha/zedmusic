@@ -5,7 +5,7 @@ class KBackground extends StatelessWidget {
   const KBackground({
     Key? key,
     required this.child,
-    required this.fade,
+     this.fade = true,
   }) : super(key: key);
   final Widget child;
   final bool fade;

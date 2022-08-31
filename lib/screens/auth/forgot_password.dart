@@ -47,8 +47,8 @@ class _AuthScreenState extends State<ForgotPasswordScreen> {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: primaryColor,
+        systemNavigationBarIconBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.light,
       ),
     );
@@ -61,7 +61,6 @@ class _AuthScreenState extends State<ForgotPasswordScreen> {
         automaticallyImplyLeading: false,
       ),
       body:KBackground(
-        fade: true,
         child: Padding(
           padding: const EdgeInsets.only(
             right: 18,

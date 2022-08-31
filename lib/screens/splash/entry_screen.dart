@@ -29,8 +29,8 @@ class _EntryScreenState extends State<EntryScreen> {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: primaryColor,
+        systemNavigationBarIconBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.light,
       ),
     );

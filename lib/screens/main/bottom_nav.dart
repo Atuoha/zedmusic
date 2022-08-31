@@ -5,9 +5,12 @@ import 'package:zedmusic/screens/main/home.dart';
 import 'package:zedmusic/screens/main/profile.dart';
 import 'package:zedmusic/screens/main/settings.dart';
 
+import '../../components/kBackground.dart';
 import '../../constants/colors.dart';
 
 class BottomNav extends StatefulWidget {
+  static const routeName = '/main';
+
   const BottomNav({Key? key}) : super(key: key);
 
   @override
@@ -34,38 +37,43 @@ class _BottomNavState extends State<BottomNav> {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: primaryColor,
+        systemNavigationBarIconBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.light,
       ),
     );
     return Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          onTap: _changeScreen,
-          currentIndex: currentScreenIndex,
-          selectedItemColor: iconBg,
-          unselectedItemColor: Colors.grey.shade400,
-          showUnselectedLabels: false,
-          showSelectedLabels: false,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_outlined),
-              label: '',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: '',
-            ),
-          ],
-        ),
-        body: _screens[currentScreenIndex]);
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: primaryColor,
+        onTap: _changeScreen,
+        currentIndex: currentScreenIndex,
+        selectedItemColor: accentColor,
+        unselectedItemColor: Colors.grey.shade400,
+        showUnselectedLabels: false,
+        showSelectedLabels: false,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: '',
+          ),
+        ],
+      ),
+      body: KBackground(
+        child: _screens[currentScreenIndex],
+      ),
+    );
   }
 }

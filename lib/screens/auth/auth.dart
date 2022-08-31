@@ -6,6 +6,7 @@ import '../../components/kBackground.dart';
 import '../../components/kRichtext.dart';
 import '../../components/loading.dart';
 import '../../constants/colors.dart';
+import '../main/bottom_nav.dart';
 import 'forgot_password.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -42,7 +43,7 @@ class _AuthScreenState extends State<AuthScreen> {
       isLoading = true;
     });
     Timer(const Duration(seconds: 5), () {
-      Navigator.of(context).pushNamed('');
+      Navigator.of(context).pushNamed(BottomNav.routeName);
     });
   }
 
@@ -160,8 +161,8 @@ class _AuthScreenState extends State<AuthScreen> {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: Colors.white,
-        systemNavigationBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: primaryColor,
+        systemNavigationBarIconBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.light,
       ),
     );
@@ -174,7 +175,6 @@ class _AuthScreenState extends State<AuthScreen> {
         automaticallyImplyLeading: false,
       ),
       body: KBackground(
-        fade: true,
         child: Padding(
           padding: const EdgeInsets.only(
             right: 18,
