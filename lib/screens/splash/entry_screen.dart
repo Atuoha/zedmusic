@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:zedmusic/screens/splash/splash.dart';
 import '../../components/kBackground.dart';
 import '../../constants/colors.dart';
@@ -21,6 +22,7 @@ class _EntryScreenState extends State<EntryScreen> {
         SplashScreen.routeName,
       );
     });
+    Permission.storage.request();
     super.initState();
   }
 
