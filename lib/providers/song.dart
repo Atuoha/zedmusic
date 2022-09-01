@@ -1,37 +1,28 @@
 import 'package:flutter/material.dart';
-import '../models/song.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class SongData extends ChangeNotifier {
-  toggleIsFav(String id) {
-    var song = _songs.firstWhere((song) => song.id == id);
-    song.toggleIsFav();
+  toggleIsFav(SongModel song) {
+    switch (isFav(song.id)) {
+      case true:
+        _favoritesSongs.remove(song);
+        break;
+      case false:
+        _favoritesSongs.add(song);
+        break;
+    }
     notifyListeners();
   }
 
-  bool isFav(String id) {
-    return _songs.any((song) => song.isFavorite);
+  bool isFav(int id) {
+    return _favoritesSongs.any(
+      (song) => song.id == id,
+    );
   }
 
-  Song findById(String id) {
-    return _songs.firstWhere((song) => song.id == id);
+  getFavorites(){
+    return [..._favoritesSongs];
   }
 
-  final _songs = [
-    Song(
-      id: DateTime.now().toString(),
-      artisteName: '',
-      title: '',
-      audio: '',
-      albumCoverUrl: '',
-    ),
-
-    Song(
-      id: DateTime.now().toString(),
-      artisteName: '',
-      title: '',
-      audio: '',
-      albumCoverUrl: '',
-    ),
-
-  ];
+  final List<SongModel> _favoritesSongs = [];
 }

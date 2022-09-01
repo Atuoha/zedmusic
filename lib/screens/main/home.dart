@@ -73,7 +73,6 @@ class _HomeScreenState extends State<HomeScreen> {
     String imgAsset,
     String baseText,
     bool showBaseText,
-    bool isMusic,
   ) {
     return Column(
       children: [
@@ -116,74 +115,169 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final OnAudioQuery audioQuery = OnAudioQuery();
-    final orientation = MediaQuery.of(context).orientation;
+    Size size  = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(
-        // right: 18.0,
-        // left: 18.0,
-        top: 45.0,
+        top: 40.0,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Image.asset('assets/images/small_logo.png'),
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: TextField(
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.only(left: 10),
-                hintText: 'Search',
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade500,
-                ),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: Colors.grey,
-                ),
-                fillColor: searchBoxBg,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Image.asset('assets/images/small_logo.png'),
+            ),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.only(left: 10),
+                  hintText: 'Search',
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade500,
+                  ),
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                  fillColor: searchBoxBg,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                 ),
               ),
             ),
-          ),
 
-          //  PLAYLIST SIDE
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const KText(
-                      firstText: 'My',
-                      secondText: ' Playlist',
+            //  PLAYLIST SIDE
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const KText(
+                        firstText: 'My',
+                        secondText: ' Playlist',
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed(''),
+                        child: const Text(
+                          'See All',
+                          style: TextStyle(
+                            color: searchBoxBg,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  FutureBuilder<List<PlaylistModel>>(
+                    future: audioQuery.queryPlaylists(
+                      orderType: OrderType.ASC_OR_SMALLER,
+                      uriType: UriType.EXTERNAL,
+                      sortType: null,
+                      ignoreCase: true,
                     ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pushNamed(''),
-                      child: const Text(
-                        'See All',
+                    builder: (context, item) {
+                      var playlists = item.data;
+                      if (item.data == null) {
+                        return const Center(
+                          child: Loading(),
+                        );
+                      }
+                      if (item.data!.isEmpty) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/empty.png',
+                              width: 90,
+                            ),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Playlist is empty!',
+                              style: TextStyle(
+                                color: searchBoxBg,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return SizedBox(
+                        height: 150,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: playlists!.length,
+                          itemBuilder: (context, index) =>  Padding(
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: Column(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: QueryArtworkWidget(
+                                    id: playlists[index].id,
+                                    type: ArtworkType.PLAYLIST,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  playlists[index].playlist,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+
+            // ARTISTE
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Artistes',
                         style: TextStyle(
-                          color: searchBoxBg,
+                          color: ambientBg,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    )
-                  ],
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed(''),
+                        child: const Text(
+                          'See All',
+                          style: TextStyle(
+                            color: searchBoxBg,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-                FutureBuilder<List<PlaylistModel>>(
-                  future: audioQuery.queryPlaylists(
+                FutureBuilder<List<ArtistModel>>(
+                  future: audioQuery.queryArtists(
                     orderType: OrderType.ASC_OR_SMALLER,
                     uriType: UriType.EXTERNAL,
                     sortType: null,
                     ignoreCase: true,
                   ),
                   builder: (context, item) {
-                    var playlists = item.data;
+                    var artistes = item.data;
                     if (item.data == null) {
                       return const Center(
                         child: Loading(),
@@ -199,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const SizedBox(width: 10),
                           const Text(
-                            'Playlist is empty!',
+                            'Genres are empty!',
                             style: TextStyle(
                               color: searchBoxBg,
                             ),
@@ -208,16 +302,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }
                     return SizedBox(
-                      height: 150,
+                      height: 90,
                       child: ListView.builder(
+                        padding: const EdgeInsets.only(top:10),
                         scrollDirection: Axis.horizontal,
-                        itemCount: playlists!.length,
-                        itemBuilder: (context, index) => kShowCase(
-                          playlists[index].playlist,
-                          'assets/images/playlist.png',
-                          '${playlists[index].numOfSongs} songs',
-                          true,
-                          false,
+                        itemCount: artistes!.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: QueryArtworkWidget(
+                                  id: artistes[index].id,
+                                  type: ArtworkType.ARTIST,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                artistes[index].artist,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -225,182 +336,204 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: 10),
 
-          // BY GENRE
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const KText(
-                      firstText: 'All',
-                      secondText: ' Genres',
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pushNamed(''),
-                      child: const Text(
-                        'See All',
-                        style: TextStyle(
-                          color: searchBoxBg,
-                        ),
+            // GENRE
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const KText(
+                        firstText: 'All',
+                        secondText: ' Genres',
                       ),
-                    )
-                  ],
-                ),
-              ),
-              FutureBuilder<List<GenreModel>>(
-                future: audioQuery.queryGenres(
-                  orderType: OrderType.ASC_OR_SMALLER,
-                  uriType: UriType.EXTERNAL,
-                  sortType: null,
-                  ignoreCase: true,
-                ),
-                builder: (context, item) {
-                  var genres = item.data;
-                  if (item.data == null) {
-                    return const Center(
-                      child: Loading(),
-                    );
-                  }
-                  if (item.data!.isEmpty) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/empty.png',
-                          width: 90,
-                        ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Genres are empty!',
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed(''),
+                        child: const Text(
+                          'See All',
                           style: TextStyle(
                             color: searchBoxBg,
                           ),
                         ),
-                      ],
+                      )
+                    ],
+                  ),
+                ),
+                FutureBuilder<List<GenreModel>>(
+                  future: audioQuery.queryGenres(
+                    orderType: OrderType.ASC_OR_SMALLER,
+                    uriType: UriType.EXTERNAL,
+                    sortType: null,
+                    ignoreCase: true,
+                  ),
+                  builder: (context, item) {
+                    var genres = item.data;
+                    if (item.data == null) {
+                      return const Center(
+                        child: Loading(),
+                      );
+                    }
+                    if (item.data!.isEmpty) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/empty.png',
+                            width: 90,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Genres are empty!',
+                            style: TextStyle(
+                              color: searchBoxBg,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return SizedBox(
+                      height: 90,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(top:10),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: genres!.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          child: Column(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: QueryArtworkWidget(
+                                  id: genres[index].id,
+                                  type: ArtworkType.GENRE,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                genres[index].genre,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     );
-                  }
-                  return SizedBox(
-                    height: 150,
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: genres!.length,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: kShowCase('', 'assets/images/playlist.png',
-                            genres[index].genre, true, false),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
 
-          // BY DOWNLOAD
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Songs',
-                      style: TextStyle(
-                        color: ambientBg,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pushNamed(''),
-                      child: const Text(
-                        'See All',
+
+            // SONGS
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Songs',
                         style: TextStyle(
-                          color: searchBoxBg,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              FutureBuilder<List<SongModel>>(
-                future: audioQuery.querySongs(
-                  orderType: OrderType.ASC_OR_SMALLER,
-                  uriType: UriType.EXTERNAL,
-                  sortType: null,
-                  ignoreCase: true,
-                ),
-                builder: (context, item) {
-                  var songs = item.data;
-                  print(songs);
-                  if (item.data == null) {
-                    return const Center(
-                      child: Loading(),
-                    );
-                  }
-                  if (item.data!.isEmpty) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/empty.png',
-                          width: 90,
-                        ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          'Songs are empty!',
-                          style: TextStyle(
-                            color: searchBoxBg,
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return SizedBox(
-                    height: 200,
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-
-                      // scrollDirection: Axis.horizontal,
-                      itemCount: songs!.length,
-                      itemBuilder: (context, index) => ListTile(
-                        leading: QueryArtworkWidget(
-                          id: songs[index].id,
-                          type: ArtworkType.AUDIO,
-                          artworkFit: BoxFit.cover,
-                          artworkBorder: BorderRadius.circular(30),
-                        ),
-                        title: Text(
-                          songs[index].displayName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        subtitle: Text(
-                          songs[index].artist!,
-                          style: TextStyle(
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        trailing: const Icon(
-                          Icons.play_arrow,
                           color: ambientBg,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ],
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pushNamed(''),
+                        child: const Text(
+                          'See All',
+                          style: TextStyle(
+                            color: searchBoxBg,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                FutureBuilder<List<SongModel>>(
+                  future: audioQuery.querySongs(
+                    orderType: OrderType.ASC_OR_SMALLER,
+                    uriType: UriType.EXTERNAL,
+                    sortType: null,
+                    ignoreCase: true,
+                  ),
+                  builder: (context, item) {
+                    var songs = item.data;
+                    if (item.data == null) {
+                      return const Center(
+                        child: Loading(),
+                      );
+                    }
+                    if (item.data!.isEmpty) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/empty.png',
+                            width: 90,
+                          ),
+                          const SizedBox(width: 10),
+                          const Text(
+                            'Songs are empty!',
+                            style: TextStyle(
+                              color: searchBoxBg,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return SizedBox(
+                      height: 220,
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        // scrollDirection: Axis.horizontal,
+                        itemCount: songs!.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(bottom:10.0),
+                          child: ListTile(
+                            leading: QueryArtworkWidget(
+                              id: songs[index].id,
+                              type: ArtworkType.AUDIO,
+                              artworkFit: BoxFit.cover,
+                              artworkBorder: BorderRadius.circular(30),
+                            ),
+                            title: Text(
+                              songs[index].displayName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            subtitle: Text(
+                              songs[index].artist!,
+                              style: TextStyle(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            trailing: const Icon(
+                              Icons.play_circle,
+                              color: ambientBg,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
