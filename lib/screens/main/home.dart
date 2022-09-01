@@ -227,7 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-
           // BY GENRE
           Column(
             children: [
@@ -291,14 +290,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       itemCount: genres!.length,
                       itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(right:8.0),
-                        child: kShowCase(
-                         '',
-                          'assets/images/playlist.png',
-                            genres[index].genre,
-                          true,
-                          false
-                        ),
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: kShowCase('', 'assets/images/playlist.png',
+                            genres[index].genre, true, false),
                       ),
                     ),
                   );
@@ -316,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Downloads',
+                      'Songs',
                       style: TextStyle(
                         color: ambientBg,
                         fontWeight: FontWeight.w600,
@@ -369,21 +363,36 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   return SizedBox(
                     height: 200,
-                    child: GridView.builder(
+                    child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount:
-                            orientation == Orientation.portrait ? 2 : 3,
-                        mainAxisSpacing: 5,
-                      ),
+
                       // scrollDirection: Axis.horizontal,
                       itemCount: songs!.length,
-                      itemBuilder: (context, index) => kShowCase(
-                        songs[index].displayName,
-                        songs[index].album!,
-                        songs[index].artist!,
-                        true,
-                        true,
+                      itemBuilder: (context, index) => ListTile(
+                        leading: QueryArtworkWidget(
+                          id: songs[index].id,
+                          type: ArtworkType.AUDIO,
+                          artworkFit: BoxFit.cover,
+                          artworkBorder: BorderRadius.circular(30),
+                        ),
+                        title: Text(
+                          songs[index].displayName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        subtitle: Text(
+                          songs[index].artist!,
+                          style: TextStyle(
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                        trailing: const Icon(
+                          Icons.play_arrow,
+                          color: ambientBg,
+                        ),
                       ),
                     ),
                   );
