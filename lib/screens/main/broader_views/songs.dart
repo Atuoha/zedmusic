@@ -11,6 +11,7 @@ import '../../../providers/song.dart';
 
 class SongsView extends StatelessWidget {
   static const routeName = '/songs';
+
   SongsView({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
 
@@ -19,6 +20,7 @@ class SongsView extends StatelessWidget {
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     int songsLength = data['length'];
+    var songData = Provider.of<SongData>(context);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -134,7 +136,7 @@ class SongsView extends StatelessWidget {
                               artworkBorder: BorderRadius.circular(30),
                             ),
                             title: Text(
-                              songs[index].displayName,
+                              songs[index].title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
@@ -150,10 +152,15 @@ class SongsView extends StatelessWidget {
                             trailing: Column(
                               children: [
                                 GestureDetector(
-                                  onTap: () {},
-                                  child: const Icon(
-                                    Icons.favorite_border,
-                                    color: ambientBg,
+                                  onTap: () =>
+                                      songData.toggleIsFav(songs[index]),
+                                  child: Icon(
+                                    songData.isFav(songs[index].id)
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: songData.isFav(songs[index].id)
+                                        ? Colors.red
+                                        : ambientBg,
                                   ),
                                 ),
                                 const SizedBox(height: 5),

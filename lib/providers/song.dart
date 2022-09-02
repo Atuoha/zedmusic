@@ -11,9 +11,10 @@ class SongData extends ChangeNotifier {
 
 
   toggleIsFav(SongModel song) {
+    print(song.title);
     switch (isFav(song.id)) {
       case true:
-        _favoritesSongs.remove(song);
+        _favoritesSongs.removeWhere((songs) => songs.id == song.id);
         break;
       case false:
         _favoritesSongs.add(song);
