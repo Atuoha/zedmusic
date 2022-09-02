@@ -20,7 +20,7 @@ class GenresView extends StatelessWidget {
     final orientation = MediaQuery.of(context).orientation;
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    int genreLength = data['genreLength'];
+    int genreLength = data['length'];
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

@@ -3,7 +3,6 @@ import 'package:zedmusic/components/searchbox.dart';
 import 'package:zedmusic/screens/main/home_components/playlists.dart';
 import '../../constants/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import 'home_components/artistes.dart';
 import 'home_components/genres.dart';
 import 'home_components/songs.dart';
@@ -91,11 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             //  PLAYLISTS
-            const Playlists(),
+            Playlists(),
             const SizedBox(height: 10),
 
             // ARTISTES
-            const Artistes(),
+            Artistes(),
             const SizedBox(height: 10),
 
             // GENRES

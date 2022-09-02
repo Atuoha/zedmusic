@@ -5,7 +5,7 @@ import '../../../constants/colors.dart';
 import '../broader_views/songs.dart';
 
 class Songs extends StatelessWidget {
-   Songs({Key? key}) : super(key: key);
+  Songs({Key? key}) : super(key: key);
 
   var songsLength;
 
@@ -27,7 +27,10 @@ class Songs extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pushNamed(SongsView.routeName, arguments: {'songsLength': songsLength}),
+                onPressed: () => Navigator.of(context).pushNamed(
+                  SongsView.routeName,
+                  arguments: {'length': songsLength},
+                ),
                 child: const Text(
                   'See All',
                   style: TextStyle(

@@ -18,7 +18,7 @@ class SongsView extends StatelessWidget {
   Widget build(BuildContext context) {
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    int songsLength = data['songsLength'];
+    int songsLength = data['length'];
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

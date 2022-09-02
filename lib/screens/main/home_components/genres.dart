@@ -8,7 +8,7 @@ import '../broader_views/genres.dart';
 
 class Genres extends StatelessWidget {
    Genres({Key? key}) : super(key: key);
-  var genresLength;
+  var genresLength = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,10 @@ class Genres extends StatelessWidget {
                 secondText: ' Genres',
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pushNamed(GenresView.routeName, arguments: {'genreLength': genresLength}),
+                onPressed: () => Navigator.of(context).pushNamed(
+                  GenresView.routeName,
+                  arguments: {'length': genresLength},
+                ),
                 child: const Text(
                   'See All',
                   style: TextStyle(
@@ -75,30 +78,29 @@ class Genres extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 scrollDirection: Axis.horizontal,
                 itemCount: genres.length,
-                itemBuilder: (context, index) =>
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: QueryArtworkWidget(
-                              id: genres[index].id,
-                              type: ArtworkType.GENRE,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            genres[index].genre,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: QueryArtworkWidget(
+                          id: genres[index].id,
+                          type: ArtworkType.GENRE,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      Text(
+                        genres[index].genre,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             );
           },

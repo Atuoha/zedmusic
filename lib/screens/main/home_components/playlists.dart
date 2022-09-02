@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:zedmusic/screens/main/broader_views/playlist.dart';
 
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
 
 class Playlists extends StatelessWidget {
-  const Playlists({Key? key}) : super(key: key);
+   Playlists({Key? key}) : super(key: key);
+  var playlistlength = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,10 @@ class Playlists extends StatelessWidget {
                 secondText: ' Playlist',
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pushNamed(''),
+                onPressed: () => Navigator.of(context).pushNamed(
+                  PlayListView.routeName,
+                  arguments: {'length': playlistlength},
+                ),
                 child: const Text(
                   'See All',
                   style: TextStyle(
@@ -66,11 +71,12 @@ class Playlists extends StatelessWidget {
                   ],
                 );
               }
+              playlistlength = playlists!.length;
               return SizedBox(
                 height: 150,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: playlists!.length,
+                  itemCount: playlists.length,
                   itemBuilder: (context, index) =>  Padding(
                     padding: const EdgeInsets.only(right: 20.0),
                     child: Column(

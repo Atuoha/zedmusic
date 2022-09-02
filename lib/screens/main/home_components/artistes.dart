@@ -3,14 +3,15 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
+import '../broader_views/artistes.dart';
 
 class Artistes extends StatelessWidget {
-  const Artistes({Key? key}) : super(key: key);
+   Artistes({Key? key}) : super(key: key);
+  var artisteLength = 0;
 
   @override
   Widget build(BuildContext context) {
     final OnAudioQuery audioQuery = OnAudioQuery();
-
     return Column(
       children: [
         Padding(
@@ -26,7 +27,10 @@ class Artistes extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pushNamed(''),
+                onPressed: () => Navigator.of(context).pushNamed(
+                  ArtisteView.routeName,
+                  arguments: {'length': artisteLength},
+                ),
                 child: const Text(
                   'See All',
                   style: TextStyle(
@@ -61,7 +65,7 @@ class Artistes extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   const Text(
-                    'Genres are empty!',
+                    'Artistes are empty!',
                     style: TextStyle(
                       color: searchBoxBg,
                     ),
@@ -69,36 +73,36 @@ class Artistes extends StatelessWidget {
                 ],
               );
             }
+            artisteLength = artistes!.length;
             return SizedBox(
               height: 90,
               child: ListView.builder(
                 padding: const EdgeInsets.only(top: 10),
                 scrollDirection: Axis.horizontal,
-                itemCount: artistes!.length,
-                itemBuilder: (context, index) =>
-                    Padding(
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: QueryArtworkWidget(
-                              id: artistes[index].id,
-                              type: ArtworkType.ARTIST,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            artistes[index].artist,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
+                itemCount: artistes.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: QueryArtworkWidget(
+                          id: artistes[index].id,
+                          type: ArtworkType.ARTIST,
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      Text(
+                        artistes[index].artist,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             );
           },
