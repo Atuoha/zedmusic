@@ -1,6 +1,7 @@
 import 'package:zedmusic/screens/auth/auth.dart';
 import 'package:zedmusic/screens/auth/forgot_password.dart';
 import 'package:zedmusic/screens/main/bottom_nav.dart';
+import 'package:zedmusic/screens/main/broader_views/songs.dart';
 import 'package:zedmusic/screens/splash/splash.dart';
 
 var routes =
@@ -9,5 +10,6 @@ var routes =
     AuthScreen.routeName: (context)=> const AuthScreen(),
     ForgotPasswordScreen.routeName: (context)=> const ForgotPasswordScreen(),
     BottomNav.routeName: (context)=> const BottomNav(),
+    SongsView.routeName: (context)=> const SongsView(),
   }
 ;

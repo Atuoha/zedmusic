@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
+import '../broader_views/songs.dart';
 
 class Songs extends StatelessWidget {
   const Songs({Key? key}) : super(key: key);
@@ -9,7 +10,7 @@ class Songs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OnAudioQuery audioQuery = OnAudioQuery();
-    return      Column(
+    return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -24,7 +25,7 @@ class Songs extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pushNamed(''),
+                onPressed: () => Navigator.of(context).pushNamed(SongsView.routeName),
                 child: const Text(
                   'See All',
                   style: TextStyle(
@@ -74,7 +75,7 @@ class Songs extends StatelessWidget {
                 // scrollDirection: Axis.horizontal,
                 itemCount: songs!.length,
                 itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(bottom:10.0),
+                  padding: const EdgeInsets.only(bottom: 10.0),
                   child: ListTile(
                     leading: QueryArtworkWidget(
                       id: songs[index].id,
