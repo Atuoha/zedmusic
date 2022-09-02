@@ -5,7 +5,9 @@ import '../../../constants/colors.dart';
 import '../broader_views/songs.dart';
 
 class Songs extends StatelessWidget {
-  const Songs({Key? key}) : super(key: key);
+   Songs({Key? key}) : super(key: key);
+
+  var songsLength;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class Songs extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pushNamed(SongsView.routeName),
+                onPressed: () => Navigator.of(context).pushNamed(SongsView.routeName, arguments: {'songsLength': songsLength}),
                 child: const Text(
                   'See All',
                   style: TextStyle(
@@ -68,12 +70,13 @@ class Songs extends StatelessWidget {
                 ],
               );
             }
+            songsLength = songs!.length;
             return SizedBox(
               height: 220,
               child: ListView.builder(
                 padding: EdgeInsets.zero,
                 // scrollDirection: Axis.horizontal,
-                itemCount: songs!.length,
+                itemCount: songs.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: ListTile(

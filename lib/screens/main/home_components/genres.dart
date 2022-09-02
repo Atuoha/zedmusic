@@ -11,7 +11,7 @@ class Genres extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final OnAudioQuery audioQuery = OnAudioQuery();
-    return       Column(
+    return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -69,32 +69,33 @@ class Genres extends StatelessWidget {
             return SizedBox(
               height: 90,
               child: ListView.builder(
-                padding: const EdgeInsets.only(top:10),
+                padding: const EdgeInsets.only(top: 10),
                 scrollDirection: Axis.horizontal,
                 itemCount: genres!.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: QueryArtworkWidget(
-                          id: genres[index].id,
-                          type: ArtworkType.GENRE,
-                        ),
+                itemBuilder: (context, index) =>
+                    Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: QueryArtworkWidget(
+                              id: genres[index].id,
+                              type: ArtworkType.GENRE,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            genres[index].genre,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      Text(
-                        genres[index].genre,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
               ),
             );
           },

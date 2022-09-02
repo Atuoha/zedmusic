@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class SongData extends ChangeNotifier {
+  var songsLength = 0;
+
+  updateSongsLength(int number){
+    songsLength == number;
+    notifyListeners();
+  }
+
+
   toggleIsFav(SongModel song) {
     switch (isFav(song.id)) {
       case true:

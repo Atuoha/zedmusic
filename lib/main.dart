@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:zedmusic/providers/song.dart';
 import 'package:zedmusic/routes/routes.dart';
 import 'package:zedmusic/screens/splash/entry_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(const MusicApp());
 
@@ -9,11 +11,14 @@ class MusicApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Roboto'),
-      home: const EntryScreen(),
-      routes: routes,
+    return ChangeNotifierProvider(
+      create: (context)=> SongData(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(fontFamily: 'Roboto'),
+        home: const EntryScreen(),
+        routes: routes,
+      ),
     );
   }
 }
