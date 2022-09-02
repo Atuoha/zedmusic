@@ -4,9 +4,11 @@ import 'package:on_audio_query/on_audio_query.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
+import '../broader_views/genres.dart';
 
 class Genres extends StatelessWidget {
-  const Genres({Key? key}) : super(key: key);
+   Genres({Key? key}) : super(key: key);
+  var genresLength;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class Genres extends StatelessWidget {
                 secondText: ' Genres',
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pushNamed(''),
+                onPressed: () => Navigator.of(context).pushNamed(GenresView.routeName, arguments: {'genreLength': genresLength}),
                 child: const Text(
                   'See All',
                   style: TextStyle(
@@ -66,12 +68,13 @@ class Genres extends StatelessWidget {
                 ],
               );
             }
+            genresLength = genres!.length;
             return SizedBox(
               height: 90,
               child: ListView.builder(
                 padding: const EdgeInsets.only(top: 10),
                 scrollDirection: Axis.horizontal,
-                itemCount: genres!.length,
+                itemCount: genres.length,
                 itemBuilder: (context, index) =>
                     Padding(
                       padding: const EdgeInsets.only(right: 20.0),

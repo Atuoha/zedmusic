@@ -99,11 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 10),
 
             // GENRES
-            const Genres(),
+            Genres(),
             const SizedBox(height: 10),
 
             // SONGS
-             Songs()
+            Songs()
           ],
         ),
       ),

@@ -9,25 +9,16 @@ import '../../../components/searchbox.dart';
 import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
 
-class SongsView extends StatefulWidget {
+class SongsView extends StatelessWidget {
   static const routeName = '/songs';
-
-  const SongsView({Key? key}) : super(key: key);
-
-  @override
-  State<SongsView> createState() => _SongsViewState();
-}
-
-class _SongsViewState extends State<SongsView> {
+  SongsView({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
-
-
-
 
   @override
   Widget build(BuildContext context) {
-    var data = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    int songsLength  = data['songsLength'];
+    var data =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    int songsLength = data['songsLength'];
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -36,7 +27,6 @@ class _SongsViewState extends State<SongsView> {
         statusBarIconBrightness: Brightness.light,
       ),
     );
-    final songData = Provider.of<SongData>(context, listen: false);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: KBackground(
