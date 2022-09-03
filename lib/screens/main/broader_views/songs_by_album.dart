@@ -71,21 +71,24 @@ class AlbumSongs extends StatelessWidget {
                 const SizedBox(height: 25),
                 const SearchBox(),
                 const SizedBox(height: 25),
-                ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    KText(
-                      firstText: 'Songs by ',
-                      secondText: '${album.album} Album' ,
-                    ),
-                    const SizedBox(width: 20),
-                    Text(
-                      '${album.numOfSongs} songs ',
-                      style: const TextStyle(
-                        color: searchBoxBg,
+                SizedBox(
+                  height: 20,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      KText(
+                        firstText: 'Songs by ',
+                        secondText: '${album.album} Album' ,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 20),
+                      Text(
+                        '${album.numOfSongs} songs ',
+                        style: const TextStyle(
+                          color: searchBoxBg,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 10),
                 SizedBox(
