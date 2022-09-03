@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:zedmusic/screens/main/broader_views/songs_by_artiste.dart';
+import 'package:provider/provider.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../components/searchbox.dart';
 import '../../../constants/colors.dart';
+import '../../../providers/song.dart';
 
-class ArtisteView extends StatelessWidget {
-  static const routeName = '/artistes';
+class AlbumSongs extends StatelessWidget {
+  static const routeName = '/albumsongs';
 
-  ArtisteView({Key? key}) : super(key: key);
+  AlbumSongs({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
 
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
     var data =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    int artisteLength = data['length'];
-
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    AlbumModel album = data['album'];
+    var songData = Provider.of<SongData>(context);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -74,12 +74,12 @@ class ArtisteView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const KText(
-                      firstText: 'All',
-                      secondText: ' Artistes',
+                    KText(
+                      firstText: 'Songs by ',
+                      secondText: album.album,
                     ),
                     Text(
-                      '$artisteLength artistes ',
+                      '${album.numOfSongs} songs ',
                       style: const TextStyle(
                         color: searchBoxBg,
                       ),
@@ -87,15 +87,27 @@ class ArtisteView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                FutureBuilder<List<ArtistModel>>(
-                  future: audioQuery.queryArtists(
+                SizedBox(
+                  height: 200,
+                  width: double.infinity,
+                  child: QueryArtworkWidget(
+                    id: album.id,
+                    type: ArtworkType.ALBUM,
+                    artworkFit: BoxFit.cover,
+                    artworkBorder: BorderRadius.circular(20),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                FutureBuilder<List<SongModel>>(
+                  future: audioQuery.queryAudiosFrom(
+                    AudiosFromType.ALBUM_ID,
+                    album.id,
                     orderType: OrderType.ASC_OR_SMALLER,
-                    uriType: UriType.EXTERNAL,
                     sortType: null,
                     ignoreCase: true,
                   ),
                   builder: (context, item) {
-                    var artistes = item.data;
+                    var songs = item.data;
                     if (item.data == null) {
                       return const Center(
                         child: Loading(),
@@ -111,7 +123,7 @@ class ArtisteView extends StatelessWidget {
                           ),
                           const SizedBox(width: 10),
                           const Text(
-                            'Artistes are empty!',
+                            'Songs are empty!',
                             style: TextStyle(
                               color: searchBoxBg,
                             ),
@@ -119,48 +131,61 @@ class ArtisteView extends StatelessWidget {
                         ],
                       );
                     }
+
                     return SizedBox(
-                        height: size.height / 1.3,
-                        child: GridView.builder(
-                          padding: const EdgeInsets.only(top: 10),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                orientation == Orientation.portrait ? 2 : 3,
-                            mainAxisSpacing: 7,
-                            crossAxisSpacing: 10,
-                          ),
-                          itemCount: artistes!.length,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                              ArtisteSongs.routeName,
-                              arguments: {
-                                'artiste': artistes[index],
-                              },
+                      height: size.height / 1,
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: songs!.length,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: QueryArtworkWidget(
+                              id: songs[index].id,
+                              type: ArtworkType.AUDIO,
+                              artworkFit: BoxFit.cover,
+                              artworkBorder: BorderRadius.circular(30),
                             ),
-                            child: Column(
+                            title: Text(
+                              songs[index].title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            subtitle: Text(
+                              songs[index].artist!,
+                              style: TextStyle(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                            trailing: Column(
                               children: [
-                                QueryArtworkWidget(
-                                  id: artistes[index].id,
-                                  type: ArtworkType.ARTIST,
-                                  artworkFit: BoxFit.cover,
-                                  artworkHeight: 120,
-                                  artworkWidth: double.infinity,
-                                  artworkBorder: BorderRadius.circular(5),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  artistes[index].artist,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                GestureDetector(
+                                  onTap: () =>
+                                      songData.toggleIsFav(songs[index]),
+                                  child: Icon(
+                                    songData.isFav(songs[index].id)
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: songData.isFav(songs[index].id)
+                                        ? Colors.red
+                                        : ambientBg,
                                   ),
+                                ),
+                                const SizedBox(height: 5),
+                                const Icon(
+                                  Icons.play_circle,
+                                  color: ambientBg,
                                 ),
                               ],
                             ),
                           ),
-                        ));
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],

@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:zedmusic/screens/main/broader_views/songs_by_artiste.dart';
+import 'package:zedmusic/screens/main/broader_views/songs_by_album.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../components/searchbox.dart';
 import '../../../constants/colors.dart';
 
-class ArtisteView extends StatelessWidget {
-  static const routeName = '/artistes';
+class AlbumsView extends StatelessWidget {
+  static const routeName = '/albums';
 
-  ArtisteView({Key? key}) : super(key: key);
+  AlbumsView({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
 
   @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;
     var data =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    int artisteLength = data['length'];
-
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    int albumLength = data['length'];
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -76,10 +75,10 @@ class ArtisteView extends StatelessWidget {
                   children: [
                     const KText(
                       firstText: 'All',
-                      secondText: ' Artistes',
+                      secondText: ' Albums',
                     ),
                     Text(
-                      '$artisteLength artistes ',
+                      '$albumLength albums ',
                       style: const TextStyle(
                         color: searchBoxBg,
                       ),
@@ -87,15 +86,15 @@ class ArtisteView extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                FutureBuilder<List<ArtistModel>>(
-                  future: audioQuery.queryArtists(
+                FutureBuilder<List<AlbumModel>>(
+                  future: audioQuery.queryAlbums(
                     orderType: OrderType.ASC_OR_SMALLER,
                     uriType: UriType.EXTERNAL,
                     sortType: null,
                     ignoreCase: true,
                   ),
                   builder: (context, item) {
-                    var artistes = item.data;
+                    var albums = item.data;
                     if (item.data == null) {
                       return const Center(
                         child: Loading(),
@@ -111,7 +110,7 @@ class ArtisteView extends StatelessWidget {
                           ),
                           const SizedBox(width: 10),
                           const Text(
-                            'Artistes are empty!',
+                            'Albums are empty!',
                             style: TextStyle(
                               color: searchBoxBg,
                             ),
@@ -121,28 +120,30 @@ class ArtisteView extends StatelessWidget {
                     }
                     return SizedBox(
                         height: size.height / 1.3,
-                        child: GridView.builder(
-                          padding: const EdgeInsets.only(top: 10),
+                        child:  GridView.builder(
+                          padding: const EdgeInsets.only(top:10),
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                          SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount:
-                                orientation == Orientation.portrait ? 2 : 3,
+                            orientation == Orientation.portrait ? 2 : 3,
                             mainAxisSpacing: 7,
                             crossAxisSpacing: 10,
+
                           ),
-                          itemCount: artistes!.length,
+                          itemCount: albums!.length,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
-                              ArtisteSongs.routeName,
+                              AlbumSongs.routeName,
                               arguments: {
-                                'artiste': artistes[index],
+                                'album': albums[index],
                               },
+
                             ),
                             child: Column(
                               children: [
                                 QueryArtworkWidget(
-                                  id: artistes[index].id,
-                                  type: ArtworkType.ARTIST,
+                                  id: albums[index].id,
+                                  type: ArtworkType.ALBUM,
                                   artworkFit: BoxFit.cover,
                                   artworkHeight: 120,
                                   artworkWidth: double.infinity,
@@ -150,7 +151,7 @@ class ArtisteView extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  artistes[index].artist,
+                                  albums[index].album,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -160,7 +161,9 @@ class ArtisteView extends StatelessWidget {
                               ],
                             ),
                           ),
-                        ));
+                        )
+                    );
+
                   },
                 ),
               ],

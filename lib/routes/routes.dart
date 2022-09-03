@@ -4,6 +4,7 @@ import 'package:zedmusic/screens/main/bottom_nav.dart';
 import 'package:zedmusic/screens/main/broader_views/genres.dart';
 import 'package:zedmusic/screens/main/broader_views/playlist.dart';
 import 'package:zedmusic/screens/main/broader_views/songs.dart';
+import 'package:zedmusic/screens/main/broader_views/songs_by_genre.dart';
 import 'package:zedmusic/screens/main/home_components/artistes.dart';
 import 'package:zedmusic/screens/splash/splash.dart';
 
@@ -19,5 +20,6 @@ var routes = {
   GenresView.routeName: (context) => GenresView(),
   ArtisteView.routeName: (context) => ArtisteView(),
   PlayListView.routeName: (context)=> PlayListView(),
-  ArtisteSongs.routeName: (context)=> ArtisteSongs()
+  ArtisteSongs.routeName: (context)=> ArtisteSongs(),
+  GenreSongs.routeName: (context)=> GenreSongs(),
 };

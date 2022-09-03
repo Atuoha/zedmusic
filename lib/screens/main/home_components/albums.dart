@@ -3,11 +3,11 @@ import 'package:on_audio_query/on_audio_query.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
-import '../broader_views/genres.dart';
+import '../broader_views/albums.dart';
 
-class Genres extends StatelessWidget {
-   Genres({Key? key}) : super(key: key);
-  var genresLength = 0;
+class Albums extends StatelessWidget {
+  Albums({Key? key}) : super(key: key);
+  var albumsLength = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,12 @@ class Genres extends StatelessWidget {
             children: [
               const KText(
                 firstText: 'All',
-                secondText: ' Genres',
+                secondText: ' Albums',
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pushNamed(
-                  GenresView.routeName,
-                  arguments: {'length': genresLength},
+                  AlbumsView.routeName,
+                  arguments: {'length': albumsLength},
                 ),
                 child: const Text(
                   'See All',
@@ -38,15 +38,15 @@ class Genres extends StatelessWidget {
             ],
           ),
         ),
-        FutureBuilder<List<GenreModel>>(
-          future: audioQuery.queryGenres(
+        FutureBuilder<List<AlbumModel>>(
+          future: audioQuery.queryAlbums(
             orderType: OrderType.ASC_OR_SMALLER,
             uriType: UriType.EXTERNAL,
             sortType: null,
             ignoreCase: true,
           ),
           builder: (context, item) {
-            var genres = item.data;
+            var albums = item.data;
             if (item.data == null) {
               return const Center(
                 child: Loading(),
@@ -62,7 +62,7 @@ class Genres extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   const Text(
-                    'Genres are empty!',
+                    'Albums are empty!',
                     style: TextStyle(
                       color: searchBoxBg,
                     ),
@@ -70,13 +70,13 @@ class Genres extends StatelessWidget {
                 ],
               );
             }
-            genresLength = genres!.length;
+            albumsLength = albums!.length;
             return SizedBox(
               height: 90,
               child: ListView.builder(
                 padding: const EdgeInsets.only(top: 10),
                 scrollDirection: Axis.horizontal,
-                itemCount: genres.length,
+                itemCount: albums.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(right: 20.0),
                   child: Column(
@@ -84,13 +84,13 @@ class Genres extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: QueryArtworkWidget(
-                          id: genres[index].id,
-                          type: ArtworkType.GENRE,
+                          id: albums[index].id,
+                          type: ArtworkType.ALBUM,
                         ),
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        genres[index].genre,
+                        albums[index].album,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

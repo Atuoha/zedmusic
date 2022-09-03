@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
+import 'package:zedmusic/screens/main/broader_views/songs_by_genre.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
@@ -133,7 +134,13 @@ class GenresView extends StatelessWidget {
                           ),
                           itemCount: genres!.length,
                           itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(''),
+                            onTap: () => Navigator.of(context).pushNamed(
+                              GenreSongs.routeName,
+                              arguments: {
+                                'genre': genres[index],
+                              },
+
+                            ),
                             child: Column(
                               children: [
                                 QueryArtworkWidget(

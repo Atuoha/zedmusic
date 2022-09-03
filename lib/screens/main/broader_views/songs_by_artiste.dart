@@ -71,38 +71,45 @@ class ArtisteSongs extends StatelessWidget {
                 const SizedBox(height: 25),
                 const SearchBox(),
                 const SizedBox(height: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    KText(
-                      firstText: 'Songs by',
-                      secondText: artiste.artist,
+                SizedBox(
+                  height:20,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                        KText(
+                          firstText: 'Songs by ',
+                          secondText: artiste.artist,
+                        ),
+                        const SizedBox(width: 20),
+                        Text(
+                          '${artiste.numberOfTracks} songs ',
+                          style: const TextStyle(
+                            color: searchBoxBg,
+                          ),
+                        ),
+                      const SizedBox(width: 20),
+                        Text(
+                          '${artiste.numberOfAlbums} albums ',
+                          style: const TextStyle(
+                            color: searchBoxBg,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '${artiste.numberOfTracks} songs ',
-                      style: const TextStyle(
-                        color: searchBoxBg,
-                      ),
-                    ),
-                    Text(
-                      '${artiste.numberOfAlbums} albums ',
-                      style: const TextStyle(
-                        color: searchBoxBg,
-                      ),
-                    ),
-                  ],
                 ),
+
                 const SizedBox(height: 10),
                 SizedBox(
-                  height: 120,
+                  height: 200,
                   width: double.infinity,
                   child: QueryArtworkWidget(
                     id: artiste.id,
                     type: ArtworkType.ARTIST,
                     artworkFit: BoxFit.cover,
-                    artworkBorder: BorderRadius.circular(30),
+                    artworkBorder: BorderRadius.circular(20),
                   ),
                 ),
+                const SizedBox(height: 10),
                 FutureBuilder<List<SongModel>>(
                   future: audioQuery.queryAudiosFrom(
                     AudiosFromType.ARTIST_ID,
