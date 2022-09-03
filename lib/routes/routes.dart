@@ -8,6 +8,7 @@ import 'package:zedmusic/screens/main/home_components/artistes.dart';
 import 'package:zedmusic/screens/splash/splash.dart';
 
 import '../screens/main/broader_views/artistes.dart';
+import '../screens/main/broader_views/songs_by_artiste.dart';
 
 var routes = {
   SplashScreen.routeName: (context) => const SplashScreen(),
@@ -18,4 +19,5 @@ var routes = {
   GenresView.routeName: (context) => GenresView(),
   ArtisteView.routeName: (context) => ArtisteView(),
   PlayListView.routeName: (context)=> PlayListView(),
+  ArtisteSongs.routeName: (context)=> ArtisteSongs()
 };
