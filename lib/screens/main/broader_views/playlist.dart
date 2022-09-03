@@ -8,11 +8,20 @@ import '../../../components/loading.dart';
 import '../../../components/searchbox.dart';
 import '../../../constants/colors.dart';
 
-class PlayListView extends StatelessWidget {
+enum Operation { create, edit }
+
+class PlayListView extends StatefulWidget {
   static const routeName = '/playlists';
 
   PlayListView({Key? key}) : super(key: key);
+
+  @override
+  State<PlayListView> createState() => _PlayListViewState();
+}
+
+class _PlayListViewState extends State<PlayListView> {
   final OnAudioQuery audioQuery = OnAudioQuery();
+
   final playlistNameController = TextEditingController();
 
   message(String message) {
@@ -31,17 +40,26 @@ class PlayListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _addPlayList() {
+    _addAndEditPlaylist(Operation operation, int playlistId) {
       if (playlistNameController.text.isEmpty) {
         return;
       } else {
-        audioQuery.createPlaylist(playlistNameController.text);
+        switch (operation) {
+          case Operation.create:
+            audioQuery.createPlaylist(playlistNameController.text);
+            break;
+
+          case Operation.edit:
+            audioQuery.renamePlaylist(playlistId, playlistNameController.text);
+            break;
+        }
+
         playlistNameController.text = "";
         Navigator.of(context).pop();
       }
     }
 
-    _showModal() {
+    _showModal(Operation operation, int playlistId) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -64,7 +82,9 @@ class PlayListView extends StatelessWidget {
           ),
           content: TextField(
             controller: playlistNameController,
-            decoration: const InputDecoration(hintText: 'New Playlist Name'),
+            decoration: const InputDecoration(
+              hintText: 'New Playlist Name',
+            ),
           ),
           actions: [
             ElevatedButton(
@@ -75,10 +95,22 @@ class PlayListView extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(5),
               ),
-              onPressed: () => _addPlayList(),
-              child: const Text(
-                'Add Playlist',
-                style: TextStyle(
+              onPressed: () {
+                switch (operation) {
+                  case Operation.create:
+                    _addAndEditPlaylist(Operation.create, 0);
+                    break;
+
+                  case Operation.edit:
+                    _addAndEditPlaylist(Operation.edit, playlistId);
+                    break;
+                }
+              },
+              child: Text(
+                operation == Operation.create
+                    ? 'Add Playlist'
+                    : 'Rename Playlist',
+                style: const TextStyle(
                   color: Colors.white,
                 ),
               ),
@@ -105,7 +137,7 @@ class PlayListView extends StatelessWidget {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
-        onPressed: () => _showModal(),
+        onPressed: () => _showModal(Operation.create, 0),
         child: const Icon(
           Icons.add,
           color: primaryColor,
@@ -252,14 +284,28 @@ class PlayListView extends StatelessWidget {
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _showModal(
+                                          Operation.edit,
+                                          playlists[index].id,
+                                        );
+                                        setState(() {
+                                          playlistNameController.text =
+                                              playlists[index].playlist;
+                                        });
+                                      },
                                       icon: const Icon(
                                         Icons.edit_note,
                                         color: ambientBg,
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        setState(() {
+                                          audioQuery.removePlaylist(
+                                              playlists[index].id);
+                                        });
+                                      },
                                       icon: const Icon(
                                         Icons.delete_forever,
                                         color: ambientBg,
