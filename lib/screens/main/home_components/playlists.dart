@@ -7,14 +7,14 @@ import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
 
 class Playlists extends StatelessWidget {
-   Playlists({Key? key}) : super(key: key);
+  Playlists({Key? key}) : super(key: key);
   var playlistlength = 0;
 
   @override
   Widget build(BuildContext context) {
     final OnAudioQuery audioQuery = OnAudioQuery();
 
-    return    Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 18.0),
       child: Column(
         children: [
@@ -73,19 +73,21 @@ class Playlists extends StatelessWidget {
               }
               playlistlength = playlists!.length;
               return SizedBox(
-                height: 150,
+                height: 80,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: playlists.length,
-                  itemBuilder: (context, index) =>  Padding(
+                  itemBuilder: (context, index) => Padding(
                     padding: const EdgeInsets.only(right: 20.0),
                     child: Column(
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: QueryArtworkWidget(
-                            id: playlists[index].id,
-                            type: ArtworkType.PLAYLIST,
+                          borderRadius: BorderRadius.circular(40),
+                          child: Image.asset(
+                            'assets/images/playlist1.png',
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
                           ),
                         ),
                         const SizedBox(height: 10),

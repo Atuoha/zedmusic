@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:zedmusic/screens/main/broader_views/songs_by_playlist.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
@@ -9,14 +10,87 @@ import '../../../constants/colors.dart';
 
 class PlayListView extends StatelessWidget {
   static const routeName = '/playlists';
+
   PlayListView({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
+  final playlistNameController = TextEditingController();
+
+  message(String message) {
+    return ScaffoldMessenger(
+      child: SnackBar(
+        backgroundColor: primaryColor,
+        content: Text(
+          message,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    _addPlayList() {
+      if (playlistNameController.text.isEmpty) {
+        return;
+      } else {
+        audioQuery.createPlaylist(playlistNameController.text);
+        playlistNameController.text = "";
+        Navigator.of(context).pop();
+      }
+    }
+
+    _showModal() {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Wrap(
+            children: const [
+              Icon(
+                Icons.music_note,
+                size: 30,
+                color: primaryColor,
+              ),
+              SizedBox(width: 5),
+              Text(
+                'ZedMusic',
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          content: TextField(
+            controller: playlistNameController,
+            decoration: const InputDecoration(hintText: 'New Playlist Name'),
+          ),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: btnBg,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(5),
+              ),
+              onPressed: () => _addPlayList(),
+              child: const Text(
+                'Add Playlist',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final orientation = MediaQuery.of(context).orientation;
     var data =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     int playlistlength = data['length'];
 
     SystemChrome.setSystemUIOverlayStyle(
@@ -29,6 +103,14 @@ class PlayListView extends StatelessWidget {
     );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        onPressed: () => _showModal(),
+        child: const Icon(
+          Icons.add,
+          color: primaryColor,
+        ),
+      ),
       body: KBackground(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -119,23 +201,27 @@ class PlayListView extends StatelessWidget {
                     }
                     return SizedBox(
                         height: size.height / 1.3,
-                        child:  GridView.builder(
-                          padding: const EdgeInsets.only(top:10),
+                        child: GridView.builder(
+                          padding: const EdgeInsets.only(top: 10),
                           gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount:
-                            orientation == Orientation.portrait ? 2 : 3,
+                                orientation == Orientation.portrait ? 2 : 3,
                             mainAxisSpacing: 7,
                             crossAxisSpacing: 10,
-
                           ),
                           itemCount: playlists!.length,
                           itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(''),
+                            onTap: () => Navigator.of(context).pushNamed(
+                              PlayListSongs.routeName,
+                              arguments: {
+                                'playlist': playlists[index],
+                              },
+                            ),
                             child: Column(
                               children: [
                                 Text(
-                                  '${playlists[index].numOfSongs}',
+                                  playlists[index].playlist,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -143,29 +229,48 @@ class PlayListView extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                QueryArtworkWidget(
-                                  id: playlists[index].id,
-                                  type: ArtworkType.PLAYLIST,
-                                  artworkFit: BoxFit.cover,
-                                  artworkHeight: 120,
-                                  artworkWidth: double.infinity,
-                                  artworkBorder: BorderRadius.circular(5),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  '${playlists[index].numOfSongs}',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(
+                                    'assets/images/playlist1.png',
+                                    height: 90,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
                                   ),
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${playlists[index].numOfSongs} songs',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.edit_note,
+                                        color: ambientBg,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.delete_forever,
+                                        color: ambientBg,
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                        )
-                    );
-
+                        ));
                   },
                 ),
               ],
