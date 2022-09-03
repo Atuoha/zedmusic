@@ -76,7 +76,7 @@ class GenreSongs extends StatelessWidget {
                   children: [
                     KText(
                       firstText: 'Songs by ',
-                      secondText: genre.genre,
+                      secondText: '${genre.genre} Genre',
                     ),
                     Text(
                       '${genre.numOfSongs} songs ',
