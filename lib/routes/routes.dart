@@ -1,9 +1,11 @@
 import 'package:zedmusic/screens/auth/auth.dart';
 import 'package:zedmusic/screens/auth/forgot_password.dart';
 import 'package:zedmusic/screens/main/bottom_nav.dart';
+import 'package:zedmusic/screens/main/broader_views/albums.dart';
 import 'package:zedmusic/screens/main/broader_views/genres.dart';
 import 'package:zedmusic/screens/main/broader_views/playlist.dart';
 import 'package:zedmusic/screens/main/broader_views/songs.dart';
+import 'package:zedmusic/screens/main/broader_views/songs_by_album.dart';
 import 'package:zedmusic/screens/main/broader_views/songs_by_genre.dart';
 import 'package:zedmusic/screens/main/home_components/artistes.dart';
 import 'package:zedmusic/screens/splash/splash.dart';
@@ -22,4 +24,6 @@ var routes = {
   PlayListView.routeName: (context)=> PlayListView(),
   ArtisteSongs.routeName: (context)=> ArtisteSongs(),
   GenreSongs.routeName: (context)=> GenreSongs(),
+  AlbumsView.routeName: (context)=>AlbumsView(),
+  AlbumSongs.routeName:(context)=>AlbumSongs(),
 };
