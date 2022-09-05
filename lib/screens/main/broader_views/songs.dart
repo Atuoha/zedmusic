@@ -97,12 +97,12 @@ class SongsView extends StatelessWidget {
                   ),
                   builder: (context, item) {
                     var songs = item.data;
-                    if (item.data == null) {
+                    if (songs == null) {
                       return const Center(
                         child: Loading(),
                       );
                     }
-                    if (item.data!.isEmpty) {
+                    if (songs.isEmpty) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -125,7 +125,7 @@ class SongsView extends StatelessWidget {
                       height: size.height / 1,
                       child: ListView.builder(
                         padding: EdgeInsets.zero,
-                        itemCount: songs!.length,
+                        itemCount: songs.length,
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: GestureDetector(

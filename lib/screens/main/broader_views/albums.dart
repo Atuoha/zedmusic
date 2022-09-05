@@ -95,12 +95,12 @@ class AlbumsView extends StatelessWidget {
                   ),
                   builder: (context, item) {
                     var albums = item.data;
-                    if (item.data == null) {
+                    if (albums == null) {
                       return const Center(
                         child: Loading(),
                       );
                     }
-                    if (item.data!.isEmpty) {
+                    if (albums.isEmpty) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -130,7 +130,7 @@ class AlbumsView extends StatelessWidget {
                             crossAxisSpacing: 10,
 
                           ),
-                          itemCount: albums!.length,
+                          itemCount: albums.length,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
                               AlbumSongs.routeName,

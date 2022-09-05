@@ -47,12 +47,12 @@ class Albums extends StatelessWidget {
           ),
           builder: (context, item) {
             var albums = item.data;
-            if (item.data == null) {
+            if (albums == null) {
               return const Center(
                 child: Loading(),
               );
             }
-            if (item.data!.isEmpty) {
+            if (albums.isEmpty) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -70,7 +70,7 @@ class Albums extends StatelessWidget {
                 ],
               );
             }
-            albumsLength = albums!.length;
+            albumsLength = albums.length;
             return SizedBox(
               height: 90,
               child: ListView.builder(

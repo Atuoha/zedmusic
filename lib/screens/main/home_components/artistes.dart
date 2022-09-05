@@ -50,12 +50,12 @@ class Artistes extends StatelessWidget {
           ),
           builder: (context, item) {
             var artistes = item.data;
-            if (item.data == null) {
+            if (artistes == null) {
               return const Center(
                 child: Loading(),
               );
             }
-            if (item.data!.isEmpty) {
+            if (artistes.isEmpty) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -73,7 +73,7 @@ class Artistes extends StatelessWidget {
                 ],
               );
             }
-            artisteLength = artistes!.length;
+            artisteLength = artistes.length;
             return SizedBox(
               height: 90,
               child: ListView.builder(

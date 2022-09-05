@@ -47,12 +47,12 @@ class Genres extends StatelessWidget {
           ),
           builder: (context, item) {
             var genres = item.data;
-            if (item.data == null) {
+            if (genres == null) {
               return const Center(
                 child: Loading(),
               );
             }
-            if (item.data!.isEmpty) {
+            if (genres.isEmpty) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -70,7 +70,7 @@ class Genres extends StatelessWidget {
                 ],
               );
             }
-            genresLength = genres!.length;
+            genresLength = genres.length;
             return SizedBox(
               height: 90,
               child: ListView.builder(

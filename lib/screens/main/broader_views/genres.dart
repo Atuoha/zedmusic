@@ -97,12 +97,12 @@ class GenresView extends StatelessWidget {
                   ),
                   builder: (context, item) {
                     var genres = item.data;
-                    if (item.data == null) {
+                    if (genres == null) {
                       return const Center(
                         child: Loading(),
                       );
                     }
-                    if (item.data!.isEmpty) {
+                    if (genres.isEmpty) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -132,7 +132,7 @@ class GenresView extends StatelessWidget {
                                 crossAxisSpacing: 10,
 
                           ),
-                          itemCount: genres!.length,
+                          itemCount: genres.length,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
                               GenreSongs.routeName,

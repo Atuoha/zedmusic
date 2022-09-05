@@ -297,12 +297,12 @@ class _PlayListViewState extends State<PlayListView> {
                   ),
                   builder: (context, item) {
                     var playlists = item.data;
-                    if (item.data == null) {
+                    if (playlists == null) {
                       return const Center(
                         child: Loading(),
                       );
                     }
-                    if (item.data!.isEmpty) {
+                    if (playlists.isEmpty) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -331,7 +331,7 @@ class _PlayListViewState extends State<PlayListView> {
                             mainAxisSpacing: 7,
                             crossAxisSpacing: 10,
                           ),
-                          itemCount: playlists!.length,
+                          itemCount: playlists.length,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
                               PlayListSongs.routeName,

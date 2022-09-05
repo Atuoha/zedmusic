@@ -51,12 +51,12 @@ class Songs extends StatelessWidget {
           ),
           builder: (context, item) {
             var songs = item.data;
-            if (item.data == null) {
+            if (songs == null) {
               return const Center(
                 child: Loading(),
               );
             }
-            if (item.data!.isEmpty) {
+            if (songs.isEmpty) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -74,7 +74,7 @@ class Songs extends StatelessWidget {
                 ],
               );
             }
-            songsLength = songs!.length;
+            songsLength = songs.length;
             return SizedBox(
               height: 220,
               child: ListView.builder(

@@ -38,8 +38,7 @@ class AlbumSongs extends StatelessWidget {
             right: 18.0,
             top: 45.0,
           ),
-          child: SingleChildScrollView(
-            child: Column(
+          child:  Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -102,101 +101,103 @@ class AlbumSongs extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                FutureBuilder<List<SongModel>>(
-                  future: audioQuery.queryAudiosFrom(
-                    AudiosFromType.ALBUM_ID,
-                    album.id,
-                    orderType: OrderType.ASC_OR_SMALLER,
-                    sortType: null,
-                    ignoreCase: true,
-                  ),
-                  builder: (context, item) {
-                    var songs = item.data;
-                    if (item.data == null) {
-                      return const Center(
-                        child: Loading(),
-                      );
-                    }
-                    if (item.data!.isEmpty) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/empty.png',
-                            width: 90,
-                          ),
-                          const SizedBox(width: 10),
-                          const Text(
-                            'Songs are empty!',
-                            style: TextStyle(
-                              color: searchBoxBg,
+                SingleChildScrollView(
+                  child: FutureBuilder<List<SongModel>>(
+                    future: audioQuery.queryAudiosFrom(
+                      AudiosFromType.ALBUM_ID,
+                      album.id,
+                      orderType: OrderType.ASC_OR_SMALLER,
+                      sortType: null,
+                      ignoreCase: true,
+                    ),
+                    builder: (context, item) {
+                      var songs = item.data;
+                      if (songs == null) {
+                        return const Center(
+                          child: Loading(),
+                        );
+                      }
+                      if (songs.isEmpty) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/empty.png',
+                              width: 90,
                             ),
-                          ),
-                        ],
-                      );
-                    }
-
-                    return SizedBox(
-                      height: size.height / 1,
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        itemCount: songs!.length,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: QueryArtworkWidget(
-                              id: songs[index].id,
-                              type: ArtworkType.AUDIO,
-                              artworkFit: BoxFit.cover,
-                              artworkBorder: BorderRadius.circular(30),
-                            ),
-                            title: Text(
-                              songs[index].title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            subtitle: Text(
-                              songs[index].artist!,
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Songs are empty!',
                               style: TextStyle(
-                                color: Colors.grey.shade300,
+                                color: searchBoxBg,
                               ),
                             ),
-                            trailing: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () =>
-                                      songData.toggleIsFav(songs[index]),
-                                  child: Icon(
-                                    songData.isFav(songs[index].id)
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: songData.isFav(songs[index].id)
-                                        ? Colors.red
-                                        : ambientBg,
+                          ],
+                        );
+                      }
+
+                      return SizedBox(
+                        height: size.height / 2.2,
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: songs.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: QueryArtworkWidget(
+                                id: songs[index].id,
+                                type: ArtworkType.AUDIO,
+                                artworkFit: BoxFit.cover,
+                                artworkBorder: BorderRadius.circular(30),
+                              ),
+                              title: Text(
+                                songs[index].title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              subtitle: Text(
+                                songs[index].artist!,
+                                style: TextStyle(
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                              trailing: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () =>
+                                        songData.toggleIsFav(songs[index]),
+                                    child: Icon(
+                                      songData.isFav(songs[index].id)
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: songData.isFav(songs[index].id)
+                                          ? Colors.red
+                                          : ambientBg,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 5),
-                                const Icon(
-                                  Icons.play_circle,
-                                  color: ambientBg,
-                                ),
-                              ],
+                                  const SizedBox(height: 5),
+                                  const Icon(
+                                    Icons.play_circle,
+                                    color: ambientBg,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
           ),
         ),
-      ),
+     
     );
   }
 }

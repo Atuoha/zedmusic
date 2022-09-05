@@ -96,12 +96,12 @@ class ArtisteView extends StatelessWidget {
                   ),
                   builder: (context, item) {
                     var artistes = item.data;
-                    if (item.data == null) {
+                    if (artistes == null) {
                       return const Center(
                         child: Loading(),
                       );
                     }
-                    if (item.data!.isEmpty) {
+                    if (artistes.isEmpty) {
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -130,7 +130,7 @@ class ArtisteView extends StatelessWidget {
                             mainAxisSpacing: 7,
                             crossAxisSpacing: 10,
                           ),
-                          itemCount: artistes!.length,
+                          itemCount: artistes.length,
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
                               ArtisteSongs.routeName,

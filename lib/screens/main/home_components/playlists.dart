@@ -49,12 +49,12 @@ class Playlists extends StatelessWidget {
           ),
           builder: (context, item) {
             var playlists = item.data;
-            if (item.data == null) {
+            if (playlists == null) {
               return const Center(
                 child: Loading(),
               );
             }
-            if (item.data!.isEmpty) {
+            if (playlists.isEmpty) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -72,7 +72,7 @@ class Playlists extends StatelessWidget {
                 ],
               );
             }
-            playlistlength = playlists!.length;
+            playlistlength = playlists.length;
             return SizedBox(
               height: 80,
               child: ListView.builder(
