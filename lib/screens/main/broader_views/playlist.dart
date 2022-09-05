@@ -13,7 +13,7 @@ enum Operation { create, edit }
 class PlayListView extends StatefulWidget {
   static const routeName = '/playlists';
 
-  PlayListView({Key? key}) : super(key: key);
+  const PlayListView({Key? key}) : super(key: key);
 
   @override
   State<PlayListView> createState() => _PlayListViewState();
@@ -21,8 +21,9 @@ class PlayListView extends StatefulWidget {
 
 class _PlayListViewState extends State<PlayListView> {
   final OnAudioQuery audioQuery = OnAudioQuery();
-
   final playlistNameController = TextEditingController();
+
+
 
   message(String message) {
     return ScaffoldMessenger(
@@ -38,10 +39,14 @@ class _PlayListViewState extends State<PlayListView> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    _addAndEditPlaylist(Operation operation, int playlistId) {
+
+    // add and rename playlist
+    _addAndEditPlaylist(Operation operation, int playlistId){
       if (playlistNameController.text.isEmpty) {
+        message('Input is empty');
         return;
       } else {
         switch (operation) {
@@ -50,7 +55,7 @@ class _PlayListViewState extends State<PlayListView> {
             break;
 
           case Operation.edit:
-            audioQuery.renamePlaylist(playlistId, playlistNameController.text);
+              audioQuery.renamePlaylist(playlistId, playlistNameController.text);
             break;
         }
 
@@ -59,6 +64,7 @@ class _PlayListViewState extends State<PlayListView> {
       }
     }
 
+    // show modal for playlist creation and renaming
     _showModal(Operation operation, int playlistId) {
       showDialog(
         context: context,
@@ -81,6 +87,7 @@ class _PlayListViewState extends State<PlayListView> {
             ],
           ),
           content: TextField(
+            autofocus: true,
             controller: playlistNameController,
             decoration: const InputDecoration(
               hintText: 'New Playlist Name',
@@ -115,6 +122,88 @@ class _PlayListViewState extends State<PlayListView> {
                 ),
               ),
             ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: btnBg,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(5),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Delete Request Modal
+    _deleteRequestModal(String playlist, int playlistId) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Wrap(
+            children: const [
+              Icon(
+                Icons.music_note,
+                size: 30,
+                color: primaryColor,
+              ),
+              SizedBox(width: 5),
+              Text(
+                'ZedMusic',
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          content: Text('Do you want to delete $playlist playlist?'),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: btnBg,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(5),
+              ),
+              onPressed: () => {
+                setState(() {
+                  audioQuery.removePlaylist(playlistId);
+                }),
+                Navigator.of(context).pop(),
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: btnBg,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.all(5),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'No',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
           ],
         ),
       );
@@ -135,14 +224,6 @@ class _PlayListViewState extends State<PlayListView> {
     );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () => _showModal(Operation.create, 0),
-        child: const Icon(
-          Icons.add,
-          color: primaryColor,
-        ),
-      ),
       body: KBackground(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -300,12 +381,10 @@ class _PlayListViewState extends State<PlayListView> {
                                       ),
                                     ),
                                     IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          audioQuery.removePlaylist(
-                                              playlists[index].id);
-                                        });
-                                      },
+                                      onPressed: () => _deleteRequestModal(
+                                        playlists[index].playlist,
+                                        playlists[index].id,
+                                      ),
                                       icon: const Icon(
                                         Icons.delete_forever,
                                         color: ambientBg,
