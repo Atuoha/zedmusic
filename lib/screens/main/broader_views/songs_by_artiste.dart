@@ -38,7 +38,8 @@ class ArtisteSongs extends StatelessWidget {
             right: 18.0,
             top: 45.0,
           ),
-          child:  Column(
+          child: SingleChildScrollView(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -71,32 +72,31 @@ class ArtisteSongs extends StatelessWidget {
                 const SearchBox(),
                 const SizedBox(height: 25),
                 SizedBox(
-                  height:20,
+                  height: 20,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
-                        KText(
-                          firstText: 'Songs by ',
-                          secondText: artiste.artist,
-                        ),
-                        const SizedBox(width: 20),
-                        Text(
-                          '${artiste.numberOfTracks} songs ',
-                          style: const TextStyle(
-                            color: searchBoxBg,
-                          ),
-                        ),
+                      KText(
+                        firstText: 'Songs by ',
+                        secondText: artiste.artist,
+                      ),
                       const SizedBox(width: 20),
-                        Text(
-                          '${artiste.numberOfAlbums} albums ',
-                          style: const TextStyle(
-                            color: searchBoxBg,
-                          ),
+                      Text(
+                        '${artiste.numberOfTracks} songs ',
+                        style: const TextStyle(
+                          color: searchBoxBg,
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 20),
+                      Text(
+                        '${artiste.numberOfAlbums} albums ',
+                        style: const TextStyle(
+                          color: searchBoxBg,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-
                 const SizedBox(height: 10),
                 SizedBox(
                   height: 200,
@@ -205,7 +205,7 @@ class ArtisteSongs extends StatelessWidget {
             ),
           ),
         ),
-    
+      ),
     );
   }
 }

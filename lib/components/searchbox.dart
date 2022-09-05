@@ -20,6 +20,11 @@ class SearchBox extends StatelessWidget {
         ),
         fillColor: searchBoxBg,
         filled: true,
+        focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: ambientBg,
+
+        ),
+            borderRadius: BorderRadius.circular(15)
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
         ),

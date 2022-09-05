@@ -15,6 +15,118 @@ class PlayListSongs extends StatelessWidget {
   PlayListSongs({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
 
+  showMusics(BuildContext context, int playlistId, SongData songData) {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(20),
+          topLeft: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            const SearchBox(),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  FutureBuilder<List<SongModel>>(
+                    future: audioQuery.querySongs(
+                      orderType: OrderType.ASC_OR_SMALLER,
+                      sortType: null,
+                      ignoreCase: true,
+                    ),
+                    builder: (context, item) {
+                      var songs = item.data;
+                      if (item.data == null) {
+                        return const Center(
+                          child: Loading(),
+                        );
+                      }
+                      if (item.data!.isEmpty) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/empty.png',
+                              width: 90,
+                            ),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Songs are empty!',
+                              style: TextStyle(
+                                color: searchBoxBg,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+
+                      return SizedBox(
+                        height: 365,
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: songs!.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: QueryArtworkWidget(
+                                id: songs[index].id,
+                                type: ArtworkType.AUDIO,
+                                artworkFit: BoxFit.cover,
+                                artworkBorder: BorderRadius.circular(30),
+                              ),
+                              title: Text(
+                                songs[index].title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              subtitle: Text(
+                                songs[index].artist!,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              trailing: Column(
+                                children: [
+                                  songData.isSongInPlaylist(
+                                          songs[index].id, playlistId)
+                                      ? const Icon(Icons.check_box,
+                                          color: primaryColor)
+                                      : GestureDetector(
+                                          onTap: () => audioQuery.addToPlaylist(
+                                            playlistId,
+                                            songs[index].id,
+                                          ),
+                                          child: const Icon(
+                                            Icons.add_box_rounded,
+                                            color: primaryColor,
+                                          ),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var data =
@@ -30,124 +142,12 @@ class PlayListSongs extends StatelessWidget {
       ),
     );
 
-    showMusics(BuildContext context) {
-      showModalBottomSheet(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
-          ),
-        ),
-        context: context,
-        builder: (context) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              const SearchBox(),
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    FutureBuilder<List<SongModel>>(
-                      future: audioQuery.querySongs(
-                        orderType: OrderType.ASC_OR_SMALLER,
-                        sortType: null,
-                        ignoreCase: true,
-                      ),
-                      builder: (context, item) {
-                        var songs = item.data;
-                        if (item.data == null) {
-                          return const Center(
-                            child: Loading(),
-                          );
-                        }
-                        if (item.data!.isEmpty) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/images/empty.png',
-                                width: 90,
-                              ),
-                              const SizedBox(width: 10),
-                              const Text(
-                                'Songs are empty!',
-                                style: TextStyle(
-                                  color: searchBoxBg,
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-
-                        return SizedBox(
-                          height: 365,
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            itemCount: songs!.length,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: ListTile(
-                                contentPadding: EdgeInsets.zero,
-                                leading: QueryArtworkWidget(
-                                  id: songs[index].id,
-                                  type: ArtworkType.AUDIO,
-                                  artworkFit: BoxFit.cover,
-                                  artworkBorder: BorderRadius.circular(30),
-                                ),
-                                title: Text(
-                                  songs[index].title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  songs[index].artist!,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                trailing: Column(
-                                  children: [
-                                    songData.isSongInPlaylist(songs[index].id,  playlist.id)?
-
-                                    const Icon(Icons.check_box, color:primaryColor)
-
-                                    :GestureDetector(
-                                      onTap: () => audioQuery.addToPlaylist(
-                                        playlist.id,
-                                        songs[index].id,
-                                      ),
-                                      child: const Icon(
-                                        Icons.add_box_rounded,
-                                        color: primaryColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-    }
-
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
-        onPressed: () => showMusics(context),
+        onPressed: () => showMusics(context, playlist.id, songData),
         child: const Icon(
           Icons.add,
           color: primaryColor,
@@ -160,7 +160,8 @@ class PlayListSongs extends StatelessWidget {
             right: 18.0,
             top: 45.0,
           ),
-          child:  Column(
+          child: SingleChildScrollView(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -264,6 +265,7 @@ class PlayListSongs extends StatelessWidget {
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               leading: QueryArtworkWidget(
+                                artworkColor: Colors.white,
                                 id: songs[index].id,
                                 type: ArtworkType.AUDIO,
                                 artworkFit: BoxFit.cover,
@@ -283,24 +285,41 @@ class PlayListSongs extends StatelessWidget {
                                   color: Colors.grey.shade300,
                                 ),
                               ),
-                              trailing: Column(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () =>
-                                        songData.toggleIsFav(songs[index]),
-                                    child: Icon(
-                                      songData.isFav(songs[index].id)
-                                          ? Icons.favorite
-                                          : Icons.favorite_border,
-                                      color: songData.isFav(songs[index].id)
-                                          ? Colors.red
-                                          : ambientBg,
+                              trailing: PopupMenuButton(
+                                icon: const Icon(
+                                  Icons.more_vert,
+                                  color: Colors.white,
+                                ),
+                                itemBuilder: (BuildContext context) => [
+                                  PopupMenuItem(
+                                    onTap: () => audioQuery.removeFromPlaylist(
+                                      playlist.id,
+                                      songs[index].id,
+                                    ),
+                                    child: const Text(
+                                      'Remove from list',
                                     ),
                                   ),
-                                  const SizedBox(height: 5),
-                                  const Icon(
-                                    Icons.play_circle,
-                                    color: ambientBg,
+                                  PopupMenuItem(
+                                    onTap: () =>
+                                        songData.toggleIsFav(songs[index]),
+                                    child: Text(
+                                      songData.isFav(songs[index].id)
+                                          ? 'Remove from favorites'
+                                          : 'Add to favorites',
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () => {},
+                                    child: const Text(
+                                      'Set as ringtone',
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () => {},
+                                    child: const Text(
+                                      'Delete Song',
+                                    ),
                                   ),
                                 ],
                               ),
@@ -314,7 +333,7 @@ class PlayListSongs extends StatelessWidget {
               ],
             ),
           ),
-
+        ),
       ),
     );
   }

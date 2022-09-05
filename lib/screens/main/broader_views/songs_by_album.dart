@@ -38,7 +38,9 @@ class AlbumSongs extends StatelessWidget {
             right: 18.0,
             top: 45.0,
           ),
-          child:  Column(
+          child: SingleChildScrollView(
+          child:
+          Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
@@ -197,7 +199,7 @@ class AlbumSongs extends StatelessWidget {
             ),
           ),
         ),
-     
+      ),
     );
   }
 }
