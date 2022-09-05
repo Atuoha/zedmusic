@@ -7,7 +7,7 @@ import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
 
 class SongPlayer extends StatelessWidget {
-  static const routeName = '/songs';
+  static const routeName = '/songplayer';
 
   SongPlayer({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
@@ -39,7 +39,34 @@ class SongPlayer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Builder(
+                      builder: (context) => GestureDetector(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: Container(
+                          height: 25,
+                          width: 30,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white,
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.keyboard_arrow_down,
+                              color: primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    // const SizedBox(width: 50),
+                    Image.asset('assets/images/small_logo.png'),
 
+                  ],
+                ),
+                Text(song.title)
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
+import 'package:zedmusic/screens/main/details/song_player.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
@@ -127,48 +128,56 @@ class SongsView extends StatelessWidget {
                         itemCount: songs!.length,
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: QueryArtworkWidget(
-                              id: songs[index].id,
-                              type: ArtworkType.AUDIO,
-                              artworkFit: BoxFit.cover,
-                              artworkBorder: BorderRadius.circular(30),
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                              SongPlayer.routeName,
+                              arguments: {
+                                'song': songs[index],
+                              },
                             ),
-                            title: Text(
-                              songs[index].title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: QueryArtworkWidget(
+                                id: songs[index].id,
+                                type: ArtworkType.AUDIO,
+                                artworkFit: BoxFit.cover,
+                                artworkBorder: BorderRadius.circular(30),
                               ),
-                            ),
-                            subtitle: Text(
-                              songs[index].artist!,
-                              style: TextStyle(
-                                color: Colors.grey.shade300,
+                              title: Text(
+                                songs[index].title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            trailing: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () =>
-                                      songData.toggleIsFav(songs[index]),
-                                  child: Icon(
-                                    songData.isFav(songs[index].id)
-                                        ? Icons.favorite
-                                        : Icons.favorite_border,
-                                    color: songData.isFav(songs[index].id)
-                                        ? Colors.red
-                                        : ambientBg,
+                              subtitle: Text(
+                                songs[index].artist!,
+                                style: TextStyle(
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                              trailing: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () =>
+                                        songData.toggleIsFav(songs[index]),
+                                    child: Icon(
+                                      songData.isFav(songs[index].id)
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: songData.isFav(songs[index].id)
+                                          ? Colors.red
+                                          : ambientBg,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 5),
-                                const Icon(
-                                  Icons.play_circle,
-                                  color: ambientBg,
-                                ),
-                              ],
+                                  const SizedBox(height: 5),
+                                  const Icon(
+                                    Icons.play_circle,
+                                    color: ambientBg,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

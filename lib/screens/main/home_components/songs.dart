@@ -3,6 +3,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
 import '../broader_views/songs.dart';
+import '../details/song_player.dart';
 
 class Songs extends StatelessWidget {
   Songs({Key? key}) : super(key: key);
@@ -82,30 +83,38 @@ class Songs extends StatelessWidget {
                 itemCount: songs.length,
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: ListTile(
-                    leading: QueryArtworkWidget(
-                      id: songs[index].id,
-                      type: ArtworkType.AUDIO,
-                      artworkFit: BoxFit.cover,
-                      artworkBorder: BorderRadius.circular(30),
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed(
+                      SongPlayer.routeName,
+                      arguments: {
+                        'song': songs[index],
+                      },
                     ),
-                    title: Text(
-                      songs[index].displayName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
+                    child: ListTile(
+                      leading: QueryArtworkWidget(
+                        id: songs[index].id,
+                        type: ArtworkType.AUDIO,
+                        artworkFit: BoxFit.cover,
+                        artworkBorder: BorderRadius.circular(30),
                       ),
-                    ),
-                    subtitle: Text(
-                      songs[index].artist!,
-                      style: TextStyle(
-                        color: Colors.grey.shade300,
+                      title: Text(
+                        songs[index].displayName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    trailing: const Icon(
-                      Icons.play_circle,
-                      color: ambientBg,
+                      subtitle: Text(
+                        songs[index].artist!,
+                        style: TextStyle(
+                          color: Colors.grey.shade300,
+                        ),
+                      ),
+                      trailing: const Icon(
+                        Icons.play_circle,
+                        color: ambientBg,
+                      ),
                     ),
                   ),
                 ),

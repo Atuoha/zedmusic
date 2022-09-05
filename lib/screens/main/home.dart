@@ -92,19 +92,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
             //  PLAYLISTS
             Playlists(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
 
             //  ALBUMS
             Albums(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
 
             // ARTISTES
             Artistes(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
 
             // GENRES
             Genres(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
 
             // SONGS
             Songs()

@@ -74,7 +74,6 @@ class Genres extends StatelessWidget {
             return SizedBox(
               height: 90,
               child: ListView.builder(
-                padding: const EdgeInsets.only(top: 10),
                 scrollDirection: Axis.horizontal,
                 itemCount: genres.length,
                 itemBuilder: (context, index) => Padding(

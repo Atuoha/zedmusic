@@ -77,7 +77,6 @@ class Artistes extends StatelessWidget {
             return SizedBox(
               height: 90,
               child: ListView.builder(
-                padding: const EdgeInsets.only(top: 10),
                 scrollDirection: Axis.horizontal,
                 itemCount: artistes.length,
                 itemBuilder: (context, index) => Padding(

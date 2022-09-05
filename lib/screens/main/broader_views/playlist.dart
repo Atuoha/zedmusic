@@ -224,6 +224,14 @@ class _PlayListViewState extends State<PlayListView> {
     );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        onPressed: () => _showModal(Operation.create, 0),
+        child: const Icon(
+          Icons.add,
+          color: primaryColor,
+        ),
+      ),
       body: KBackground(
         child: Padding(
           padding: const EdgeInsets.only(

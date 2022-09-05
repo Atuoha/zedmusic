@@ -15,6 +15,108 @@ class PlayListSongs extends StatelessWidget {
   PlayListSongs({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
 
+  showMusics(BuildContext context) {
+    showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(20),
+          topLeft: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            const SearchBox(),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  FutureBuilder<List<SongModel>>(
+                    future: audioQuery.querySongs(
+                      orderType: OrderType.ASC_OR_SMALLER,
+                      sortType: null,
+                      ignoreCase: true,
+                    ),
+                    builder: (context, item) {
+                      var songs = item.data;
+                      if (item.data == null) {
+                        return const Center(
+                          child: Loading(),
+                        );
+                      }
+                      if (item.data!.isEmpty) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/empty.png',
+                              width: 90,
+                            ),
+                            const SizedBox(width: 10),
+                            const Text(
+                              'Songs are empty!',
+                              style: TextStyle(
+                                color: searchBoxBg,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+
+                      return SizedBox(
+                        height: 360,
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: songs!.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10.0),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: QueryArtworkWidget(
+                                id: songs[index].id,
+                                type: ArtworkType.AUDIO,
+                                artworkFit: BoxFit.cover,
+                                artworkBorder: BorderRadius.circular(30),
+                              ),
+                              title: Text(
+                                songs[index].title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              subtitle: Text(
+                                songs[index].artist!,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              trailing: Column(
+                                children: const [
+                                  Icon(
+                                    Icons.add_box_rounded,
+                                    color: primaryColor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var data =
@@ -30,10 +132,11 @@ class PlayListSongs extends StatelessWidget {
       ),
     );
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white,
-        onPressed: () => {},
+        onPressed: () => showMusics(context),
         child: const Icon(
           Icons.add,
           color: primaryColor,
@@ -95,11 +198,14 @@ class PlayListSongs extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                Image.asset(
-                  'assets/images/playlist1.png',
-                  height: 200,
-                  width:double.infinity,
-                  fit: BoxFit.cover,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(
+                    'assets/images/playlist1.png',
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 FutureBuilder<List<SongModel>>(
