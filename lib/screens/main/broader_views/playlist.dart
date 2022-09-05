@@ -385,7 +385,7 @@ class _PlayListViewState extends State<PlayListView> {
                                       },
                                       icon: const Icon(
                                         Icons.edit_note,
-                                        color: ambientBg,
+                                        color: pColor,
                                       ),
                                     ),
                                     IconButton(

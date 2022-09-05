@@ -9,10 +9,16 @@ import '../../../components/searchbox.dart';
 import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
 
-class PlayListSongs extends StatelessWidget {
+class PlayListSongs extends StatefulWidget {
   static const routeName = '/playlistsongs';
 
-  PlayListSongs({Key? key}) : super(key: key);
+  const PlayListSongs({Key? key}) : super(key: key);
+
+  @override
+  State<PlayListSongs> createState() => _PlayListSongsState();
+}
+
+class _PlayListSongsState extends State<PlayListSongs> {
   final OnAudioQuery audioQuery = OnAudioQuery();
 
   showMusics(BuildContext context, int playlistId, SongData songData) {
@@ -98,16 +104,23 @@ class PlayListSongs extends StatelessWidget {
                                 children: [
                                   songData.isSongInPlaylist(
                                           songs[index].id, playlistId)
-                                      ? const Icon(Icons.check_box,
-                                          color: primaryColor)
+                                      ? const Icon(
+                                          Icons.check_box,
+                                          color: pColor,
+                                        )
                                       : GestureDetector(
-                                          onTap: () => audioQuery.addToPlaylist(
-                                            playlistId,
-                                            songs[index].id,
-                                          ),
+                                          onTap: () => {
+                                            setState(() {
+                                              audioQuery.addToPlaylist(
+                                                playlistId,
+                                                songs[index].id,
+                                              );
+                                            }),
+                                            Navigator.of(context).pop()
+                                          },
                                           child: const Icon(
                                             Icons.add_box_rounded,
-                                            color: primaryColor,
+                                            color: pColor,
                                           ),
                                         ),
                                 ],
@@ -213,7 +226,7 @@ class PlayListSongs extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   child: Image.asset(
                     'assets/images/playlist1.png',
-                    height: 200,
+                    height: 210,
                     width: double.infinity,
                     fit: BoxFit.cover,
                   ),
@@ -230,7 +243,6 @@ class PlayListSongs extends StatelessWidget {
                     ),
                     builder: (context, item) {
                       var songs = item.data;
-                      print(songs);
                       if (songs == null) {
                         return const Center(
                           child: Loading(),
@@ -264,12 +276,10 @@ class PlayListSongs extends StatelessWidget {
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
-                              leading: QueryArtworkWidget(
-                                artworkColor: Colors.white,
-                                id: songs[index].id,
-                                type: ArtworkType.AUDIO,
-                                artworkFit: BoxFit.cover,
-                                artworkBorder: BorderRadius.circular(30),
+                              leading: const CircleAvatar(
+                                backgroundImage: AssetImage(
+                                  'assets/images/play.gif',
+                                ),
                               ),
                               title: Text(
                                 songs[index].title,
@@ -292,10 +302,14 @@ class PlayListSongs extends StatelessWidget {
                                 ),
                                 itemBuilder: (BuildContext context) => [
                                   PopupMenuItem(
-                                    onTap: () => audioQuery.removeFromPlaylist(
-                                      playlist.id,
-                                      songs[index].id,
-                                    ),
+                                    onTap: () => {
+                                      setState(() {
+                                        audioQuery.removeFromPlaylist(
+                                          playlist.id,
+                                          songs[index].id,
+                                        );
+                                      })
+                                    },
                                     child: const Text(
                                       'Remove from list',
                                     ),
@@ -307,6 +321,12 @@ class PlayListSongs extends StatelessWidget {
                                       songData.isFav(songs[index].id)
                                           ? 'Remove from favorites'
                                           : 'Add to favorites',
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () => {},
+                                    child: const Text(
+                                      'Share',
                                     ),
                                   ),
                                   PopupMenuItem(
