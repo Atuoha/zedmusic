@@ -89,7 +89,7 @@ class Albums extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       Text(
-                       '${albums[index].album.substring(0,8)}...',
+                       '${albums[index].album.substring(0,4)}...',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

@@ -21,7 +21,11 @@ class PlayListSongs extends StatefulWidget {
 class _PlayListSongsState extends State<PlayListSongs> {
   final OnAudioQuery audioQuery = OnAudioQuery();
 
-  showMusics(BuildContext context, int playlistId, SongData songData) {
+  showMusics(
+    BuildContext context,
+    int playlistId,
+    SongData songData,
+  ) {
     showModalBottomSheet(
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -47,12 +51,12 @@ class _PlayListSongsState extends State<PlayListSongs> {
                     ),
                     builder: (context, item) {
                       var songs = item.data;
-                      if (item.data == null) {
+                      if (songs == null) {
                         return const Center(
                           child: Loading(),
                         );
                       }
-                      if (item.data!.isEmpty) {
+                      if (songs.isEmpty) {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -75,7 +79,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
                         height: 365,
                         child: ListView.builder(
                           padding: EdgeInsets.zero,
-                          itemCount: songs!.length,
+                          itemCount: songs.length,
                           itemBuilder: (context, index) => Padding(
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: ListTile(
@@ -314,21 +318,16 @@ class _PlayListSongsState extends State<PlayListSongs> {
                                       'Remove from list',
                                     ),
                                   ),
-                                  PopupMenuItem(
-                                    onTap: () =>
-                                        songData.toggleIsFav(songs[index]),
-                                    child: Text(
-                                      songData.isFav(songs[index].id)
-                                          ? 'Remove from favorites'
-                                          : 'Add to favorites',
-                                    ),
-                                  ),
-                                  PopupMenuItem(
-                                    onTap: () => {},
-                                    child: const Text(
-                                      'Share',
-                                    ),
-                                  ),
+                                  // PopupMenuItem(
+                                  //   onTap: () =>
+                                  //       songData.toggleIsFav(songs[index]),
+                                  //   child: Text(
+                                  //     songData.isFav(songs[index].id)
+                                  //         ? 'Remove from favorites'
+                                  //         : 'Add to favorites',
+                                  //   ),
+                                  // ),
+
                                   PopupMenuItem(
                                     onTap: () => {},
                                     child: const Text(
@@ -339,6 +338,12 @@ class _PlayListSongsState extends State<PlayListSongs> {
                                     onTap: () => {},
                                     child: const Text(
                                       'Delete Song',
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    onTap: () => {},
+                                    child: const Text(
+                                      'Share',
                                     ),
                                   ),
                                 ],

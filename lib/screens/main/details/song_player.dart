@@ -15,8 +15,8 @@ class SongPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var data =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    SongModel song  = data['song'];
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    SongModel song = data['song'];
     var songData = Provider.of<SongData>(context);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -63,7 +63,40 @@ class SongPlayer extends StatelessWidget {
                     ),
                     // const SizedBox(width: 50),
                     Image.asset('assets/images/small_logo.png'),
-
+                    PopupMenuButton(
+                      icon: const Icon(
+                        Icons.more_vert,
+                        color: Colors.white,
+                      ),
+                      itemBuilder: (BuildContext context) => [
+                        PopupMenuItem(
+                          onTap: () => songData.toggleIsFav(song),
+                          child: Text(
+                            songData.isFav(song.id)
+                                ? 'Remove from favorites'
+                                : 'Add to favorites',
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () => {},
+                          child: const Text(
+                            'Set as ringtone',
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () => {},
+                          child: const Text(
+                            'Delete Song',
+                          ),
+                        ),
+                        PopupMenuItem(
+                          onTap: () => {},
+                          child: const Text(
+                            'Share',
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 Text(song.title)

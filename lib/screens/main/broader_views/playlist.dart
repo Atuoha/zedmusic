@@ -23,8 +23,6 @@ class _PlayListViewState extends State<PlayListView> {
   final OnAudioQuery audioQuery = OnAudioQuery();
   final playlistNameController = TextEditingController();
 
-
-
   message(String message) {
     return ScaffoldMessenger(
       child: SnackBar(
@@ -39,176 +37,173 @@ class _PlayListViewState extends State<PlayListView> {
     );
   }
 
+  // add and rename playlist
+  _addAndEditPlaylist(Operation operation, int playlistId) {
+    if (playlistNameController.text.isEmpty) {
+      message('Input is empty');
+      return;
+    } else {
+      switch (operation) {
+        case Operation.create:
+          audioQuery.createPlaylist(playlistNameController.text);
+          break;
+
+        case Operation.edit:
+          audioQuery.renamePlaylist(playlistId, playlistNameController.text);
+          break;
+      }
+      playlistNameController.text = "";
+      Navigator.of(context).pop();
+    }
+  }
+
+  // show modal for playlist creation and renaming
+  _showModal(Operation operation, int playlistId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Wrap(
+          children: const [
+            Icon(
+              Icons.music_note,
+              size: 30,
+              color: primaryColor,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'ZedMusic',
+              style: TextStyle(
+                color: primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        content: TextField(
+          autofocus: true,
+          controller: playlistNameController,
+          decoration: const InputDecoration(
+            hintText: 'New Playlist Name',
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: btnBg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(5),
+            ),
+            onPressed: () {
+              switch (operation) {
+                case Operation.create:
+                  _addAndEditPlaylist(Operation.create, 0);
+                  break;
+
+                case Operation.edit:
+                  _addAndEditPlaylist(Operation.edit, playlistId);
+                  break;
+              }
+            },
+            child: Text(
+              operation == Operation.create
+                  ? 'Add Playlist'
+                  : 'Rename Playlist',
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: btnBg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(5),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Delete Request Modal
+  _deleteRequestModal(String playlist, int playlistId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Wrap(
+          children: const [
+            Icon(
+              Icons.music_note,
+              size: 30,
+              color: primaryColor,
+            ),
+            SizedBox(width: 5),
+            Text(
+              'ZedMusic',
+              style: TextStyle(
+                color: primaryColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        content: Text('Do you want to delete $playlist playlist?'),
+        actions: [
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: btnBg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(5),
+            ),
+            onPressed: () => {
+              setState(() {
+                audioQuery.removePlaylist(playlistId);
+              }),
+              Navigator.of(context).pop(),
+            },
+            child: const Text(
+              'Yes',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: btnBg,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(5),
+            ),
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'No',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    // add and rename playlist
-    _addAndEditPlaylist(Operation operation, int playlistId){
-      if (playlistNameController.text.isEmpty) {
-        message('Input is empty');
-        return;
-      } else {
-        switch (operation) {
-          case Operation.create:
-            audioQuery.createPlaylist(playlistNameController.text);
-            break;
-
-          case Operation.edit:
-              audioQuery.renamePlaylist(playlistId, playlistNameController.text);
-            break;
-        }
-
-        playlistNameController.text = "";
-        Navigator.of(context).pop();
-      }
-    }
-
-    // show modal for playlist creation and renaming
-    _showModal(Operation operation, int playlistId) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Wrap(
-            children: const [
-              Icon(
-                Icons.music_note,
-                size: 30,
-                color: primaryColor,
-              ),
-              SizedBox(width: 5),
-              Text(
-                'ZedMusic',
-                style: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          content: TextField(
-            autofocus: true,
-            controller: playlistNameController,
-            decoration: const InputDecoration(
-              hintText: 'New Playlist Name',
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: btnBg,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(5),
-              ),
-              onPressed: () {
-                switch (operation) {
-                  case Operation.create:
-                    _addAndEditPlaylist(Operation.create, 0);
-                    break;
-
-                  case Operation.edit:
-                    _addAndEditPlaylist(Operation.edit, playlistId);
-                    break;
-                }
-              },
-              child: Text(
-                operation == Operation.create
-                    ? 'Add Playlist'
-                    : 'Rename Playlist',
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: btnBg,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(5),
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    // Delete Request Modal
-    _deleteRequestModal(String playlist, int playlistId) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Wrap(
-            children: const [
-              Icon(
-                Icons.music_note,
-                size: 30,
-                color: primaryColor,
-              ),
-              SizedBox(width: 5),
-              Text(
-                'ZedMusic',
-                style: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          content: Text('Do you want to delete $playlist playlist?'),
-          actions: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: btnBg,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(5),
-              ),
-              onPressed: () => {
-                setState(() {
-                  audioQuery.removePlaylist(playlistId);
-                }),
-                Navigator.of(context).pop(),
-              },
-              child: const Text(
-                'Yes',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: btnBg,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(5),
-              ),
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text(
-                'No',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
     final orientation = MediaQuery.of(context).orientation;
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
