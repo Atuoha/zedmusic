@@ -6,12 +6,34 @@ import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
+import 'package:just_audio/just_audio.dart';
 
 class SongPlayer extends StatelessWidget {
   static const routeName = '/songplayer';
 
   SongPlayer({Key? key}) : super(key: key);
   final OnAudioQuery audioQuery = OnAudioQuery();
+  final player = AudioPlayer();
+
+  // PLAY SONG
+  _playSong(String? uri) {
+    player.setAudioSource(
+      AudioSource.uri(
+        Uri.parse(uri!),
+      ),
+    );
+    player.play();
+  }
+
+  // PAUSE SONG
+  _pauseSong(String? uri) {
+    player.setAudioSource(
+      AudioSource.uri(
+        Uri.parse(uri!),
+      ),
+    );
+    player.pause();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,9 +142,12 @@ class SongPlayer extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FittedBox(
+                    SizedBox(
+                      width: size.width / 1.5,
                       child: Text(
                         song.title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: ambientBg,
                           fontWeight: FontWeight.w600,
@@ -147,6 +172,56 @@ class SongPlayer extends StatelessWidget {
                   style: const TextStyle(
                     color: searchBoxBg,
                   ),
+                ),
+                const SizedBox(height: 20),
+
+                //TODO: Music Progress and Seeking
+                const SizedBox(height: 10),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () => {},
+                      child: const Icon(
+                        Icons.repeat,
+                        color: accentColor,
+                        size: 30,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => {},
+                      child: const Icon(
+                        Icons.skip_previous_outlined,
+                        color: accentColor,
+                        size: 30,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => {},
+                      child: const Icon(
+                        Icons.play_circle_outlined,
+                        color: accentColor,
+                        size: 60,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => {},
+                      child: const Icon(
+                        Icons.skip_next_outlined,
+                        color: accentColor,
+                        size: 30,
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => {},
+                      child: const Icon(
+                        Icons.shuffle_outlined,
+                        color: accentColor,
+                        size: 30,
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),
