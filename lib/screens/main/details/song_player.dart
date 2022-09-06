@@ -22,7 +22,7 @@ class SongPlayer extends StatelessWidget {
         Uri.parse(uri!),
       ),
     );
-    player.play();
+    player.pause();
   }
 
   // PAUSE SONG
@@ -198,9 +198,13 @@ class SongPlayer extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => {},
-                      child: const Icon(
-                        Icons.play_circle_outlined,
+                      onTap: () => player.playing
+                          ? _playSong(song.uri)
+                          : _pauseSong(song.uri),
+                      child: Icon(
+                        player.playing
+                            ? Icons.pause_circle_outline
+                            : Icons.play_circle_outlined,
                         color: accentColor,
                         size: 60,
                       ),
