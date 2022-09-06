@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../components/kBackground.dart';
+import '../../../components/kText.dart';
 import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
 
@@ -99,7 +100,54 @@ class SongPlayer extends StatelessWidget {
                     ),
                   ],
                 ),
-                Text(song.title)
+                const SizedBox(height: 20),
+                const KText(
+                  firstText: 'Pla',
+                  secondText: 'yer',
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 230,
+                  width: double.infinity,
+                  child: QueryArtworkWidget(
+                    id: song.id,
+                    type: ArtworkType.AUDIO,
+                    artworkFit: BoxFit.cover,
+                    artworkBorder: BorderRadius.circular(20),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FittedBox(
+                      child: Text(
+                        song.title,
+                        style: const TextStyle(
+                          color: ambientBg,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => songData.toggleIsFav(song),
+                      child: Icon(
+                        songData.isFav(song.id)
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: songData.isFav(song.id) ? Colors.red : ambientBg,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  song.artist!,
+                  style: const TextStyle(
+                    color: searchBoxBg,
+                  ),
+                )
               ],
             ),
           ),
