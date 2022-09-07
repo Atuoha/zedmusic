@@ -389,7 +389,7 @@ class _PlayListViewState extends State<PlayListView> {
                                         playlists[index].id,
                                       ),
                                       icon: const Icon(
-                                        Icons.delete_forever,
+                                        Icons.playlist_remove,
                                         color: ambientBg,
                                       ),
                                     )

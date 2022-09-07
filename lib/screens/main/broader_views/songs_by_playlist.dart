@@ -109,7 +109,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
                                   songData.isSongInPlaylist(
                                           songs[index].id, playlistId)
                                       ? const Icon(
-                                          Icons.check_box,
+                                          Icons.playlist_add_check,
                                           color: pColor,
                                         )
                                       : GestureDetector(
@@ -123,7 +123,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
                                             Navigator.of(context).pop()
                                           },
                                           child: const Icon(
-                                            Icons.add_box_rounded,
+                                            Icons.playlist_add,
                                             color: pColor,
                                           ),
                                         ),

@@ -4,42 +4,140 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
+import '../../../components/seekbar.dart';
 import '../../../constants/colors.dart';
+import '../../../providerdata.dart';
 import '../../../providers/song.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:rxdart/rxdart.dart';
 
-class SongPlayer extends StatelessWidget {
-  static const routeName = '/songplayer';
+class SongPlayer extends StatefulWidget {
+  const SongPlayer({Key? key, required this.song}) : super(key: key);
+  final SongModel song;
 
-  SongPlayer({Key? key}) : super(key: key);
+  @override
+  State<SongPlayer> createState() => _SongPlayerState();
+}
+
+class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   final OnAudioQuery audioQuery = OnAudioQuery();
+
   final player = AudioPlayer();
 
   // PLAY SONG
   _playSong(String? uri) {
-    player.setAudioSource(
-      AudioSource.uri(
-        Uri.parse(uri!),
-      ),
-    );
-    player.pause();
+    player.play();
   }
 
   // PAUSE SONG
   _pauseSong(String? uri) {
-    player.setAudioSource(
-      AudioSource.uri(
-        Uri.parse(uri!),
-      ),
-    );
     player.pause();
   }
 
+  bool isRepeatOne = false;
+  bool isShuffle = false;
+
+  _toggleIsRepeat() {
+    setState(() {
+      isRepeatOne = !isRepeatOne;
+    });
+
+    if (isRepeatOne) {
+      setState(() {
+        player.setLoopMode(LoopMode.one);
+        player.loopMode;
+      });
+    } else {
+      setState(() {
+        player.setLoopMode(LoopMode.all);
+        player.loopMode;
+      });
+    }
+  }
+
+  _toggleIsShuffle() {
+    setState(() {
+      isShuffle = !isShuffle;
+      player.setShuffleModeEnabled(isShuffle);
+    });
+    if (isShuffle) {
+      player.shuffle();
+    }
+  }
+
+  _skipNext() {
+    if (player.hasNext) {
+      player.seekToNext();
+    }
+  }
+
+  _skipPrevious() {
+    if (player.hasPrevious) {
+      player.seekToPrevious();
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    try {
+      player.setAudioSource(
+        AudioSource.uri(
+          Uri.parse(widget.song.uri!),
+        ),
+      );
+      player.play();
+    } on Exception {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: primaryColor,
+          content: Text(
+            'Song can not play!',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    player.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      // Release the player's resources when not in use. We use "stop" so that
+      // if the app resumes later, it will still remember what position to
+      // resume from.
+      player.stop();
+    }
+  }
+
+  /// Collects the data useful for displaying in a seek bar, using a handy
+  /// feature of rx_dart to combine the 3 streams of interest into one.
+  Stream<PositionData> get _positionDataStream =>
+      Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+        player.positionStream,
+        player.bufferedPositionStream,
+        player.durationStream,
+        (position, bufferedPosition, duration) => PositionData(
+          position,
+          bufferedPosition,
+          duration ?? Duration.zero,
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
-    var data =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    SongModel song = data['song'];
     var songData = Provider.of<SongData>(context);
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -93,9 +191,9 @@ class SongPlayer extends StatelessWidget {
                       ),
                       itemBuilder: (BuildContext context) => [
                         PopupMenuItem(
-                          onTap: () => songData.toggleIsFav(song),
+                          onTap: () => songData.toggleIsFav(widget.song),
                           child: Text(
-                            songData.isFav(song.id)
+                            songData.isFav(widget.song.id)
                                 ? 'Remove from favorites'
                                 : 'Add to favorites',
                           ),
@@ -129,10 +227,10 @@ class SongPlayer extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
-                  height: 230,
+                  height: 380,
                   width: double.infinity,
                   child: QueryArtworkWidget(
-                    id: song.id,
+                    id: widget.song.id,
                     type: ArtworkType.AUDIO,
                     artworkFit: BoxFit.cover,
                     artworkBorder: BorderRadius.circular(20),
@@ -145,7 +243,7 @@ class SongPlayer extends StatelessWidget {
                     SizedBox(
                       width: size.width / 1.5,
                       child: Text(
-                        song.title,
+                        widget.song.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -156,41 +254,94 @@ class SongPlayer extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => songData.toggleIsFav(song),
+                      onTap: () => songData.toggleIsFav(widget.song),
                       child: Icon(
-                        songData.isFav(song.id)
+                        songData.isFav(widget.song.id)
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: songData.isFav(song.id) ? Colors.red : ambientBg,
+                        color: songData.isFav(widget.song.id)
+                            ? Colors.red
+                            : ambientBg,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  song.artist!,
+                  widget.song.artist == '<unknown>'
+                      ? 'Unknown Artist'
+                      : widget.song.artist!,
                   style: const TextStyle(
                     color: searchBoxBg,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
 
                 //TODO: Music Progress and Seeking
-                const SizedBox(height: 10),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //
+                //
+                //     Text(
+                //       player.position.toString(),
+                //       style: const TextStyle(
+                //         color: accentColor,
+                //       ),
+                //     ),
+                //     Text(
+                //       player.bufferedPosition.toString().substring(0, 7),
+                //       style: const TextStyle(
+                //         color: accentColor,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // SliderTheme(
+                //   data: SliderThemeData(
+                //     overlayShape: SliderComponentShape.noOverlay,
+                //     trackHeight: 1,
+                //   ),
+                //   child: Container(
+                //     width: 800,
+                //     child: Slider(
+                //       onChanged: (double value) {},
+                //       value: 50,
+                //       thumbColor: accentColor,
+                //       activeColor: accentColor,
+                //       inactiveColor: Colors.grey.shade400,
+                //       max: 200,
+                //     ),
+                //   ),
+                // ),
+                // const SizedBox(height: 10),
+
+                StreamBuilder<PositionData>(
+                    stream: _positionDataStream,
+                    builder: (context, snapshot) {
+                      final positionData = snapshot.data;
+                      return SeekBar(
+                        duration: positionData?.duration ?? Duration.zero,
+                        position: positionData?.position ?? Duration.zero,
+                        bufferedPosition:
+                            positionData?.bufferedPosition ?? Duration.zero,
+                        onChangeEnd: player.seek,
+                      );
+                    }),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => {},
-                      child: const Icon(
-                        Icons.repeat,
+                      onTap: () => _toggleIsRepeat(),
+                      child: Icon(
+                        isRepeatOne ? Icons.repeat_one_outlined : Icons.repeat,
                         color: accentColor,
                         size: 30,
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => {},
+                      onTap: () => _skipPrevious(),
                       child: const Icon(
                         Icons.skip_previous_outlined,
                         color: accentColor,
@@ -198,9 +349,15 @@ class SongPlayer extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => player.playing
-                          ? _playSong(song.uri)
-                          : _pauseSong(song.uri),
+                      onTap: () => {
+                        player.playing
+                            ? setState(() {
+                                _pauseSong(widget.song.uri);
+                              })
+                            : setState(() {
+                                _playSong(widget.song.uri);
+                              })
+                      },
                       child: Icon(
                         player.playing
                             ? Icons.pause_circle_outline
@@ -210,7 +367,7 @@ class SongPlayer extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => {},
+                      onTap: () => _skipNext(),
                       child: const Icon(
                         Icons.skip_next_outlined,
                         color: accentColor,
@@ -218,10 +375,10 @@ class SongPlayer extends StatelessWidget {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => {},
-                      child: const Icon(
+                      onTap: () => _toggleIsShuffle(),
+                      child: Icon(
                         Icons.shuffle_outlined,
-                        color: accentColor,
+                        color: isShuffle ? accentColor : Colors.grey.shade500,
                         size: 30,
                       ),
                     ),
@@ -235,3 +392,5 @@ class SongPlayer extends StatelessWidget {
     );
   }
 }
+
+class _positionDataStream {}

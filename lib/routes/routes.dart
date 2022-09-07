@@ -29,5 +29,5 @@ var routes = {
   AlbumsView.routeName: (context) => AlbumsView(),
   AlbumSongs.routeName: (context) => AlbumSongs(),
   PlayListSongs.routeName: (context) => PlayListSongs(),
-  SongPlayer.routeName: (context) => SongPlayer(),
+
 };

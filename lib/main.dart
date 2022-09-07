@@ -12,7 +12,7 @@ class MusicApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context)=> SongData(),
+      create: (context) => SongData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'Roboto'),
@@ -22,8 +22,6 @@ class MusicApp extends StatelessWidget {
     );
   }
 }
-
-
 
 // ISSUES TO FIX
 // - RENAMING PLAYLIST NOT WORKING

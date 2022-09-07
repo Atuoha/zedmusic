@@ -9,12 +9,49 @@ import '../../../components/loading.dart';
 import '../../../components/searchbox.dart';
 import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
+import 'package:just_audio/just_audio.dart';
 
-class SongsView extends StatelessWidget {
+class SongsView extends StatefulWidget {
   static const routeName = '/songs';
 
-  SongsView({Key? key}) : super(key: key);
+  const SongsView({Key? key}) : super(key: key);
+
+  @override
+  State<SongsView> createState() => _SongsViewState();
+}
+
+class _SongsViewState extends State<SongsView> {
   final OnAudioQuery audioQuery = OnAudioQuery();
+  final player = AudioPlayer();
+
+  // PLAY SONG
+  _playSong(String? uri) {
+    try {
+      player.setAudioSource(
+        AudioSource.uri(
+          Uri.parse(uri!),
+        ),
+      );
+      player.play();
+    } on Exception {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: primaryColor,
+          content: Text(
+            'Song can not play!',
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  // PAUSE SONG
+  _pauseSong(String? uri) {
+    player.pause();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,12 +166,16 @@ class SongsView extends StatelessWidget {
                         itemBuilder: (context, index) => Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                              SongPlayer.routeName,
-                              arguments: {
-                                'song': songs[index],
-                              },
-                            ),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => SongPlayer(
+                                    song: songs[index],
+                                  ),
+                                ),
+                              );
+                              player.pause();
+                            },
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
                               leading: QueryArtworkWidget(
