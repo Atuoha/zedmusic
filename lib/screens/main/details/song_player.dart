@@ -34,6 +34,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     player.pause();
   }
 
+
   bool isRepeatOne = false;
   bool isShuffle = false;
 
@@ -87,6 +88,9 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
           Uri.parse(widget.song.uri!),
         ),
       );
+      if (player.playing) {
+        player.pause();
+      }
       player.play();
     } on Exception {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,7 +112,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   @override
   void dispose() {
     // TODO: implement dispose
-    player.dispose();
+    // player.dispose();
     super.dispose();
   }
 
@@ -118,12 +122,11 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
       // Release the player's resources when not in use. We use "stop" so that
       // if the app resumes later, it will still remember what position to
       // resume from.
-      player.stop();
+      // player.stop();
     }
   }
 
   /// Collects the data useful for displaying in a seek bar, using a handy
-  /// feature of rx_dart to combine the 3 streams of interest into one.
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         player.positionStream,
@@ -277,57 +280,20 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                 ),
                 const SizedBox(height: 40),
 
-                //TODO: Music Progress and Seeking
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //
-                //
-                //     Text(
-                //       player.position.toString(),
-                //       style: const TextStyle(
-                //         color: accentColor,
-                //       ),
-                //     ),
-                //     Text(
-                //       player.bufferedPosition.toString().substring(0, 7),
-                //       style: const TextStyle(
-                //         color: accentColor,
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // SliderTheme(
-                //   data: SliderThemeData(
-                //     overlayShape: SliderComponentShape.noOverlay,
-                //     trackHeight: 1,
-                //   ),
-                //   child: Container(
-                //     width: 800,
-                //     child: Slider(
-                //       onChanged: (double value) {},
-                //       value: 50,
-                //       thumbColor: accentColor,
-                //       activeColor: accentColor,
-                //       inactiveColor: Colors.grey.shade400,
-                //       max: 200,
-                //     ),
-                //   ),
-                // ),
-                // const SizedBox(height: 10),
-
                 StreamBuilder<PositionData>(
-                    stream: _positionDataStream,
-                    builder: (context, snapshot) {
-                      final positionData = snapshot.data;
-                      return SeekBar(
-                        duration: positionData?.duration ?? Duration.zero,
-                        position: positionData?.position ?? Duration.zero,
-                        bufferedPosition:
-                            positionData?.bufferedPosition ?? Duration.zero,
-                        onChangeEnd: player.seek,
-                      );
-                    }),
+                  stream: _positionDataStream,
+                  builder: (context, snapshot) {
+                    final positionData = snapshot.data;
+                    return SeekBar(
+                      duration: positionData?.duration ?? Duration.zero,
+                      position: positionData?.position ?? Duration.zero,
+                      bufferedPosition:
+                          positionData?.bufferedPosition ?? Duration.zero,
+                      onChangeEnd: player.seek,
+                    );
+                  },
+                ),
+                const SizedBox(height: 15),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -393,4 +359,3 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   }
 }
 
-class _positionDataStream {}

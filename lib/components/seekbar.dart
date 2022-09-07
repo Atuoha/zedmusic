@@ -37,32 +37,53 @@ class SeekBarState extends State<SeekBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SliderTheme(
-      data: _sliderThemeData.copyWith(
-          overlayShape: SliderComponentShape.noOverlay,
-          activeTrackColor: accentColor,
-          inactiveTrackColor: Colors.grey.shade300,
-          thumbColor: accentColor),
-      child: Slider(
-        min: 0.0,
-        max: widget.duration.inMilliseconds.toDouble(),
-        value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
-            widget.duration.inMilliseconds.toDouble()),
-        onChanged: (value) {
-          setState(() {
-            _dragValue = value;
-          });
-          if (widget.onChanged != null) {
-            widget.onChanged!(Duration(milliseconds: value.round()));
-          }
-        },
-        onChangeEnd: (value) {
-          if (widget.onChangeEnd != null) {
-            widget.onChangeEnd!(Duration(milliseconds: value.round()));
-          }
-          _dragValue = null;
-        },
-      ),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              widget.position.toString().substring(0, 7),
+              style: const TextStyle(
+                color: accentColor,
+              ),
+            ),
+            Text(
+              '${widget.duration - widget.position}'.substring(0,7),
+              style: const TextStyle(
+                color: accentColor,
+              ),
+            ),
+          ],
+        ),
+        SliderTheme(
+          data: _sliderThemeData.copyWith(
+              overlayShape: SliderComponentShape.noOverlay,
+              activeTrackColor: accentColor,
+              inactiveTrackColor: Colors.grey.shade300,
+              thumbColor: accentColor),
+          child: Slider(
+            min: 0.0,
+            max: widget.duration.inMilliseconds.toDouble(),
+            value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
+                widget.duration.inMilliseconds.toDouble()),
+            onChanged: (value) {
+              setState(() {
+                _dragValue = value;
+              });
+              if (widget.onChanged != null) {
+                widget.onChanged!(Duration(milliseconds: value.round()));
+              }
+            },
+            onChangeEnd: (value) {
+              if (widget.onChangeEnd != null) {
+                widget.onChangeEnd!(Duration(milliseconds: value.round()));
+              }
+              _dragValue = null;
+            },
+          ),
+        ),
+      ],
     );
   }
 }
