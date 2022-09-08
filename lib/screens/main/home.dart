@@ -114,6 +114,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+
+          // Bottom Player
           const BottomPlayer(),
         ],
       ),

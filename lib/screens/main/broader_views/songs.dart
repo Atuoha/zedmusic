@@ -272,6 +272,8 @@ class _SongsViewState extends State<SongsView> {
                   ),
                 ),
               ),
+
+              // Bottom Player
               const BottomPlayer()
             ],
           ),
