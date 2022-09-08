@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zedmusic/components/searchbox.dart';
 import 'package:zedmusic/screens/main/home_components/playlists.dart';
+import '../../components/bottomPlayer.dart';
 import '../../constants/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'home_components/albums.dart';
@@ -77,39 +78,44 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.only(
         top: 40.0,
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Image.asset('assets/images/small_logo.png'),
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Image.asset('assets/images/small_logo.png'),
+                ),
+                const SizedBox(height: 15),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 18.0),
+                  child: SearchBox(),
+                ),
+
+                //  PLAYLISTS
+                Playlists(),
+                const SizedBox(height: 5),
+
+                //  ALBUMS
+                Albums(),
+                const SizedBox(height: 5),
+
+                // ARTISTES
+                Artistes(),
+                const SizedBox(height: 5),
+
+                // GENRES
+                Genres(),
+                const SizedBox(height: 5),
+
+                // SONGS
+                Songs()
+              ],
             ),
-            const SizedBox(height: 15),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 18.0),
-              child: SearchBox(),
-            ),
-
-            //  PLAYLISTS
-            Playlists(),
-            const SizedBox(height: 5),
-
-            //  ALBUMS
-            Albums(),
-            const SizedBox(height: 5),
-
-            // ARTISTES
-            Artistes(),
-            const SizedBox(height: 5),
-
-            // GENRES
-            Genres(),
-            const SizedBox(height: 5),
-
-            // SONGS
-            Songs()
-          ],
-        ),
+          ),
+          const BottomPlayer(),
+        ],
       ),
     );
   }

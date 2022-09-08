@@ -1,18 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
+import '../../../providers/song.dart';
 import '../broader_views/songs.dart';
 import '../details/song_player.dart';
 
-class Songs extends StatelessWidget {
+class Songs extends StatefulWidget {
   Songs({Key? key}) : super(key: key);
+
+  @override
+  State<Songs> createState() => _SongsState();
+}
+
+class _SongsState extends State<Songs> {
+  final player = AudioPlayer();
 
   var songsLength;
 
   @override
   Widget build(BuildContext context) {
     final OnAudioQuery audioQuery = OnAudioQuery();
+
+    var songData = Provider.of<SongData>(context);
+
+    // PLAY SONG
+    _playSong(String? uri) {
+      try {
+        songData.player.setAudioSource(
+          AudioSource.uri(
+            Uri.parse(uri!),
+          ),
+        );
+      } on Exception {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: primaryColor,
+            content: Text(
+              'Song can not play!',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
+    // CONTINUE SONG
+    _continueSong() {
+      songData.player.play();
+    }
+
+    // PAUSE SONG
+    _pauseSong() {
+      songData.player.pause();
+    }
+
     return Column(
       children: [
         Padding(
@@ -84,13 +130,18 @@ class Songs extends StatelessWidget {
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: GestureDetector(
-                    // onTap: () => Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => SongPlayer(
-                    //       song: songs[index],
-                    //     ),
-                    //   ),
-                    // ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SongPlayer(
+                            song: songs[index],
+                            player: songData.player,
+                          ),
+                        ),
+                      );
+                      songData.setPlayingSong(songs[index]);
+                      _playSong(songs[index].uri);
+                    },
                     child: ListTile(
                       leading: QueryArtworkWidget(
                         id: songs[index].id,
@@ -112,9 +163,36 @@ class Songs extends StatelessWidget {
                           color: Colors.grey.shade300,
                         ),
                       ),
-                      trailing: const Icon(
-                        Icons.play_circle,
-                        color: ambientBg,
+                      trailing: GestureDetector(
+                        onTap: () => {
+                          if (songData.isPlaying)
+                            {
+                              setState(() {
+                                songData.player.playing
+                                    ? _pauseSong()
+                                    : _continueSong();
+                              })
+                            }
+                          else
+                            {
+                              songData.setPlayingSong(
+                                  songs[index]),
+                              setState(() {
+                                _playSong(songs[index].uri);
+                              })
+                            }
+                        },
+                        child: Icon(
+                          songData.isPlaying
+                              ? songData.playingSong.id ==
+                              songs[index].id
+                              ? songData.player.playing
+                              ? Icons.pause_circle
+                              : Icons.play_circle
+                              : Icons.play_circle
+                              : Icons.play_circle,
+                          color: ambientBg,
+                        ),
                       ),
                     ),
                   ),
