@@ -230,21 +230,27 @@ class _SongsViewState extends State<SongsView> {
                                           onTap: () => {
                                             if (songData.isPlaying)
                                               {
-                                                player.playing
-                                                    ? _pauseSong()
-                                                    : _continueSong()
+                                                setState(() {
+                                                  player.playing
+                                                      ? _pauseSong()
+                                                      : _continueSong();
+                                                })
                                               }
                                             else
                                               {
                                                 songData.setPlayingSong(
                                                     songs[index]),
-                                                _playSong(songs[index].uri),
+                                                setState(() {
+                                                  _playSong(songs[index].uri);
+                                                })
                                               }
                                           },
                                           child: Icon(
                                             songData.playingSong.id ==
                                                     songs[index].id
-                                                ? Icons.pause_circle
+                                                ? player.playing
+                                                    ? Icons.pause_circle
+                                                    : Icons.play_circle
                                                 : Icons.play_circle,
                                             color: ambientBg,
                                           ),
