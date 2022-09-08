@@ -24,46 +24,46 @@ class _SongsViewState extends State<SongsView> {
   final OnAudioQuery audioQuery = OnAudioQuery();
   final player = AudioPlayer();
 
-  // PLAY SONG
-  _playSong(String? uri) {
-    try {
-      player.setAudioSource(
-        AudioSource.uri(
-          Uri.parse(uri!),
-        ),
-      );
-      player.play();
-    } on Exception {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: primaryColor,
-          content: Text(
-            'Song can not play!',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  // CONTINUE SONG
-  _continueSong() {
-    player.play();
-  }
-
-  // PAUSE SONG
-  _pauseSong() {
-    player.pause();
-  }
-
   @override
   Widget build(BuildContext context) {
     var data =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     int songsLength = data['length'];
     var songData = Provider.of<SongData>(context);
+
+    // PLAY SONG
+    _playSong(String? uri) {
+      try {
+        songData.player.setAudioSource(
+          AudioSource.uri(
+            Uri.parse(uri!),
+          ),
+        );
+      } on Exception {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: primaryColor,
+            content: Text(
+              'Song can not play!',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
+    // CONTINUE SONG
+    _continueSong() {
+      songData.player.play();
+    }
+
+    // PAUSE SONG
+    _pauseSong() {
+      songData.player.pause();
+    }
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -174,13 +174,14 @@ class _SongsViewState extends State<SongsView> {
                                 padding: const EdgeInsets.only(bottom: 10.0),
                                 child: GestureDetector(
                                   onTap: () {
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => SongPlayer(
-                                    //       song: songs[index],
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => SongPlayer(
+                                          song: songs[index],
+                                          player: songData.player,
+                                        ),
+                                      ),
+                                    );
                                     songData.setPlayingSong(songs[index]);
                                     _playSong(songs[index].uri);
                                   },
@@ -231,7 +232,7 @@ class _SongsViewState extends State<SongsView> {
                                             if (songData.isPlaying)
                                               {
                                                 setState(() {
-                                                  player.playing
+                                                  songData.player.playing
                                                       ? _pauseSong()
                                                       : _continueSong();
                                                 })
@@ -246,10 +247,12 @@ class _SongsViewState extends State<SongsView> {
                                               }
                                           },
                                           child: Icon(
-                                            songData.playingSong.id ==
-                                                    songs[index].id
-                                                ? player.playing
-                                                    ? Icons.pause_circle
+                                            songData.isPlaying
+                                                ? songData.playingSong.id ==
+                                                        songs[index].id
+                                                    ? songData.player.playing
+                                                        ? Icons.pause_circle
+                                                        : Icons.play_circle
                                                     : Icons.play_circle
                                                 : Icons.play_circle,
                                             color: ambientBg,
@@ -277,43 +280,53 @@ class _SongsViewState extends State<SongsView> {
                         color: primaryColor,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: QueryArtworkWidget(
-                              id: songData.playingSong.id,
-                              type: ArtworkType.AUDIO,
-                              artworkFit: BoxFit.cover,
-                              artworkBorder: BorderRadius.circular(30),
-                            ),
-                            title: Text(
-                              songData.playingSong.title,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SongPlayer(
+                                  song: songData.playingSong,
+                                  player: songData.player,
+                                ),
                               ),
                             ),
-                            subtitle: Text(
-                              songData.playingSong.artist!,
-                              style: TextStyle(
-                                color: Colors.grey.shade300,
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: QueryArtworkWidget(
+                                id: songData.playingSong.id,
+                                type: ArtworkType.AUDIO,
+                                artworkFit: BoxFit.cover,
+                                artworkBorder: BorderRadius.circular(30),
                               ),
-                            ),
-                            trailing: GestureDetector(
-                              onTap: () => {
-                                player.playing
-                                    ? setState(() {
-                                        _pauseSong();
-                                      })
-                                    : setState(() {
-                                        _continueSong();
-                                      })
-                              },
-                              child: Icon(
-                                player.playing
-                                    ? Icons.pause_circle
-                                    : Icons.play_circle,
-                                color: ambientBg,
+                              title: Text(
+                                songData.playingSong.title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              subtitle: Text(
+                                songData.playingSong.artist!,
+                                style: TextStyle(
+                                  color: Colors.grey.shade300,
+                                ),
+                              ),
+                              trailing: GestureDetector(
+                                onTap: () => {
+                                  songData.player.playing
+                                      ? setState(() {
+                                          _pauseSong();
+                                        })
+                                      : setState(() {
+                                          _continueSong();
+                                        })
+                                },
+                                child: Icon(
+                                  songData.player.playing
+                                      ? Icons.pause_circle
+                                      : Icons.play_circle,
+                                  color: ambientBg,
+                                ),
                               ),
                             ),
                           ),

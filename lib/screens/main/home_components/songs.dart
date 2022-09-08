@@ -84,13 +84,13 @@ class Songs extends StatelessWidget {
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: GestureDetector(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => SongPlayer(
-                          song: songs[index],
-                        ),
-                      ),
-                    ),
+                    // onTap: () => Navigator.of(context).push(
+                    //   MaterialPageRoute(
+                    //     builder: (context) => SongPlayer(
+                    //       song: songs[index],
+                    //     ),
+                    //   ),
+                    // ),
                     child: ListTile(
                       leading: QueryArtworkWidget(
                         id: songs[index].id,

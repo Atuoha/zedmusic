@@ -12,8 +12,13 @@ import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SongPlayer extends StatefulWidget {
-  const SongPlayer({Key? key, required this.song}) : super(key: key);
+  const SongPlayer({
+    Key? key,
+    required this.song,
+    required this.player,
+  }) : super(key: key);
   final SongModel song;
+  final AudioPlayer player;
 
   @override
   State<SongPlayer> createState() => _SongPlayerState();
@@ -22,16 +27,18 @@ class SongPlayer extends StatefulWidget {
 class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   final OnAudioQuery audioQuery = OnAudioQuery();
 
-  final player = AudioPlayer();
-
   // PLAY SONG
   _playSong() {
-    player.play();
+    setState(() {
+      widget.player.play();
+    });
   }
 
   // PAUSE SONG
   _pauseSong() {
-    player.pause();
+    setState(() {
+      widget.player.pause();
+    });
   }
 
   bool isRepeatOne = false;
@@ -44,13 +51,13 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
 
     if (isRepeatOne) {
       setState(() {
-        player.setLoopMode(LoopMode.one);
-        player.loopMode;
+        widget.player.setLoopMode(LoopMode.one);
+        widget.player.loopMode;
       });
     } else {
       setState(() {
-        player.setLoopMode(LoopMode.all);
-        player.loopMode;
+        widget.player.setLoopMode(LoopMode.all);
+        widget.player.loopMode;
       });
     }
   }
@@ -58,22 +65,22 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   _toggleIsShuffle() {
     setState(() {
       isShuffle = !isShuffle;
-      player.setShuffleModeEnabled(isShuffle);
+      widget.player.setShuffleModeEnabled(isShuffle);
     });
     if (isShuffle) {
-      player.shuffle();
+      widget.player.shuffle();
     }
   }
 
   _skipNext() {
-    if (player.hasNext) {
-      player.seekToNext();
+    if (widget.player.hasNext) {
+      widget.player.seekToNext();
     }
   }
 
   _skipPrevious() {
-    if (player.hasPrevious) {
-      player.seekToPrevious();
+    if (widget.player.hasPrevious) {
+      widget.player.seekToPrevious();
     }
   }
 
@@ -81,29 +88,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   void initState() {
     // TODO: implement initState
 
-    try {
-      player.setAudioSource(
-        AudioSource.uri(
-          Uri.parse(widget.song.uri!),
-        ),
-      );
-      if (player.playing) {
-        player.pause();
-      }
-      player.play();
-    } on Exception {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: primaryColor,
-          content: Text(
-            'Song can not play!',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      );
-    }
+    widget.player.play();
 
     super.initState();
   }
@@ -128,9 +113,9 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   /// Collects the data useful for displaying in a seek bar, using a handy
   Stream<PositionData> get _positionDataStream =>
       Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-        player.positionStream,
-        player.bufferedPositionStream,
-        player.durationStream,
+        widget.player.positionStream,
+        widget.player.bufferedPositionStream,
+        widget.player.durationStream,
         (position, bufferedPosition, duration) => PositionData(
           position,
           bufferedPosition,
@@ -233,7 +218,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                   height: 380,
                   width: double.infinity,
                   child: Hero(
-                    tag:widget.song.id,
+                    tag: widget.song.id,
                     transitionOnUserGestures: true,
                     child: QueryArtworkWidget(
                       id: widget.song.id,
@@ -292,7 +277,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       position: positionData?.position ?? Duration.zero,
                       bufferedPosition:
                           positionData?.bufferedPosition ?? Duration.zero,
-                      onChangeEnd: player.seek,
+                      onChangeEnd: widget.player.seek,
                     );
                   },
                 ),
@@ -318,7 +303,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                     ),
                     GestureDetector(
                       onTap: () => {
-                        player.playing
+                        widget.player.playing
                             ? setState(() {
                                 _pauseSong();
                               })
@@ -327,7 +312,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                               })
                       },
                       child: Icon(
-                        player.playing
+                        widget.player.playing
                             ? Icons.pause_circle_outline
                             : Icons.play_circle_outlined,
                         color: accentColor,
