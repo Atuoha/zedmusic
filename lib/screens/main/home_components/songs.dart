@@ -59,6 +59,20 @@ class _SongsState extends State<Songs> {
       songData.player.pause();
     }
 
+    // Fnc for loading new music on track and taking them to the song_player screen
+    _loadNewSongOnTrack(SongModel song) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SongPlayer(
+            song: song,
+            player: songData.player,
+          ),
+        ),
+      );
+      songData.setPlayingSong(song);
+      _playSong(song.uri);
+    }
+
     return Column(
       children: [
         Padding(
@@ -130,18 +144,8 @@ class _SongsState extends State<Songs> {
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => SongPlayer(
-                            song: songs[index],
-                            player: songData.player,
-                          ),
-                        ),
-                      );
-                      songData.setPlayingSong(songs[index]);
-                      _playSong(songs[index].uri);
-                    },
+                    onTap: () =>
+                        _loadNewSongOnTrack(songs[index]),
                     child: ListTile(
                       leading: QueryArtworkWidget(
                         id: songs[index].id,
@@ -165,13 +169,21 @@ class _SongsState extends State<Songs> {
                       ),
                       trailing: GestureDetector(
                         onTap: () => {
-                          if (songData.isPlaying)
+                          if (songData.isPlaying &&
+                              songData.playingSong.id ==
+                                  songs[index].id)
                             {
                               setState(() {
                                 songData.player.playing
                                     ? _pauseSong()
                                     : _continueSong();
                               })
+                            }
+                          else if (songData.playingSong.id !=
+                              songs[index].id)
+                            {
+                              _loadNewSongOnTrack(
+                                  songs[index])
                             }
                           else
                             {

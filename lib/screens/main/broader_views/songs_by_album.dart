@@ -64,6 +64,21 @@ class _AlbumSongsState extends State<AlbumSongs> {
       songData.player.pause();
     }
 
+
+    // Fnc for loading new music on track and taking them to the song_player screen
+    _loadNewSongOnTrack(SongModel song) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SongPlayer(
+            song: song,
+            player: songData.player,
+          ),
+        ),
+      );
+      songData.setPlayingSong(song);
+      _playSong(song.uri);
+    }
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -190,18 +205,8 @@ class _AlbumSongsState extends State<AlbumSongs> {
                                 itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.only(bottom: 10.0),
                                   child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => SongPlayer(
-                                            song: songs[index],
-                                            player: songData.player,
-                                          ),
-                                        ),
-                                      );
-                                      songData.setPlayingSong(songs[index]);
-                                      _playSong(songs[index].uri);
-                                    },
+                                    onTap: () =>
+                                        _loadNewSongOnTrack(songs[index]),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       leading: QueryArtworkWidget(
@@ -243,13 +248,21 @@ class _AlbumSongsState extends State<AlbumSongs> {
                                           const SizedBox(height: 5),
                                           GestureDetector(
                                             onTap: () => {
-                                              if (songData.isPlaying)
+                                              if (songData.isPlaying &&
+                                                  songData.playingSong.id ==
+                                                      songs[index].id)
                                                 {
                                                   setState(() {
                                                     songData.player.playing
                                                         ? _pauseSong()
                                                         : _continueSong();
                                                   })
+                                                }
+                                              else if (songData.playingSong.id !=
+                                                  songs[index].id)
+                                                {
+                                                  _loadNewSongOnTrack(
+                                                      songs[index])
                                                 }
                                               else
                                                 {
