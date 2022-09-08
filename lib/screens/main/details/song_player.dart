@@ -25,15 +25,14 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   final player = AudioPlayer();
 
   // PLAY SONG
-  _playSong(String? uri) {
+  _playSong() {
     player.play();
   }
 
   // PAUSE SONG
-  _pauseSong(String? uri) {
+  _pauseSong() {
     player.pause();
   }
-
 
   bool isRepeatOne = false;
   bool isShuffle = false;
@@ -142,6 +141,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var songData = Provider.of<SongData>(context);
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -232,11 +232,15 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                 SizedBox(
                   height: 380,
                   width: double.infinity,
-                  child: QueryArtworkWidget(
-                    id: widget.song.id,
-                    type: ArtworkType.AUDIO,
-                    artworkFit: BoxFit.cover,
-                    artworkBorder: BorderRadius.circular(20),
+                  child: Hero(
+                    tag:widget.song.id,
+                    transitionOnUserGestures: true,
+                    child: QueryArtworkWidget(
+                      id: widget.song.id,
+                      type: ArtworkType.AUDIO,
+                      artworkFit: BoxFit.cover,
+                      artworkBorder: BorderRadius.circular(20),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -279,7 +283,6 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                   ),
                 ),
                 const SizedBox(height: 40),
-
                 StreamBuilder<PositionData>(
                   stream: _positionDataStream,
                   builder: (context, snapshot) {
@@ -294,7 +297,6 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                   },
                 ),
                 const SizedBox(height: 15),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -318,10 +320,10 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       onTap: () => {
                         player.playing
                             ? setState(() {
-                                _pauseSong(widget.song.uri);
+                                _pauseSong();
                               })
                             : setState(() {
-                                _playSong(widget.song.uri);
+                                _playSong();
                               })
                       },
                       child: Icon(
@@ -358,4 +360,3 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     );
   }
 }
-

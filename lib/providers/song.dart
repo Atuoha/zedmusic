@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class SongData extends ChangeNotifier {
 
   final OnAudioQuery audioQuery = OnAudioQuery();
+  final player = AudioPlayer();
+
+  late SongModel playingSong;
+  bool isPlaying = false;
+
+  setPlayingSong(SongModel song){
+    playingSong = song;
+    isPlaying = true;
+    notifyListeners();
+  }
 
 
   bool isSongInPlaylist(int songId, int playlistId) {
