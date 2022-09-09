@@ -23,8 +23,8 @@ class _SongsState extends State<Songs> {
   @override
   Widget build(BuildContext context) {
     final OnAudioQuery audioQuery = OnAudioQuery();
-
     var songData = Provider.of<SongData>(context);
+    var songList = [];
 
     // PLAY SONG
     _playSong(String? uri) {
@@ -66,6 +66,7 @@ class _SongsState extends State<Songs> {
           builder: (context) => SongPlayer(
             song: song,
             player: songData.player,
+              songs: songList
           ),
         ),
       );

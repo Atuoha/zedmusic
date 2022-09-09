@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -12,13 +14,15 @@ import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SongPlayer extends StatefulWidget {
-  const SongPlayer({
+  SongPlayer({
     Key? key,
     required this.song,
     required this.player,
+    required this.songs,
   }) : super(key: key);
-  final SongModel song;
+  SongModel song;
   final AudioPlayer player;
+  final List songs;
 
   @override
   State<SongPlayer> createState() => _SongPlayerState();
@@ -27,69 +31,23 @@ class SongPlayer extends StatefulWidget {
 class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   final OnAudioQuery audioQuery = OnAudioQuery();
 
-  // PLAY SONG
-  _playSong() {
-    setState(() {
-      widget.player.play();
+  // this will be holding the current index of the music list array
+  var currentSongIndex = 0;
+
+  // Return current song index
+  _returnCurrentIndex() {
+    widget.songs.asMap().forEach((key, song) {
+      if (song.id == widget.song.id) {
+        currentSongIndex = key;
+      }
     });
-  }
-
-  // PAUSE SONG
-  _pauseSong() {
-    setState(() {
-      widget.player.pause();
-    });
-  }
-
-  bool isRepeatOne = false;
-  bool isShuffle = false;
-
-  _toggleIsRepeat() {
-    setState(() {
-      isRepeatOne = !isRepeatOne;
-    });
-
-    if (isRepeatOne) {
-      setState(() {
-        widget.player.setLoopMode(LoopMode.one);
-        widget.player.loopMode;
-      });
-    } else {
-      setState(() {
-        widget.player.setLoopMode(LoopMode.all);
-        widget.player.loopMode;
-      });
-    }
-  }
-
-  _toggleIsShuffle() {
-    setState(() {
-      isShuffle = !isShuffle;
-      widget.player.setShuffleModeEnabled(isShuffle);
-    });
-    if (isShuffle) {
-      widget.player.shuffle();
-    }
-  }
-
-  _skipNext() {
-    if (widget.player.hasNext) {
-      widget.player.seekToNext();
-    }
-  }
-
-  _skipPrevious() {
-    if (widget.player.hasPrevious) {
-      widget.player.seekToPrevious();
-    }
   }
 
   @override
   void initState() {
     // TODO: implement initState
-
+    _returnCurrentIndex();
     widget.player.play();
-
     super.initState();
   }
 
@@ -126,6 +84,103 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     var songData = Provider.of<SongData>(context);
+
+    // PLAY SONG
+    _playSong() {
+      setState(() {
+        widget.player.play();
+      });
+    }
+
+    // PAUSE SONG
+    _pauseSong() {
+      setState(() {
+        widget.player.pause();
+      });
+    }
+
+    bool isRepeatOne = false;
+    bool isShuffle = false;
+
+    _toggleIsRepeat() {
+      setState(() {
+        isRepeatOne = !isRepeatOne;
+      });
+
+      if (isRepeatOne) {
+        setState(() {
+          widget.player.setLoopMode(LoopMode.one);
+          widget.player.loopMode;
+        });
+      } else {
+        setState(() {
+          widget.player.setLoopMode(LoopMode.all);
+          widget.player.loopMode;
+        });
+      }
+    }
+
+    _toggleIsShuffle() {
+      setState(() {
+        isShuffle = !isShuffle;
+        widget.player.setShuffleModeEnabled(isShuffle);
+      });
+      if (isShuffle) {
+        widget.player.shuffle();
+      }
+    }
+
+    // To next song
+    _skipNext() {
+      if (currentSongIndex != widget.songs.length - 1) {
+        setState(() {
+          currentSongIndex += 1;
+        });
+      }
+
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
+          songData.setPlayingSong(widget.songs[currentSongIndex]);
+        });
+
+        setState(() {
+          widget.song = widget.songs[currentSongIndex];
+          songData.player.setAudioSource(
+            AudioSource.uri(
+              Uri.parse(widget.songs[currentSongIndex].uri),
+            ),
+          );
+        });
+      });
+
+      widget.player.play();
+    }
+
+    // to previous song
+    _skipPrevious() {
+      if (currentSongIndex != 0) {
+        setState(() {
+          currentSongIndex -= 1;
+        });
+      }
+
+      Timer(const Duration(microseconds: 1), () {
+        setState(() {
+          songData.setPlayingSong(widget.songs[currentSongIndex]);
+        });
+
+        setState(() {
+          widget.song = widget.songs[currentSongIndex];
+          songData.player.setAudioSource(
+            AudioSource.uri(
+              Uri.parse(widget.songs[currentSongIndex].uri),
+            ),
+          );
+        });
+      });
+
+      widget.player.play();
+    }
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(

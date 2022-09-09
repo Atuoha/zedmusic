@@ -31,6 +31,7 @@ class _SongsViewState extends State<SongsView> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     int songsLength = data['length'];
     var songData = Provider.of<SongData>(context);
+    var songList = [];
 
     // PLAY SONG
     _playSong(String? uri) {
@@ -72,6 +73,7 @@ class _SongsViewState extends State<SongsView> {
           builder: (context) => SongPlayer(
             song: song,
             player: songData.player,
+            songs: songList,
           ),
         ),
       );
@@ -179,7 +181,7 @@ class _SongsViewState extends State<SongsView> {
                               ],
                             );
                           }
-
+                        songList = songs;
                           return SizedBox(
                             height: size.height / 1,
                             child: ListView.builder(

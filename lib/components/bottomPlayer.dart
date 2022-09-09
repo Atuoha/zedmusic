@@ -19,6 +19,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
   Widget build(BuildContext context) {
 
     var songData = Provider.of<SongData>(context);
+    var songList = [];
 
     // PLAY SONG
     _playSong(String? uri) {
@@ -70,6 +71,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
                 builder: (context) => SongPlayer(
                   song: songData.playingSong,
                   player: songData.player,
+                  songs: songList
                 ),
               ),
             ),

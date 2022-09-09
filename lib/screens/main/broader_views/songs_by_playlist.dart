@@ -153,6 +153,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     PlaylistModel playlist = data['playlist'];
     var songData = Provider.of<SongData>(context);
+    var songList = [];
 
     // PLAY SONG
     _playSong(String? uri) {
@@ -324,6 +325,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
                                           builder: (context) => SongPlayer(
                                             song: songs[index],
                                             player: songData.player,
+                                              songs: songList
                                           ),
                                         ),
                                       );
