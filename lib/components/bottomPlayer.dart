@@ -19,7 +19,6 @@ class _BottomPlayerState extends State<BottomPlayer> {
   Widget build(BuildContext context) {
 
     var songData = Provider.of<SongData>(context);
-    var songList = [];
 
     // PLAY SONG
     _playSong(String? uri) {
@@ -46,17 +45,25 @@ class _BottomPlayerState extends State<BottomPlayer> {
 
     // CONTINUE SONG
     _continueSong() {
-      songData.player.play();
+      setState(() {
+        songData.player.play();
+        songData.setIsPlaying(true);
+      });
+
     }
 
     // PAUSE SONG
     _pauseSong() {
-      songData.player.pause();
+      setState((){
+        songData.player.pause();
+        songData.setIsPlaying(false);
+      });
+
     }
     Size size = MediaQuery.of(context).size;
 
 
-    return songData.isPlaying
+    return songData.isPlaying || songData.isPaused
         ? Positioned(
       bottom: 0,
       child: Container(
@@ -71,7 +78,7 @@ class _BottomPlayerState extends State<BottomPlayer> {
                 builder: (context) => SongPlayer(
                   song: songData.playingSong,
                   player: songData.player,
-                  songs: songList
+                  songs: songData.songList
                 ),
               ),
             ),

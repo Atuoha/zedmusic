@@ -89,6 +89,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     _playSong() {
       setState(() {
         widget.player.play();
+        songData.setIsPlaying(true);
       });
     }
 
@@ -96,6 +97,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     _pauseSong() {
       setState(() {
         widget.player.pause();
+        songData.setIsPlaying(false);
       });
     }
 
@@ -153,7 +155,10 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
         });
       });
 
-      widget.player.play();
+      setState(() {
+        widget.player.play();
+        songData.setIsPlaying(true);
+      });
     }
 
     // to previous song
@@ -178,8 +183,10 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
           );
         });
       });
-
-      widget.player.play();
+      setState(() {
+        widget.player.play();
+        songData.setIsPlaying(true);
+      });
     }
 
     SystemChrome.setSystemUIOverlayStyle(

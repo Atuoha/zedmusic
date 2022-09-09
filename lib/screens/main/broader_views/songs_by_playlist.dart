@@ -188,6 +188,22 @@ class _PlayListSongsState extends State<PlayListSongs> {
       songData.player.pause();
     }
 
+    // Fnc for loading new music on track and taking them to the song_player screen
+    _loadNewSongOnTrack(SongModel song, List<SongModel> songs) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => SongPlayer(
+            song: song,
+            player: songData.player,
+            songs: songList,
+          ),
+        ),
+      );
+      songData.setSongs(songs);
+      songData.setPlayingSong(song);
+      _playSong(song.uri);
+    }
+
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -319,19 +335,8 @@ class _PlayListSongsState extends State<PlayListSongs> {
                                 itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.only(bottom: 10.0),
                                   child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) => SongPlayer(
-                                            song: songs[index],
-                                            player: songData.player,
-                                              songs: songList
-                                          ),
-                                        ),
-                                      );
-                                      songData.setPlayingSong(songs[index]);
-                                      _playSong(songs[index].uri);
-                                    },
+                                    onTap: () => _loadNewSongOnTrack(
+                                        songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       leading: const CircleAvatar(

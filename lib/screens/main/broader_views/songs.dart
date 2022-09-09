@@ -58,16 +58,22 @@ class _SongsViewState extends State<SongsView> {
 
     // CONTINUE SONG
     _continueSong() {
-      songData.player.play();
+      setState(() {
+        songData.player.play();
+        songData.setIsPlaying(true);
+      });
     }
 
     // PAUSE SONG
     _pauseSong() {
-      songData.player.pause();
+      setState(() {
+        songData.player.pause();
+        songData.setIsPlaying(false);
+      });
     }
 
     // Fnc for loading new music on track and taking them to the song_player screen
-    _loadNewSongOnTrack(SongModel song) {
+    _loadNewSongOnTrack(SongModel song, List<SongModel> songs) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPlayer(
@@ -77,6 +83,7 @@ class _SongsViewState extends State<SongsView> {
           ),
         ),
       );
+      songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song.uri);
     }
@@ -181,7 +188,7 @@ class _SongsViewState extends State<SongsView> {
                               ],
                             );
                           }
-                        songList = songs;
+                          songList = songs;
                           return SizedBox(
                             height: size.height / 1,
                             child: ListView.builder(
@@ -191,7 +198,7 @@ class _SongsViewState extends State<SongsView> {
                                 padding: const EdgeInsets.only(bottom: 10.0),
                                 child: GestureDetector(
                                   onTap: () =>
-                                      _loadNewSongOnTrack(songs[index]),
+                                      _loadNewSongOnTrack(songs[index], songs),
                                   child: ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     leading: Hero(
@@ -250,7 +257,7 @@ class _SongsViewState extends State<SongsView> {
                                                 songs[index].id)
                                               {
                                                 _loadNewSongOnTrack(
-                                                    songs[index])
+                                                    songs[index], songs)
                                               }
                                             else
                                               {

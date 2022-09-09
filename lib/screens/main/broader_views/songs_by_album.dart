@@ -65,18 +65,18 @@ class _AlbumSongsState extends State<AlbumSongs> {
       songData.player.pause();
     }
 
-
     // Fnc for loading new music on track and taking them to the song_player screen
-    _loadNewSongOnTrack(SongModel song) {
+    _loadNewSongOnTrack(SongModel song, List<SongModel> songs) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPlayer(
             song: song,
             player: songData.player,
-              songs: songList
+            songs: songList,
           ),
         ),
       );
+      songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song.uri);
     }
@@ -198,7 +198,8 @@ class _AlbumSongsState extends State<AlbumSongs> {
                                 ],
                               );
                             }
-songList = songs;
+                            songList = songs;
+
                             return SizedBox(
                               height: size.height / 2.2,
                               child: ListView.builder(
@@ -207,8 +208,8 @@ songList = songs;
                                 itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.only(bottom: 10.0),
                                   child: GestureDetector(
-                                    onTap: () =>
-                                        _loadNewSongOnTrack(songs[index]),
+                                    onTap: () => _loadNewSongOnTrack(
+                                        songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       leading: QueryArtworkWidget(
@@ -260,11 +261,12 @@ songList = songs;
                                                         : _continueSong();
                                                   })
                                                 }
-                                              else if (songData.playingSong.id !=
+                                              else if (songData
+                                                      .playingSong.id !=
                                                   songs[index].id)
                                                 {
                                                   _loadNewSongOnTrack(
-                                                      songs[index])
+                                                      songs[index], songs)
                                                 }
                                               else
                                                 {

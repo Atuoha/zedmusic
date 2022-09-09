@@ -31,6 +31,7 @@ class _GenreSongsState extends State<GenreSongs> {
     GenreModel genre = data['genre'];
     var songData = Provider.of<SongData>(context);
     var songList = [];
+
     // PLAY SONG
     _playSong(String? uri) {
       try {
@@ -65,16 +66,17 @@ class _GenreSongsState extends State<GenreSongs> {
     }
 
     // Fnc for loading new music on track and taking them to the song_player screen
-    _loadNewSongOnTrack(SongModel song) {
+    _loadNewSongOnTrack(SongModel song, List<SongModel> songs) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPlayer(
             song: song,
             player: songData.player,
-              songs: songList
+            songs: songList,
           ),
         ),
       );
+      songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song.uri);
     }
@@ -193,6 +195,7 @@ class _GenreSongsState extends State<GenreSongs> {
                               );
                             }
 
+                            songList = songs;
                             return SizedBox(
                               height: size.height / 2.2,
                               child: ListView.builder(
@@ -201,8 +204,8 @@ class _GenreSongsState extends State<GenreSongs> {
                                 itemBuilder: (context, index) => Padding(
                                   padding: const EdgeInsets.only(bottom: 10.0),
                                   child: GestureDetector(
-                                    onTap: () =>
-                                        _loadNewSongOnTrack(songs[index]),
+                                    onTap: () => _loadNewSongOnTrack(
+                                        songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       leading: QueryArtworkWidget(
@@ -254,11 +257,12 @@ class _GenreSongsState extends State<GenreSongs> {
                                                         : _continueSong();
                                                   })
                                                 }
-                                              else if (songData.playingSong.id !=
+                                              else if (songData
+                                                      .playingSong.id !=
                                                   songs[index].id)
                                                 {
                                                   _loadNewSongOnTrack(
-                                                      songs[index])
+                                                      songs[index], songs)
                                                 }
                                               else
                                                 {

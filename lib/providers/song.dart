@@ -3,21 +3,30 @@ import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class SongData extends ChangeNotifier {
-
   final OnAudioQuery audioQuery = OnAudioQuery();
   final player = AudioPlayer();
 
   late SongModel playingSong;
   bool isPlaying = false;
+  bool isPaused = false;
 
-  setPlayingSong(SongModel song){
+  setPlayingSong(SongModel song) {
     playingSong = song;
     isPlaying = true;
+    isPaused = false;
     notifyListeners();
   }
 
+  setIsPlaying(bool status){
+    isPlaying = status;
+    isPaused = !status;
+    notifyListeners();
+  }
 
-  bool isSongInPlaylist(int songId, int playlistId) {
+  bool isSongInPlaylist(
+    int songId,
+    int playlistId,
+  ) {
     bool status = false;
     return status;
   }
@@ -44,6 +53,12 @@ class SongData extends ChangeNotifier {
 
   getFavorites() {
     return [..._favoritesSongs];
+  }
+
+  List<SongModel> songList = [];
+  setSongs(List<SongModel> songs){
+    songList = songs;
+    notifyListeners();
   }
 
   final List<SongModel> _favoritesSongs = [];
