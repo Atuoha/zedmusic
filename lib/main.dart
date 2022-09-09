@@ -29,11 +29,3 @@ class MusicApp extends StatelessWidget {
  - FINDING A BETTER WAY TO MANAGE THE NUMBER OF SONGS IN A PLAYLIST
 */
 
-
-/*
-    TODO:
-    - Seek next
-    - Seek previous
-    -
-
- */
