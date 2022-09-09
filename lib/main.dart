@@ -3,8 +3,18 @@ import 'package:zedmusic/providers/song.dart';
 import 'package:zedmusic/routes/routes.dart';
 import 'package:zedmusic/screens/splash/entry_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
-void main() => runApp(const MusicApp());
+Future<void> main() async {
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.zedmusic',
+    androidNotificationChannelName: 'Zedmusic',
+    androidNotificationOngoing: true,
+  );
+  runApp(const MusicApp());
+}
+// void main()=>
+// runApp(const MusicApp());
 
 class MusicApp extends StatelessWidget {
   const MusicApp({Key? key}) : super(key: key);
@@ -28,4 +38,3 @@ class MusicApp extends StatelessWidget {
  - CHECKING SONG PRESENCE IN PLAYLIST
  - FINDING A BETTER WAY TO MANAGE THE NUMBER OF SONGS IN A PLAYLIST
 */
-

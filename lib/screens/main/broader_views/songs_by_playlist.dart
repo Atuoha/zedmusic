@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../components/bottomPlayer.dart';
@@ -156,11 +157,19 @@ class _PlayListSongsState extends State<PlayListSongs> {
     var songList = [];
 
     // PLAY SONG
-    _playSong(String? uri) {
+    _playSong(SongModel song) {
       try {
         songData.player.setAudioSource(
           AudioSource.uri(
-            Uri.parse(uri!),
+            Uri.parse(song.uri!),
+            tag: MediaItem(
+              // Specify a unique ID for each media item:
+              id: '${song.id}',
+              // Metadata to display in the notification:
+              album: song.album,
+              title: song.title,
+              artUri: Uri.parse(song.uri!),
+            ),
           ),
         );
       } on Exception {
@@ -189,7 +198,10 @@ class _PlayListSongsState extends State<PlayListSongs> {
     }
 
     // Fnc for loading new music on track and taking them to the song_player screen
-    _loadNewSongOnTrack(SongModel song, List<SongModel> songs) {
+    _loadNewSongOnTrack(
+      SongModel song,
+      List<SongModel> songs,
+    ) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPlayer(
@@ -201,7 +213,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
       );
       songData.setSongs(songs);
       songData.setPlayingSong(song);
-      _playSong(song.uri);
+      _playSong(song);
     }
 
     SystemChrome.setSystemUIOverlayStyle(

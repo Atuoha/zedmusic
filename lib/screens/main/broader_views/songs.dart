@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import 'package:zedmusic/screens/main/details/song_player.dart';
@@ -34,11 +35,19 @@ class _SongsViewState extends State<SongsView> {
     var songList = [];
 
     // PLAY SONG
-    _playSong(String? uri) {
+    _playSong(SongModel song) {
       try {
         songData.player.setAudioSource(
           AudioSource.uri(
-            Uri.parse(uri!),
+            Uri.parse(song.uri!),
+            tag: MediaItem(
+              // Specify a unique ID for each media item:
+              id: '${song.id}',
+              // Metadata to display in the notification:
+              album: song.album,
+              title: song.title,
+              artUri: Uri.parse(song.uri!),
+            ),
           ),
         );
       } on Exception {
@@ -85,7 +94,7 @@ class _SongsViewState extends State<SongsView> {
       );
       songData.setSongs(songs);
       songData.setPlayingSong(song);
-      _playSong(song.uri);
+      _playSong(song);
     }
 
     SystemChrome.setSystemUIOverlayStyle(
@@ -264,7 +273,7 @@ class _SongsViewState extends State<SongsView> {
                                                 songData.setPlayingSong(
                                                     songs[index]),
                                                 setState(() {
-                                                  _playSong(songs[index].uri);
+                                                  _playSong(songs[index]);
                                                 })
                                               }
                                           },
