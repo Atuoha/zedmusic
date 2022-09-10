@@ -5,11 +5,17 @@ import 'package:zedmusic/screens/splash/entry_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 
+import 'constants/colors.dart';
+
 Future<void> main() async {
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.zedmusic',
     androidNotificationChannelName: 'Zedmusic',
     androidNotificationOngoing: true,
+    preloadArtwork: true,
+    notificationColor: primaryColor,
+    androidNotificationIcon: 'assets/images/only_logo.png'
+
   );
   runApp(const MusicApp());
 }

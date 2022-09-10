@@ -152,6 +152,7 @@ class _SongsState extends State<Songs> {
                         id: songs[index].id,
                         type: ArtworkType.AUDIO,
                         artworkFit: BoxFit.cover,
+                        nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                         artworkBorder: BorderRadius.circular(30),
                       ),
                       title: Text(

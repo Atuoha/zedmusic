@@ -44,8 +44,10 @@ class _SongsViewState extends State<SongsView> {
               // Specify a unique ID for each media item:
               id: '${song.id}',
               // Metadata to display in the notification:
-              album: song.album,
+              artist: song.artist,
+              duration: Duration(minutes: song.duration!),
               title: song.title,
+              album: song.album,
               artUri: Uri.parse(song.uri!),
             ),
           ),
@@ -216,6 +218,7 @@ class _SongsViewState extends State<SongsView> {
                                         id: songs[index].id,
                                         type: ArtworkType.AUDIO,
                                         artworkFit: BoxFit.cover,
+                                        nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                                         artworkBorder:
                                             BorderRadius.circular(30),
                                       ),

@@ -163,11 +163,12 @@ class _PlayListSongsState extends State<PlayListSongs> {
           AudioSource.uri(
             Uri.parse(song.uri!),
             tag: MediaItem(
-              // Specify a unique ID for each media item:
               id: '${song.id}',
               // Metadata to display in the notification:
-              album: song.album,
+              artist: song.artist,
+              duration: Duration(minutes: song.duration!),
               title: song.title,
+              album: song.album,
               artUri: Uri.parse(song.uri!),
             ),
           ),

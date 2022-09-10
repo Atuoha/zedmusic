@@ -39,11 +39,12 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
           AudioSource.uri(
             Uri.parse(song.uri!),
             tag: MediaItem(
-              // Specify a unique ID for each media item:
               id: '${song.id}',
               // Metadata to display in the notification:
-              album: song.album,
+              artist: song.artist,
+              duration: Duration(minutes: song.duration!),
               title: song.title,
+              album: song.album,
               artUri: Uri.parse(song.uri!),
             ),
           ),
@@ -178,6 +179,7 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
                           id: artiste.id,
                           type: ArtworkType.ARTIST,
                           artworkFit: BoxFit.cover,
+                          nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),

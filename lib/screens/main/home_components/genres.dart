@@ -85,6 +85,7 @@ class Genres extends StatelessWidget {
                         child: QueryArtworkWidget(
                           id: genres[index].id,
                           type: ArtworkType.GENRE,
+                          nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                         ),
                       ),
                       const SizedBox(height: 10),
