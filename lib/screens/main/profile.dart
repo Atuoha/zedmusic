@@ -54,11 +54,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-
           ],
         ),
         content: const Text(
-          'Music App using a prototype by Turkan Aliyeva on Behance',
+          'Music App using a prototype by Turkan Aliyeva on Behance. Code Author: Tony Atuoha',
         ),
         actions: [
           ElevatedButton(
@@ -102,7 +101,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-
           ],
         ),
         content: const Text(

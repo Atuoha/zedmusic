@@ -147,7 +147,7 @@ class GenresView extends StatelessWidget {
                                   id: genres[index].id,
                                   type: ArtworkType.GENRE,
                                   artworkFit: BoxFit.cover,
-                                  nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                                  // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                                   artworkHeight: 120,
                                   artworkWidth: double.infinity,
                                   artworkBorder: BorderRadius.circular(5),

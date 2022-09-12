@@ -86,6 +86,7 @@ class _GenreSongsState extends State<GenreSongs> {
             song: song,
             player: songData.player,
             songs: songList,
+            songData: songData,
           ),
         ),
       );
@@ -169,7 +170,7 @@ class _GenreSongsState extends State<GenreSongs> {
                           id: genre.id,
                           type: ArtworkType.GENRE,
                           artworkFit: BoxFit.cover,
-                          nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -222,12 +223,19 @@ class _GenreSongsState extends State<GenreSongs> {
                                         songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: QueryArtworkWidget(
+                                      leading: songs[index].isMusic!
+                                          ? QueryArtworkWidget(
                                         id: songs[index].id,
                                         type: ArtworkType.AUDIO,
                                         artworkFit: BoxFit.cover,
                                         artworkBorder:
-                                            BorderRadius.circular(30),
+                                        BorderRadius.circular(30),
+                                      )
+                                          : const Center(
+                                        child: Icon(
+                                          Icons.music_note,
+                                          color: pColor,
+                                        ),
                                       ),
                                       title: Text(
                                         songs[index].title,

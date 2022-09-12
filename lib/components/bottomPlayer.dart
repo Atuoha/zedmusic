@@ -78,7 +78,8 @@ class _BottomPlayerState extends State<BottomPlayer> {
                 builder: (context) => SongPlayer(
                   song: songData.playingSong,
                   player: songData.player,
-                  songs: songData.songList
+                  songs: songData.songList,
+                  songData: songData,
                 ),
               ),
             ),

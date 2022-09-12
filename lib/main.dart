@@ -14,7 +14,7 @@ Future<void> main() async {
     androidNotificationOngoing: true,
     preloadArtwork: true,
     notificationColor: primaryColor,
-    androidNotificationIcon: 'assets/images/only_logo.png'
+    // androidNotificationIcon: 'assets/images/only_logo.png'
 
   );
   runApp(const MusicApp());

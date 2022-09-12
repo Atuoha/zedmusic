@@ -88,7 +88,7 @@ class Artistes extends StatelessWidget {
                         child: QueryArtworkWidget(
                           id: artistes[index].id,
                           type: ArtworkType.ARTIST,
-                          nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                         ),
                       ),
                       const SizedBox(height: 10),

@@ -86,6 +86,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
             song: song,
             player: songData.player,
             songs: songList,
+            songData: songData,
           ),
         ),
       );
@@ -173,7 +174,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           id: album.id,
                           type: ArtworkType.ALBUM,
                           artworkFit: BoxFit.cover,
-                          nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -226,13 +227,20 @@ class _AlbumSongsState extends State<AlbumSongs> {
                                         songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: QueryArtworkWidget(
-                                        id: songs[index].id,
-                                        type: ArtworkType.AUDIO,
-                                        artworkFit: BoxFit.cover,
-                                        artworkBorder:
-                                            BorderRadius.circular(30),
-                                      ),
+                                      leading: songs[index].isMusic!
+                                          ? QueryArtworkWidget(
+                                              id: songs[index].id,
+                                              type: ArtworkType.AUDIO,
+                                              artworkFit: BoxFit.cover,
+                                              artworkBorder:
+                                                  BorderRadius.circular(30),
+                                            )
+                                          : const Center(
+                                              child: Icon(
+                                                Icons.music_note,
+                                                color: pColor,
+                                              ),
+                                            ),
                                       title: Text(
                                         songs[index].title,
                                         maxLines: 1,

@@ -32,6 +32,8 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
     ArtistModel artiste = data['artiste'];
     var songData = Provider.of<SongData>(context);
     var songList = [];
+
+
     // PLAY SONG
     _playSong(SongModel song) {
       try {
@@ -85,6 +87,7 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
             song: song,
             player: songData.player,
             songs: songList,
+            songData: songData,
           ),
         ),
       );
@@ -179,7 +182,7 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
                           id: artiste.id,
                           type: ArtworkType.ARTIST,
                           artworkFit: BoxFit.cover,
-                          nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -231,12 +234,19 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
                                         songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: QueryArtworkWidget(
+                                      leading:songs[index].isMusic!
+                                          ? QueryArtworkWidget(
                                         id: songs[index].id,
                                         type: ArtworkType.AUDIO,
                                         artworkFit: BoxFit.cover,
                                         artworkBorder:
-                                            BorderRadius.circular(30),
+                                        BorderRadius.circular(30),
+                                      )
+                                          : const Center(
+                                        child: Icon(
+                                          Icons.music_note,
+                                          color: pColor,
+                                        ),
                                       ),
                                       title: Text(
                                         songs[index].title,

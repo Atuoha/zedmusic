@@ -66,7 +66,8 @@ class _SongsState extends State<Songs> {
           builder: (context) => SongPlayer(
             song: song,
             player: songData.player,
-              songs: songList
+              songs: songList,
+            songData: songData,
           ),
         ),
       );
@@ -148,12 +149,19 @@ class _SongsState extends State<Songs> {
                     onTap: () =>
                         _loadNewSongOnTrack(songs[index]),
                     child: ListTile(
-                      leading: QueryArtworkWidget(
+                      leading: songs[index].isMusic!
+                          ? QueryArtworkWidget(
                         id: songs[index].id,
                         type: ArtworkType.AUDIO,
                         artworkFit: BoxFit.cover,
-                        nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
-                        artworkBorder: BorderRadius.circular(30),
+                        artworkBorder:
+                        BorderRadius.circular(30),
+                      )
+                          : const Center(
+                        child: Icon(
+                          Icons.music_note,
+                          color: pColor,
+                        ),
                       ),
                       title: Text(
                         songs[index].displayName,

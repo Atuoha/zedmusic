@@ -88,11 +88,19 @@ class _PlayListSongsState extends State<PlayListSongs> {
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
-                              leading: QueryArtworkWidget(
+                              leading: songs[index].isMusic!
+                                  ? QueryArtworkWidget(
                                 id: songs[index].id,
                                 type: ArtworkType.AUDIO,
                                 artworkFit: BoxFit.cover,
-                                artworkBorder: BorderRadius.circular(30),
+                                artworkBorder:
+                                BorderRadius.circular(30),
+                              )
+                                  : const Center(
+                                child: Icon(
+                                  Icons.music_note,
+                                  color: pColor,
+                                ),
                               ),
                               title: Text(
                                 songs[index].title,
@@ -209,6 +217,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
             song: song,
             player: songData.player,
             songs: songList,
+            songData: songData,
           ),
         ),
       );

@@ -84,13 +84,17 @@ class _SongsViewState extends State<SongsView> {
     }
 
     // Fnc for loading new music on track and taking them to the song_player screen
-    _loadNewSongOnTrack(SongModel song, List<SongModel> songs) {
+    _loadNewSongOnTrack(
+      SongModel song,
+      List<SongModel> songs,
+    ) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPlayer(
             song: song,
             player: songData.player,
             songs: songList,
+            songData: songData,
           ),
         ),
       );
@@ -218,7 +222,9 @@ class _SongsViewState extends State<SongsView> {
                                         id: songs[index].id,
                                         type: ArtworkType.AUDIO,
                                         artworkFit: BoxFit.cover,
-                                        nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                                        // nullArtworkWidget: const Center(
+                                        //   child: Icon(Icons.music_note),
+                                        // ),
                                         artworkBorder:
                                             BorderRadius.circular(30),
                                       ),

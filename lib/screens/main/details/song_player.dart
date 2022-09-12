@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/seekbar.dart';
 import '../../../constants/colors.dart';
-import '../../../providerdata.dart';
+
+import '../../../models/provider_data.dart';
 import '../../../providers/song.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:rxdart/rxdart.dart';
@@ -19,10 +21,12 @@ class SongPlayer extends StatefulWidget {
     required this.song,
     required this.player,
     required this.songs,
+    required this.songData,
   }) : super(key: key);
   SongModel song;
   final AudioPlayer player;
   final List songs;
+  final SongData songData;
 
   @override
   State<SongPlayer> createState() => _SongPlayerState();
@@ -43,12 +47,155 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     });
   }
 
+  bool isRepeatOne = false;
+  bool isShuffle = false;
+
+  _toggleIsRepeat() {
+    setState(() {
+      isRepeatOne = !isRepeatOne;
+    });
+
+    if (isRepeatOne) {
+      setState(() {
+        widget.player.setLoopMode(LoopMode.one);
+        widget.player.loopMode;
+      });
+    } else {
+      setState(() {
+        widget.player.setLoopMode(LoopMode.all);
+        widget.player.loopMode;
+      });
+    }
+  }
+
+  _toggleIsShuffle() {
+    setState(() {
+      isShuffle = !isShuffle;
+      widget.player.setShuffleModeEnabled(isShuffle);
+    });
+    if (isShuffle) {
+      widget.player.shuffle();
+    }
+  }
+
+  // PLAY SONG
+  _playSong() {
+    setState(() {
+      widget.player.play();
+      widget.songData.setIsPlaying(true);
+    });
+  }
+
+  // PAUSE SONG
+  _pauseSong() {
+    setState(() {
+      widget.player.pause();
+      widget.songData.setIsPlaying(false);
+    });
+  }
+
+  // To next song
+  _skipNext() {
+    if (currentSongIndex != widget.songs.length - 1) {
+      setState(() {
+        currentSongIndex += 1;
+      });
+    }
+
+    Timer(const Duration(seconds: 1), () {
+      setState(() {
+        widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
+      });
+
+      setState(() {
+        widget.song = widget.songs[currentSongIndex];
+        widget.songData.player.setAudioSource(
+          AudioSource.uri(
+            Uri.parse(widget.songs[currentSongIndex].uri),
+            tag: MediaItem(
+              // Specify a unique ID for each media item:
+              id: '${widget.songs[currentSongIndex].id}',
+              // Metadata to display in the notification:
+              artist: widget.songs[currentSongIndex].artist,
+              duration:
+                  Duration(minutes: widget.songs[currentSongIndex].duration!),
+              title: widget.songs[currentSongIndex].title,
+              album: widget.songs[currentSongIndex].album,
+              artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+            ),
+          ),
+        );
+      });
+    });
+
+    setState(() {
+      widget.player.play();
+      widget.songData.setIsPlaying(true);
+    });
+  }
+
+  // to previous song
+  _skipPrevious() {
+    if (currentSongIndex != 0) {
+      setState(() {
+        currentSongIndex -= 1;
+      });
+    }
+
+    Timer(const Duration(microseconds: 1), () {
+      setState(() {
+        widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
+      });
+
+      setState(() {
+        widget.song = widget.songs[currentSongIndex];
+        widget.songData.player.setAudioSource(
+          AudioSource.uri(
+            Uri.parse(widget.songs[currentSongIndex].uri),
+            tag: MediaItem(
+              // Specify a unique ID for each media item:
+              id: '${widget.songs[currentSongIndex].id}',
+              // Metadata to display in the notification:
+              artist: widget.songs[currentSongIndex].artist,
+              duration:
+                  Duration(minutes: widget.songs[currentSongIndex].duration!),
+              title: widget.songs[currentSongIndex].title,
+              album: widget.songs[currentSongIndex].album,
+              artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+            ),
+          ),
+        );
+      });
+    });
+    setState(() {
+      widget.player.play();
+      widget.songData.setIsPlaying(true);
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     _returnCurrentIndex();
     widget.player.play();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    if (!isRepeatOne) {
+      widget.player.playerStateStream.listen((state) {
+        switch (state.processingState) {
+          case ProcessingState.completed:
+            _skipNext();
+        }
+      });
+    } else {
+      widget.player.play();
+    }
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -83,111 +230,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var songData = Provider.of<SongData>(context);
-
-    // PLAY SONG
-    _playSong() {
-      setState(() {
-        widget.player.play();
-        songData.setIsPlaying(true);
-      });
-    }
-
-    // PAUSE SONG
-    _pauseSong() {
-      setState(() {
-        widget.player.pause();
-        songData.setIsPlaying(false);
-      });
-    }
-
-    bool isRepeatOne = false;
-    bool isShuffle = false;
-
-    _toggleIsRepeat() {
-      setState(() {
-        isRepeatOne = !isRepeatOne;
-      });
-
-      if (isRepeatOne) {
-        setState(() {
-          widget.player.setLoopMode(LoopMode.one);
-          widget.player.loopMode;
-        });
-      } else {
-        setState(() {
-          widget.player.setLoopMode(LoopMode.all);
-          widget.player.loopMode;
-        });
-      }
-    }
-
-    _toggleIsShuffle() {
-      setState(() {
-        isShuffle = !isShuffle;
-        widget.player.setShuffleModeEnabled(isShuffle);
-      });
-      if (isShuffle) {
-        widget.player.shuffle();
-      }
-    }
-
-    // To next song
-    _skipNext() {
-      if (currentSongIndex != widget.songs.length - 1) {
-        setState(() {
-          currentSongIndex += 1;
-        });
-      }
-
-      Timer(const Duration(seconds: 1), () {
-        setState(() {
-          songData.setPlayingSong(widget.songs[currentSongIndex]);
-        });
-
-        setState(() {
-          widget.song = widget.songs[currentSongIndex];
-          songData.player.setAudioSource(
-            AudioSource.uri(
-              Uri.parse(widget.songs[currentSongIndex].uri),
-            ),
-          );
-        });
-      });
-
-      setState(() {
-        widget.player.play();
-        songData.setIsPlaying(true);
-      });
-    }
-
-    // to previous song
-    _skipPrevious() {
-      if (currentSongIndex != 0) {
-        setState(() {
-          currentSongIndex -= 1;
-        });
-      }
-
-      Timer(const Duration(microseconds: 1), () {
-        setState(() {
-          songData.setPlayingSong(widget.songs[currentSongIndex]);
-        });
-
-        setState(() {
-          widget.song = widget.songs[currentSongIndex];
-          songData.player.setAudioSource(
-            AudioSource.uri(
-              Uri.parse(widget.songs[currentSongIndex].uri),
-            ),
-          );
-        });
-      });
-      setState(() {
-        widget.player.play();
-        songData.setIsPlaying(true);
-      });
-    }
+    // var songData = Provider.of<SongData>(context);
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -241,9 +284,9 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       ),
                       itemBuilder: (BuildContext context) => [
                         PopupMenuItem(
-                          onTap: () => songData.toggleIsFav(widget.song),
+                          onTap: () => widget.songData.toggleIsFav(widget.song),
                           child: Text(
-                            songData.isFav(widget.song.id)
+                            widget.songData.isFav(widget.song.id)
                                 ? 'Remove from favorites'
                                 : 'Add to favorites',
                           ),
@@ -286,7 +329,9 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       id: widget.song.id,
                       type: ArtworkType.AUDIO,
                       artworkFit: BoxFit.cover,
-                      nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                      nullArtworkWidget: const Center(
+                        child: Icon(Icons.music_note, size: 60, color: pColor),
+                      ),
                       artworkBorder: BorderRadius.circular(20),
                     ),
                   ),
@@ -309,12 +354,12 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => songData.toggleIsFav(widget.song),
+                      onTap: () => widget.songData.toggleIsFav(widget.song),
                       child: Icon(
-                        songData.isFav(widget.song.id)
+                        widget.songData.isFav(widget.song.id)
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: songData.isFav(widget.song.id)
+                        color: widget.songData.isFav(widget.song.id)
                             ? Colors.red
                             : ambientBg,
                       ),
