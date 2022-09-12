@@ -33,7 +33,6 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
     var songData = Provider.of<SongData>(context);
     var songList = [];
 
-
     // PLAY SONG
     _playSong(SongModel song) {
       try {
@@ -182,7 +181,7 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
                           id: artiste.id,
                           type: ArtworkType.ARTIST,
                           artworkFit: BoxFit.cover,
-                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          nullArtworkWidget: const Icon(Icons.account_circle, color:pColor,size:53,),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -234,20 +233,22 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
                                         songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading:songs[index].isMusic!
+                                      leading: songs[index] != null
                                           ? QueryArtworkWidget(
-                                        id: songs[index].id,
-                                        type: ArtworkType.AUDIO,
-                                        artworkFit: BoxFit.cover,
-                                        artworkBorder:
-                                        BorderRadius.circular(30),
-                                      )
-                                          : const Center(
-                                        child: Icon(
-                                          Icons.music_note,
-                                          color: pColor,
-                                        ),
-                                      ),
+                                              id: songs[index].id,
+                                              type: ArtworkType.AUDIO,
+                                              artworkFit: BoxFit.cover,
+                                              artworkBorder:
+                                                  BorderRadius.circular(30),
+                                              nullArtworkWidget: const Icon(
+                                                Icons.music_note,
+                                                color: pColor,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Icons.music_note,
+                                              color: pColor,
+                                            ),
                                       title: Text(
                                         songs[index].title,
                                         maxLines: 1,

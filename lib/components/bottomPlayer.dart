@@ -89,8 +89,14 @@ class _BottomPlayerState extends State<BottomPlayer> {
                 id: songData.playingSong.id,
                 type: ArtworkType.AUDIO,
                 artworkFit: BoxFit.cover,
-                artworkBorder: BorderRadius.circular(30),
+                artworkBorder:
+                BorderRadius.circular(30),
+                nullArtworkWidget: const Icon(
+                  Icons.music_note,
+                  color: pColor,
+                ),
               ),
+
               title: Text(
                 songData.playingSong.title,
                 maxLines: 1,

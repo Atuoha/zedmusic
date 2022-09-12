@@ -218,16 +218,22 @@ class _SongsViewState extends State<SongsView> {
                                     contentPadding: EdgeInsets.zero,
                                     leading: Hero(
                                       tag: songs[index].id,
-                                      child: QueryArtworkWidget(
-                                        id: songs[index].id,
-                                        type: ArtworkType.AUDIO,
-                                        artworkFit: BoxFit.cover,
-                                        // nullArtworkWidget: const Center(
-                                        //   child: Icon(Icons.music_note),
-                                        // ),
-                                        artworkBorder:
-                                            BorderRadius.circular(30),
-                                      ),
+                                      child: songs[index] != null
+                                          ? QueryArtworkWidget(
+                                              id: songs[index].id,
+                                              type: ArtworkType.AUDIO,
+                                              artworkFit: BoxFit.cover,
+                                              artworkBorder:
+                                                  BorderRadius.circular(30),
+                                              nullArtworkWidget: const Icon(
+                                                Icons.music_note,
+                                                color: pColor,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Icons.music_note,
+                                              color: pColor,
+                                            ),
                                     ),
                                     title: Text(
                                       songs[index].title,

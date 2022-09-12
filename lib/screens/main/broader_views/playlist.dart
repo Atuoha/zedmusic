@@ -345,15 +345,7 @@ class _PlayListViewState extends State<PlayListView> {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    'assets/images/playlist1.png',
-                                    height: 90,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                                const Icon(Icons.playlist_play_rounded, color:pColor, size:53,),
                                 const SizedBox(height: 5),
                                 Row(
                                   mainAxisAlignment:

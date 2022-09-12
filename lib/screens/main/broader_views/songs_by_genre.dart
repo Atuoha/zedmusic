@@ -170,7 +170,7 @@ class _GenreSongsState extends State<GenreSongs> {
                           id: genre.id,
                           type: ArtworkType.GENRE,
                           artworkFit: BoxFit.cover,
-                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          nullArtworkWidget: const Icon(Icons.music_note, color:pColor,size:53,),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -223,20 +223,22 @@ class _GenreSongsState extends State<GenreSongs> {
                                         songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: songs[index].isMusic!
+                                      leading: songs[index] != null
                                           ? QueryArtworkWidget(
-                                        id: songs[index].id,
-                                        type: ArtworkType.AUDIO,
-                                        artworkFit: BoxFit.cover,
-                                        artworkBorder:
-                                        BorderRadius.circular(30),
-                                      )
-                                          : const Center(
-                                        child: Icon(
-                                          Icons.music_note,
-                                          color: pColor,
-                                        ),
-                                      ),
+                                              id: songs[index].id,
+                                              type: ArtworkType.AUDIO,
+                                              artworkFit: BoxFit.cover,
+                                              artworkBorder:
+                                                  BorderRadius.circular(30),
+                                              nullArtworkWidget: const Icon(
+                                                Icons.music_note,
+                                                color: pColor,
+                                              ),
+                                            )
+                                          : const Icon(
+                                              Icons.music_note,
+                                              color: pColor,
+                                            ),
                                       title: Text(
                                         songs[index].title,
                                         maxLines: 1,

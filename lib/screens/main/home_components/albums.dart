@@ -85,7 +85,7 @@ class Albums extends StatelessWidget {
                         child: QueryArtworkWidget(
                           id: albums[index].id,
                           type: ArtworkType.ALBUM,
-                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          nullArtworkWidget: const Icon(Icons.album, color:pColor),
                         ),
                       ),
                       const SizedBox(height: 10),

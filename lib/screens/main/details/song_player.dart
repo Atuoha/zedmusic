@@ -330,7 +330,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       type: ArtworkType.AUDIO,
                       artworkFit: BoxFit.cover,
                       nullArtworkWidget: const Center(
-                        child: Icon(Icons.music_note, size: 60, color: pColor),
+                        child: Icon(Icons.music_note, size: 80, color: pColor),
                       ),
                       artworkBorder: BorderRadius.circular(20),
                     ),

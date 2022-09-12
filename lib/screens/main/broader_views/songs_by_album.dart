@@ -174,7 +174,11 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           id: album.id,
                           type: ArtworkType.ALBUM,
                           artworkFit: BoxFit.cover,
-                          // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                          nullArtworkWidget: const Icon(
+                            Icons.album,
+                            color: pColor,
+                            size: 53,
+                          ),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -227,19 +231,21 @@ class _AlbumSongsState extends State<AlbumSongs> {
                                         songs[index], songs),
                                     child: ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: songs[index].isMusic!
+                                      leading: songs[index] != null
                                           ? QueryArtworkWidget(
                                               id: songs[index].id,
                                               type: ArtworkType.AUDIO,
                                               artworkFit: BoxFit.cover,
                                               artworkBorder:
                                                   BorderRadius.circular(30),
-                                            )
-                                          : const Center(
-                                              child: Icon(
+                                              nullArtworkWidget: const Icon(
                                                 Icons.music_note,
                                                 color: pColor,
                                               ),
+                                            )
+                                          : const Icon(
+                                              Icons.music_note,
+                                              color: pColor,
                                             ),
                                       title: Text(
                                         songs[index].title,

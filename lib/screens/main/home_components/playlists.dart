@@ -41,7 +41,7 @@ class Playlists extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left:3.0),
+          padding: const EdgeInsets.only(left: 3.0),
           child: FutureBuilder<List<PlaylistModel>>(
             future: audioQuery.queryPlaylists(
               orderType: OrderType.ASC_OR_SMALLER,
@@ -84,14 +84,10 @@ class Playlists extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 20.0),
                     child: Column(
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(40),
-                          child: Image.asset(
-                            'assets/images/playlist1.png',
-                            height: 50,
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
+                        const Icon(
+                          Icons.playlist_play_rounded,
+                          color: pColor,
+                          size: 33,
                         ),
                         const SizedBox(height: 10),
                         Text(

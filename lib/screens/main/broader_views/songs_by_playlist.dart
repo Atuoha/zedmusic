@@ -88,20 +88,21 @@ class _PlayListSongsState extends State<PlayListSongs> {
                             padding: const EdgeInsets.only(bottom: 10.0),
                             child: ListTile(
                               contentPadding: EdgeInsets.zero,
-                              leading: songs[index].isMusic!
+                              leading: songs[index] != null
                                   ? QueryArtworkWidget(
-                                id: songs[index].id,
-                                type: ArtworkType.AUDIO,
-                                artworkFit: BoxFit.cover,
-                                artworkBorder:
-                                BorderRadius.circular(30),
-                              )
-                                  : const Center(
-                                child: Icon(
-                                  Icons.music_note,
-                                  color: pColor,
-                                ),
-                              ),
+                                      id: songs[index].id,
+                                      type: ArtworkType.AUDIO,
+                                      artworkFit: BoxFit.cover,
+                                      artworkBorder: BorderRadius.circular(30),
+                                      nullArtworkWidget: const Icon(
+                                        Icons.music_note,
+                                        color: pColor,
+                                      ),
+                                    )
+                                  : const Icon(
+                                      Icons.music_note,
+                                      color: pColor,
+                                    ),
                               title: Text(
                                 songs[index].title,
                                 maxLines: 1,

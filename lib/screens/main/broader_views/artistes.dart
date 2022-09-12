@@ -146,7 +146,7 @@ class ArtisteView extends StatelessWidget {
                                   artworkFit: BoxFit.cover,
                                   artworkHeight: 120,
                                   artworkWidth: double.infinity,
-                                  // nullArtworkWidget: const Center(child:  Icon(Icons.music_note),),
+                                  nullArtworkWidget: const Icon(Icons.account_circle, color:pColor,size:33),
                                   artworkBorder: BorderRadius.circular(5),
                                 ),
                                 const SizedBox(height: 10),

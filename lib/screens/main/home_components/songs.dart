@@ -66,7 +66,7 @@ class _SongsState extends State<Songs> {
           builder: (context) => SongPlayer(
             song: song,
             player: songData.player,
-              songs: songList,
+            songs: songList,
             songData: songData,
           ),
         ),
@@ -146,23 +146,23 @@ class _SongsState extends State<Songs> {
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: GestureDetector(
-                    onTap: () =>
-                        _loadNewSongOnTrack(songs[index]),
+                    onTap: () => _loadNewSongOnTrack(songs[index]),
                     child: ListTile(
-                      leading: songs[index].isMusic!
+                      leading: songs[index] != null
                           ? QueryArtworkWidget(
-                        id: songs[index].id,
-                        type: ArtworkType.AUDIO,
-                        artworkFit: BoxFit.cover,
-                        artworkBorder:
-                        BorderRadius.circular(30),
-                      )
-                          : const Center(
-                        child: Icon(
-                          Icons.music_note,
-                          color: pColor,
-                        ),
-                      ),
+                              id: songs[index].id,
+                              type: ArtworkType.AUDIO,
+                              artworkFit: BoxFit.cover,
+                              artworkBorder: BorderRadius.circular(30),
+                              nullArtworkWidget: const Icon(
+                                Icons.music_note,
+                                color: pColor,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.music_note,
+                              color: pColor,
+                            ),
                       title: Text(
                         songs[index].displayName,
                         maxLines: 1,
@@ -180,8 +180,7 @@ class _SongsState extends State<Songs> {
                       trailing: GestureDetector(
                         onTap: () => {
                           if (songData.isPlaying &&
-                              songData.playingSong.id ==
-                                  songs[index].id)
+                              songData.playingSong.id == songs[index].id)
                             {
                               setState(() {
                                 songData.player.playing
@@ -189,16 +188,11 @@ class _SongsState extends State<Songs> {
                                     : _continueSong();
                               })
                             }
-                          else if (songData.playingSong.id !=
-                              songs[index].id)
-                            {
-                              _loadNewSongOnTrack(
-                                  songs[index])
-                            }
+                          else if (songData.playingSong.id != songs[index].id)
+                            {_loadNewSongOnTrack(songs[index])}
                           else
                             {
-                              songData.setPlayingSong(
-                                  songs[index]),
+                              songData.setPlayingSong(songs[index]),
                               setState(() {
                                 _playSong(songs[index].uri);
                               })
@@ -206,12 +200,11 @@ class _SongsState extends State<Songs> {
                         },
                         child: Icon(
                           songData.isPlaying
-                              ? songData.playingSong.id ==
-                              songs[index].id
-                              ? songData.player.playing
-                              ? Icons.pause_circle
-                              : Icons.play_circle
-                              : Icons.play_circle
+                              ? songData.playingSong.id == songs[index].id
+                                  ? songData.player.playing
+                                      ? Icons.pause_circle
+                                      : Icons.play_circle
+                                  : Icons.play_circle
                               : Icons.play_circle,
                           color: ambientBg,
                         ),
