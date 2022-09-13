@@ -444,7 +444,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
               ),
 
               // Bottom Player
-              const BottomPlayer(),
+              BottomPlayer(songData: songData,)
             ],
           ),
         ),

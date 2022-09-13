@@ -1,15 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:provider/provider.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/seekbar.dart';
 import '../../../constants/colors.dart';
-
 import '../../../models/provider_data.dart';
 import '../../../providers/song.dart';
 import 'package:just_audio/just_audio.dart';
@@ -80,97 +77,76 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
 
   // PLAY SONG
   _playSong() {
-    setState(() {
-      widget.player.play();
-      widget.songData.setIsPlaying(true);
-    });
+    widget.player.play();
+    widget.songData.setIsPlaying(true);
   }
 
   // PAUSE SONG
   _pauseSong() {
-    setState(() {
-      widget.player.pause();
-      widget.songData.setIsPlaying(false);
-    });
+    widget.player.pause();
+    widget.songData.setIsPlaying(false);
   }
 
   // To next song
   _skipNext() {
     if (currentSongIndex != widget.songs.length - 1) {
-      setState(() {
-        currentSongIndex += 1;
-      });
+      currentSongIndex += 1;
     }
 
-    Timer(const Duration(seconds: 1), () {
-      setState(() {
-        widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
-      });
-
-      setState(() {
-        widget.song = widget.songs[currentSongIndex];
-        widget.songData.player.setAudioSource(
-          AudioSource.uri(
-            Uri.parse(widget.songs[currentSongIndex].uri),
-            tag: MediaItem(
-              // Specify a unique ID for each media item:
-              id: '${widget.songs[currentSongIndex].id}',
-              // Metadata to display in the notification:
-              artist: widget.songs[currentSongIndex].artist,
-              duration:
-                  Duration(minutes: widget.songs[currentSongIndex].duration!),
-              title: widget.songs[currentSongIndex].title,
-              album: widget.songs[currentSongIndex].album,
-              artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
-            ),
-          ),
-        );
-      });
-    });
-
     setState(() {
-      widget.player.play();
-      widget.songData.setIsPlaying(true);
+      widget.song = widget.songs[currentSongIndex];
     });
+
+    widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
+    widget.player.play();
+    widget.songData.setCurrentSongIndex(currentSongIndex);
+    widget.songData.setIsPlaying(true);
+    widget.songData.player.setAudioSource(
+      AudioSource.uri(
+        Uri.parse(widget.songs[currentSongIndex].uri),
+        tag: MediaItem(
+          // Specify a unique ID for each media item:
+          id: '${widget.songs[currentSongIndex].id}',
+          // Metadata to display in the notification:
+          artist: widget.songs[currentSongIndex].artist,
+          duration: Duration(minutes: widget.songs[currentSongIndex].duration!),
+          title: widget.songs[currentSongIndex].title,
+          album: widget.songs[currentSongIndex].album,
+          // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+        ),
+      ),
+    );
   }
 
   // to previous song
   _skipPrevious() {
     if (currentSongIndex != 0) {
-      setState(() {
-        currentSongIndex -= 1;
-      });
+      currentSongIndex -= 1;
     }
 
-    Timer(const Duration(microseconds: 1), () {
-      setState(() {
-        widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
-      });
-
-      setState(() {
-        widget.song = widget.songs[currentSongIndex];
-        widget.songData.player.setAudioSource(
-          AudioSource.uri(
-            Uri.parse(widget.songs[currentSongIndex].uri),
-            tag: MediaItem(
-              // Specify a unique ID for each media item:
-              id: '${widget.songs[currentSongIndex].id}',
-              // Metadata to display in the notification:
-              artist: widget.songs[currentSongIndex].artist,
-              duration:
-                  Duration(minutes: widget.songs[currentSongIndex].duration!),
-              title: widget.songs[currentSongIndex].title,
-              album: widget.songs[currentSongIndex].album,
-              artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
-            ),
-          ),
-        );
-      });
-    });
     setState(() {
-      widget.player.play();
-      widget.songData.setIsPlaying(true);
+      widget.song = widget.songs[currentSongIndex];
     });
+
+    widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
+    widget.player.play();
+    widget.songData.setCurrentSongIndex(currentSongIndex);
+    widget.songData.setIsPlaying(true);
+    widget.songData.player.setAudioSource(
+      AudioSource.uri(
+        Uri.parse(widget.songs[currentSongIndex].uri),
+        tag: MediaItem(
+          // Specify a unique ID for each media item:
+          id: '${widget.songs[currentSongIndex].id}',
+          // Metadata to display in the notification:
+          artist: widget.songs[currentSongIndex].artist,
+          duration: Duration(minutes: widget.songs[currentSongIndex].duration!),
+          title: widget.songs[currentSongIndex].title,
+          album: widget.songs[currentSongIndex].album,
+          // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+        ),
+      ),
+    );
   }
 
   @override
@@ -178,6 +154,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     // TODO: implement initState
     _returnCurrentIndex();
     widget.player.play();
+    print("THE CURRENT INDEX OF THE MUSIC IS: $currentSongIndex");
     super.initState();
   }
 
@@ -188,7 +165,35 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
       widget.player.playerStateStream.listen((state) {
         switch (state.processingState) {
           case ProcessingState.completed:
-            _skipNext();
+            if (currentSongIndex != widget.songs.length - 1) {
+              currentSongIndex += 1;
+            }
+
+            setState(() {
+              widget.song = widget.songs[currentSongIndex];
+            });
+
+            widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
+            widget.player.play();
+            // widget.songData.setCurrentSongIndex(currentSongIndex);
+            widget.songData.setIsPlaying(true);
+            widget.songData.player.setAudioSource(
+              AudioSource.uri(
+                Uri.parse(widget.songs[currentSongIndex].uri),
+                tag: MediaItem(
+                  // Specify a unique ID for each media item:
+                  id: '${widget.songs[currentSongIndex].id}',
+                  // Metadata to display in the notification:
+                  artist: widget.songs[currentSongIndex].artist,
+                  duration: Duration(
+                    minutes: widget.songs[currentSongIndex].duration!,
+                  ),
+                  title: widget.songs[currentSongIndex].title,
+                  album: widget.songs[currentSongIndex].album,
+                  // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+                ),
+              ),
+            );
         }
       });
     } else {
@@ -196,23 +201,6 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     }
 
     super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    // player.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      // Release the player's resources when not in use. We use "stop" so that
-      // if the app resumes later, it will still remember what position to
-      // resume from.
-      // player.stop();
-    }
   }
 
   /// Collects the data useful for displaying in a seek bar, using a handy
@@ -258,7 +246,11 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                   children: [
                     Builder(
                       builder: (context) => GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
+                        onTap: () => {
+                          //setting song current index on provider
+                          widget.songData.setCurrentSongIndex(currentSongIndex),
+                          Navigator.of(context).pop(),
+                        },
                         child: Container(
                           height: 25,
                           width: 30,

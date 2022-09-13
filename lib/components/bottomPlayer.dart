@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-
 import '../constants/colors.dart';
 import '../providers/song.dart';
 import '../screens/main/details/song_player.dart';
 
 class BottomPlayer extends StatefulWidget {
-  const BottomPlayer({Key? key}) : super(key: key);
-
+  const BottomPlayer({Key? key, required this.songData}) : super(key: key);
+  final SongData songData;
   @override
   State<BottomPlayer> createState() => _BottomPlayerState();
 }
 
 class _BottomPlayerState extends State<BottomPlayer> {
+
   @override
   Widget build(BuildContext context) {
 

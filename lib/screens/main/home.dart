@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zedmusic/components/searchbox.dart';
 import 'package:zedmusic/screens/main/home_components/playlists.dart';
 import '../../components/bottomPlayer.dart';
 import '../../constants/colors.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../providers/song.dart';
 import 'home_components/albums.dart';
 import 'home_components/artistes.dart';
 import 'home_components/genres.dart';
@@ -74,6 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var songData = Provider.of<SongData>(context);
     return Padding(
       padding: const EdgeInsets.only(
         top: 40.0,
@@ -116,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           // Bottom Player
-          const BottomPlayer(),
+          BottomPlayer(songData: songData,)
         ],
       ),
     );

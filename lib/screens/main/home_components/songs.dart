@@ -17,7 +17,6 @@ class Songs extends StatefulWidget {
 
 class _SongsState extends State<Songs> {
   final player = AudioPlayer();
-
   var songsLength;
 
   @override
@@ -137,6 +136,7 @@ class _SongsState extends State<Songs> {
               );
             }
             songsLength = songs.length;
+            songList = songs;
             return SizedBox(
               height: 220,
               child: ListView.builder(

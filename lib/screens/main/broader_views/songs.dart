@@ -48,7 +48,7 @@ class _SongsViewState extends State<SongsView> {
               duration: Duration(minutes: song.duration!),
               title: song.title,
               album: song.album,
-              artUri: Uri.parse(song.uri!),
+              // artUri: Uri.parse(song.uri!),
             ),
           ),
         );
@@ -319,7 +319,7 @@ class _SongsViewState extends State<SongsView> {
               ),
 
               // Bottom Player
-              const BottomPlayer()
+               BottomPlayer(songData: songData,)
             ],
           ),
         ),

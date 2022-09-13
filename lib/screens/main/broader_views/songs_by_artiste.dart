@@ -335,7 +335,7 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
               ),
 
               // Bottom Player
-              const BottomPlayer(),
+              BottomPlayer(songData: songData,)
             ],
           ),
         ),

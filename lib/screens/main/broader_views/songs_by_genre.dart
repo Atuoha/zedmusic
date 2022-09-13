@@ -325,7 +325,7 @@ class _GenreSongsState extends State<GenreSongs> {
               ),
 
               // Bottom Player
-              const BottomPlayer(),
+              BottomPlayer(songData: songData,)
             ],
           ),
         ),
