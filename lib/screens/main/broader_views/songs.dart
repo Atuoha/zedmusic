@@ -266,6 +266,9 @@ class _SongsViewState extends State<SongsView> {
                                         ),
                                         const SizedBox(height: 5),
                                         GestureDetector(
+                                          /* function is used for playing and pause song and it also considers the songId of
+                                          the song which is playing
+                                          */
                                           onTap: () => {
                                             if (songData.isPlaying &&
                                                 songData.playingSong.id ==
@@ -292,6 +295,10 @@ class _SongsViewState extends State<SongsView> {
                                                 })
                                               }
                                           },
+                                          /* This icon state changes everything and adjusts itself based on the current
+                                            state of the player and check the songID of the playing song so as to change
+                                            it's icon to pause and the others to play
+                                          */
                                           child: Icon(
                                             songData.isPlaying
                                                 ? songData.playingSong.id ==
@@ -319,7 +326,9 @@ class _SongsViewState extends State<SongsView> {
               ),
 
               // Bottom Player
-               BottomPlayer(songData: songData,)
+              BottomPlayer(
+                songData: songData,
+              )
             ],
           ),
         ),

@@ -47,6 +47,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   bool isRepeatOne = false;
   bool isShuffle = false;
 
+  // toggling isRepeat
   _toggleIsRepeat() {
     setState(() {
       isRepeatOne = !isRepeatOne;
@@ -65,6 +66,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     }
   }
 
+  //toggling shuffle
   _toggleIsShuffle() {
     setState(() {
       isShuffle = !isShuffle;
@@ -154,7 +156,6 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
     // TODO: implement initState
     _returnCurrentIndex();
     widget.player.play();
-    print("THE CURRENT INDEX OF THE MUSIC IS: $currentSongIndex");
     super.initState();
   }
 
@@ -165,38 +166,51 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
       widget.player.playerStateStream.listen((state) {
         switch (state.processingState) {
           case ProcessingState.completed:
-            if (currentSongIndex != widget.songs.length - 1) {
-              currentSongIndex += 1;
-            }
+            if (!isRepeatOne) {
+              if (widget.songData.songList.length > 1) {
+                if (currentSongIndex != widget.songs.length - 1) {
+                  currentSongIndex += 1;
+                }
 
-            setState(() {
-              widget.song = widget.songs[currentSongIndex];
-            });
+                /* I subtracted 1 from the currentSongIndex. For a reason am still trying to figure out, the
+                  index adds extra 1 after the increment by 1
+                 */
+                setState(() {
+                  widget.song = widget.songs[currentSongIndex - 1];
+                });
 
-            widget.songData.setPlayingSong(widget.songs[currentSongIndex]);
-            widget.player.play();
-            // widget.songData.setCurrentSongIndex(currentSongIndex);
-            widget.songData.setIsPlaying(true);
-            widget.songData.player.setAudioSource(
-              AudioSource.uri(
-                Uri.parse(widget.songs[currentSongIndex].uri),
-                tag: MediaItem(
-                  // Specify a unique ID for each media item:
-                  id: '${widget.songs[currentSongIndex].id}',
-                  // Metadata to display in the notification:
-                  artist: widget.songs[currentSongIndex].artist,
-                  duration: Duration(
-                    minutes: widget.songs[currentSongIndex].duration!,
+                widget.songData
+                    .setPlayingSong(widget.songs[currentSongIndex - 1]);
+                widget.player.play();
+                // widget.songData.setCurrentSongIndex(currentSongIndex);
+                widget.songData.setIsPlaying(true);
+                widget.songData.player.setAudioSource(
+                  AudioSource.uri(
+                    Uri.parse(widget.songs[currentSongIndex - 1].uri),
+                    tag: MediaItem(
+                      // Specify a unique ID for each media item:
+                      id: '${widget.songs[currentSongIndex - 1].id}',
+                      // Metadata to display in the notification:
+                      artist: widget.songs[currentSongIndex - 1].artist,
+                      duration: Duration(
+                        minutes: widget.songs[currentSongIndex - 1].duration!,
+                      ),
+                      title: widget.songs[currentSongIndex - 1].title,
+                      album: widget.songs[currentSongIndex - 1].album,
+                      // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+                    ),
                   ),
-                  title: widget.songs[currentSongIndex].title,
-                  album: widget.songs[currentSongIndex].album,
-                  // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
-                ),
-              ),
-            );
+                );
+              } else {
+                // pausing a music if it's the only on the list when completed
+                widget.songData.player.pause();
+                widget.songData.setIsPlaying(false);
+              }
+            }
         }
       });
     } else {
+      // repeating a music without incrementing the counter if isRepeatOne is active
       widget.player.play();
     }
 
