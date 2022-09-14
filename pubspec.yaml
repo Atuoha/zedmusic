@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.0.3
   just_audio: ^0.9.28
   just_audio_background: ^0.0.1-beta.7
+  is_first_run: ^1.0.0
 
 
 dev_dependencies:

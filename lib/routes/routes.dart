@@ -20,14 +20,14 @@ var routes = {
   AuthScreen.routeName: (context) => const AuthScreen(),
   ForgotPasswordScreen.routeName: (context) => const ForgotPasswordScreen(),
   BottomNav.routeName: (context) => const BottomNav(),
-  SongsView.routeName: (context) => SongsView(),
+  SongsView.routeName: (context) => const SongsView(),
   GenresView.routeName: (context) => GenresView(),
   ArtisteView.routeName: (context) => ArtisteView(),
   PlayListView.routeName: (context) => const PlayListView(),
-  ArtisteSongs.routeName: (context) => ArtisteSongs(),
-  GenreSongs.routeName: (context) => GenreSongs(),
+  ArtisteSongs.routeName: (context) => const ArtisteSongs(),
+  GenreSongs.routeName: (context) => const GenreSongs(),
   AlbumsView.routeName: (context) => AlbumsView(),
   AlbumSongs.routeName: (context) => AlbumSongs(),
-  PlayListSongs.routeName: (context) => PlayListSongs(),
+  PlayListSongs.routeName: (context) => const PlayListSongs(),
 
 };

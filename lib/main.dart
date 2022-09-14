@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:is_first_run/is_first_run.dart';
 import 'package:zedmusic/providers/song.dart';
 import 'package:zedmusic/routes/routes.dart';
 import 'package:zedmusic/screens/splash/entry_screen.dart';
@@ -17,13 +18,27 @@ Future<void> main() async {
     // androidNotificationIcon: 'assets/images/only_logo.png'
 
   );
+
+
   runApp(const MusicApp());
 }
-// void main()=>
-// runApp(const MusicApp());
 
-class MusicApp extends StatelessWidget {
+class MusicApp extends StatefulWidget{
   const MusicApp({Key? key}) : super(key: key);
+  @override
+  State<MusicApp> createState()=> MusicAppState();
+}
+
+
+class MusicAppState extends State<MusicApp> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +47,7 @@ class MusicApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'Roboto'),
-        home: const EntryScreen(),
+        home:  EntryScreen(),
         routes: routes,
       ),
     );
