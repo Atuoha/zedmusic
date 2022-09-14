@@ -11,3 +11,4 @@ const Color textColor = Color(0XFFe3e3e3);
 const Color ambientBg = Color(0XFFBFFEFF);
 const Color settingsColor = Color(0XFFB7ADEF);
 const Color pColor = Color(0XFFFF6584);
+const Color googleBtn = Color(0XFF3F7EE8);

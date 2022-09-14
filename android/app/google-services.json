@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "27208989927",
+    "project_id": "zedmusic-98171",
+    "storage_bucket": "zedmusic-98171.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27208989927:android:aa1c75ea04ded1bb007642",
+        "android_client_info": {
+          "package_name": "com.example.zedmusic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27208989927-sfme8nsntvkbol7eboa7glpr2in594n4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTMguC3-56ePPgKcmcl_7DZJA1nUemxSo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27208989927-sfme8nsntvkbol7eboa7glpr2in594n4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "27208989927-jcbv1oper4ajrs3p0c7dm3ursiu0hi3q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.zedmusic"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

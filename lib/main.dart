@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:zedmusic/providers/song.dart';
@@ -7,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 
 import 'constants/colors.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   await JustAudioBackground.init(
@@ -16,8 +19,15 @@ Future<void> main() async {
     preloadArtwork: true,
     notificationColor: primaryColor,
     // androidNotificationIcon: 'assets/images/only_logo.png'
-
   );
+    WidgetsFlutterBinding.ensureInitialized();
+    FirebaseApp app = await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    runApp(const MusicApp());
+    if (kDebugMode) {
+      print('Initialized default app $app');
+    }
 
   runApp(const MusicApp());
 }

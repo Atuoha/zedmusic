@@ -43,6 +43,9 @@ dependencies:
   just_audio_background: ^0.0.1-beta.7
   is_first_run: ^1.0.0
   flutter_launcher_icons: ^0.10.0
+  google_sign_in: ^5.4.1
+  firebase_auth: ^3.8.0
+  firebase_core: ^1.22.0
 
 
 
