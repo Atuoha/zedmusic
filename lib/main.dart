@@ -19,7 +19,6 @@ Future<void> main() async {
 
   );
 
-
   runApp(const MusicApp());
 }
 
@@ -31,15 +30,6 @@ class MusicApp extends StatefulWidget{
 
 
 class MusicAppState extends State<MusicApp> {
-
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -47,7 +37,7 @@ class MusicAppState extends State<MusicApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'Roboto'),
-        home:  EntryScreen(),
+        home:  const EntryScreen(),
         routes: routes,
       ),
     );
@@ -59,3 +49,13 @@ class MusicAppState extends State<MusicApp> {
  - CHECKING SONG PRESENCE IN PLAYLIST
  - FINDING A BETTER WAY TO MANAGE THE NUMBER OF SONGS IN A PLAYLIST
 */
+
+
+/*
+  DISTURBING ISSUES:
+  ABILITY FOR SONG TO GO TO NEXT ON BACKGROUND -
+
+ */
+
+
+// TODO: AUTHENTICATION -username and password | Google Auth && SEARCH FNC

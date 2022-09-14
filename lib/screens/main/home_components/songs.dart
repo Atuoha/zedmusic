@@ -59,7 +59,7 @@ class _SongsState extends State<Songs> {
     }
 
     // Fnc for loading new music on track and taking them to the song_player screen
-    _loadNewSongOnTrack(SongModel song) {
+    _loadNewSongOnTrack(SongModel song, songs) {
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => SongPlayer(
@@ -70,6 +70,7 @@ class _SongsState extends State<Songs> {
           ),
         ),
       );
+      songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song.uri);
     }
@@ -146,7 +147,7 @@ class _SongsState extends State<Songs> {
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: GestureDetector(
-                    onTap: () => _loadNewSongOnTrack(songs[index]),
+                    onTap: () => _loadNewSongOnTrack(songs[index], songs),
                     child: ListTile(
                       leading: songs[index] != null
                           ? QueryArtworkWidget(
@@ -189,7 +190,7 @@ class _SongsState extends State<Songs> {
                               })
                             }
                           else if (songData.playingSong.id != songs[index].id)
-                            {_loadNewSongOnTrack(songs[index])}
+                            {_loadNewSongOnTrack(songs[index], songs)}
                           else
                             {
                               songData.setPlayingSong(songs[index]),

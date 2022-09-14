@@ -121,16 +121,15 @@ class GenresView extends StatelessWidget {
                       );
                     }
                     return SizedBox(
-                      height: size.height / 1.3,
-                      child:  GridView.builder(
-                        padding: const EdgeInsets.only(top:10),
+                        height: size.height / 1.3,
+                        child: GridView.builder(
+                          padding: const EdgeInsets.only(top: 10),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount:
                                 orientation == Orientation.portrait ? 2 : 3,
                             mainAxisSpacing: 7,
-                                crossAxisSpacing: 10,
-
+                            crossAxisSpacing: 10,
                           ),
                           itemCount: genres.length,
                           itemBuilder: (context, index) => GestureDetector(
@@ -139,7 +138,6 @@ class GenresView extends StatelessWidget {
                               arguments: {
                                 'genre': genres[index],
                               },
-
                             ),
                             child: Column(
                               children: [
@@ -147,7 +145,11 @@ class GenresView extends StatelessWidget {
                                   id: genres[index].id,
                                   type: ArtworkType.GENRE,
                                   artworkFit: BoxFit.cover,
-                                  nullArtworkWidget: const Icon(Icons.music_note, color:pColor,size:33),
+                                  nullArtworkWidget: const Icon(
+                                    Icons.music_note,
+                                    color: pColor,
+                                    size: 63,
+                                  ),
                                   artworkHeight: 120,
                                   artworkWidth: double.infinity,
                                   artworkBorder: BorderRadius.circular(5),
@@ -164,9 +166,7 @@ class GenresView extends StatelessWidget {
                               ],
                             ),
                           ),
-                        )
-                    );
-
+                        ));
                   },
                 ),
               ],

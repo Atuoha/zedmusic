@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:provider/provider.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';
 import '../../../components/seekbar.dart';
@@ -232,7 +233,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    // var songData = Provider.of<SongData>(context);
+    var songData = Provider.of<SongData>(context,listen:false);
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
@@ -290,9 +291,9 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       ),
                       itemBuilder: (BuildContext context) => [
                         PopupMenuItem(
-                          onTap: () => widget.songData.toggleIsFav(widget.song),
+                          onTap: () => songData.toggleIsFav(widget.song),
                           child: Text(
-                            widget.songData.isFav(widget.song.id)
+                            songData.isFav(widget.song.id)
                                 ? 'Remove from favorites'
                                 : 'Add to favorites',
                           ),
@@ -360,12 +361,12 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => widget.songData.toggleIsFav(widget.song),
+                      onTap: () => songData.toggleIsFav(widget.song),
                       child: Icon(
-                        widget.songData.isFav(widget.song.id)
+                        songData.isFav(widget.song.id)
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: widget.songData.isFav(widget.song.id)
+                        color: songData.isFav(widget.song.id)
                             ? Colors.red
                             : ambientBg,
                       ),

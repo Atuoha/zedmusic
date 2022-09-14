@@ -16,70 +16,81 @@ class BottomPlayer extends StatefulWidget {
 }
 
 class _BottomPlayerState extends State<BottomPlayer> {
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    // if (!isRepeatOne) {
-    widget.songData.player.playerStateStream.listen((state) {
-      switch (state.processingState) {
-        case ProcessingState.completed:
-          // if (!isRepeatOne) {
-          if (widget.songData.songList.length > 1) {
-            if (widget.songData.currentSongIndex !=
-                widget.songData.songList.length - 1) {
-              widget.songData.currentSongIndex += 1;
-            }
+  var currentSongIndex = 0;
 
-            /* I subtracted 11 from the currentSongIndex. For a reason am still trying to figure out, the
-                  index adds extra 1 after the increment by 1
-                 */
-            setState(() {
-              widget.songData.playingSong =
-                  widget.songData.songList[widget.songData.currentSongIndex];
-            });
-
-            widget.songData.setPlayingSong(
-                widget.songData.songList[widget.songData.currentSongIndex]);
-            widget.songData.player.play();
-            // widget.songData.setCurrentSongIndex(currentSongIndex);
-            widget.songData.setIsPlaying(true);
-            widget.songData.player.setAudioSource(
-              AudioSource.uri(
-                Uri.parse(widget
-                    .songData.songList[widget.songData.currentSongIndex].uri!),
-                tag: MediaItem(
-                  // Specify a unique ID for each media item:
-                  id: '${widget.songData.songList[widget.songData.currentSongIndex].id}',
-                  // Metadata to display in the notification:
-                  artist: widget.songData
-                      .songList[widget.songData.currentSongIndex].artist,
-                  duration: Duration(
-                    minutes: widget.songData
-                        .songList[widget.songData.currentSongIndex].duration!,
-                  ),
-                  title: widget.songData
-                      .songList[widget.songData.currentSongIndex].title,
-                  album: widget.songData
-                      .songList[widget.songData.currentSongIndex].album,
-                  // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
-                ),
-              ),
-            );
-            // } else {
-            //   // pausing a music if it's the only on the list when completed
-            //   widget.songData.player.pause();
-            //   widget.songData.setIsPlaying(false);
-            // }
-          }
+  // Return current song index
+  _returnCurrentIndex() {
+    widget.songData.songList.asMap().forEach((key, song) {
+      if (song.id == widget.songData.playingSong.id) {
+        currentSongIndex = key;
       }
     });
-    // } else {
-    //   // repeating a music without incrementing the counter if isRepeatOne is active
-    //   widget.player.play();
-    // }
-
-    super.didChangeDependencies();
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _returnCurrentIndex();
+    super.initState();
+  }
+
+  // @override
+  // void didChangeDependencies() {
+  //   // TODO: implement didChangeDependencies
+  //   // if (!isRepeatOne) {
+  //   widget.songData.player.playerStateStream.listen((state) {
+  //     switch (state.processingState) {
+  //       case ProcessingState.completed:
+  //         // if (!isRepeatOne) {
+  //         if (widget.songData.songList.length > 1) {
+  //           if (currentSongIndex != widget.songData.songList.length - 1) {
+  //             currentSongIndex += 1;
+  //           }
+  //
+  //           // widget.songData.player.setShuffleModeEnabled(false);
+  //           setState(() {
+  //             widget.songData.playingSong =
+  //                 widget.songData.songList[currentSongIndex];
+  //           });
+  //
+  //           widget.songData
+  //               .setPlayingSong(widget.songData.songList[currentSongIndex]);
+  //           widget.songData.player.play();
+  //           // widget.songData.setCurrentSongIndex(currentSongIndex);
+  //           widget.songData.setIsPlaying(true);
+  //           widget.songData.player.setAudioSource(
+  //             AudioSource.uri(
+  //               Uri.parse(widget.songData.songList[currentSongIndex].uri!),
+  //               tag: MediaItem(
+  //                 // Specify a unique ID for each media item:
+  //                 id: '${widget.songData.songList[currentSongIndex].id}',
+  //                 // Metadata to display in the notification:
+  //                 artist: widget.songData.songList[currentSongIndex].artist,
+  //                 duration: Duration(
+  //                   minutes:
+  //                       widget.songData.songList[currentSongIndex].duration!,
+  //                 ),
+  //                 title: widget.songData.songList[currentSongIndex].title,
+  //                 album: widget.songData.songList[currentSongIndex].album,
+  //                 // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+  //               ),
+  //             ),
+  //           );
+  //           // } else {
+  //           //   // pausing a music if it's the only on the list when completed
+  //           //   widget.songData.player.pause();
+  //           //   widget.songData.setIsPlaying(false);
+  //           // }
+  //         }
+  //     }
+  //   });
+  //   // } else {
+  //   //   // repeating a music without incrementing the counter if isRepeatOne is active
+  //   //   widget.player.play();
+  //   // }
+  //
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {

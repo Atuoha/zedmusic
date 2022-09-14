@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:zedmusic/screens/main/broader_views/songs_by_genre.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
 import '../broader_views/genres.dart';
 
 class Genres extends StatelessWidget {
-   Genres({Key? key}) : super(key: key);
+  Genres({Key? key}) : super(key: key);
   var genresLength = 0;
 
   @override
@@ -76,28 +77,39 @@ class Genres extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: genres.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: QueryArtworkWidget(
-                          id: genres[index].id,
-                          type: ArtworkType.GENRE,
-                          nullArtworkWidget: const Icon(Icons.music_note, color:pColor,),
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed(
+                    GenreSongs.routeName,
+                    arguments: {
+                      'id': genres[index].id,
+                    },
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: QueryArtworkWidget(
+                            id: genres[index].id,
+                            type: ArtworkType.GENRE,
+                            nullArtworkWidget: const Icon(
+                              Icons.music_note,
+                              color: pColor,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        genres[index].genre,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        const SizedBox(height: 10),
+                        Text(
+                          genres[index].genre,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

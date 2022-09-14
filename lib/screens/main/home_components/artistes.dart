@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:zedmusic/screens/main/broader_views/songs_by_artiste.dart';
 
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
 import '../broader_views/artistes.dart';
 
 class Artistes extends StatelessWidget {
-   Artistes({Key? key}) : super(key: key);
+  Artistes({Key? key}) : super(key: key);
   var artisteLength = 0;
 
   @override
@@ -79,28 +80,39 @@ class Artistes extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: artistes.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: QueryArtworkWidget(
-                          id: artistes[index].id,
-                          type: ArtworkType.ARTIST,
-                          nullArtworkWidget: const Icon(Icons.account_circle, color:pColor,),
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed(
+                    ArtisteSongs.routeName,
+                    arguments: {
+                      'id': artistes[index].id,
+                    },
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: QueryArtworkWidget(
+                            id: artistes[index].id,
+                            type: ArtworkType.ARTIST,
+                            nullArtworkWidget: const Icon(
+                              Icons.account_circle,
+                              color: pColor,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        artistes[index].artist,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        const SizedBox(height: 10),
+                        Text(
+                          artistes[index].artist,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

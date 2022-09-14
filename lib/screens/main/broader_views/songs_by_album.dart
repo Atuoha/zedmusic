@@ -93,6 +93,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
       songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song);
+
     }
 
     SystemChrome.setSystemUIOverlayStyle(
@@ -177,7 +178,7 @@ class _AlbumSongsState extends State<AlbumSongs> {
                           nullArtworkWidget: const Icon(
                             Icons.album,
                             color: pColor,
-                            size: 53,
+                            size: 63,
                           ),
                           artworkBorder: BorderRadius.circular(20),
                         ),

@@ -181,7 +181,11 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
                           id: artiste.id,
                           type: ArtworkType.ARTIST,
                           artworkFit: BoxFit.cover,
-                          nullArtworkWidget: const Icon(Icons.account_circle, color:pColor,size:53,),
+                          nullArtworkWidget: const Icon(
+                            Icons.account_circle,
+                            color: pColor,
+                            size: 63,
+                          ),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -335,7 +339,9 @@ class _ArtisteSongsState extends State<ArtisteSongs> {
               ),
 
               // Bottom Player
-              BottomPlayer(songData: songData,)
+              BottomPlayer(
+                songData: songData,
+              )
             ],
           ),
         ),

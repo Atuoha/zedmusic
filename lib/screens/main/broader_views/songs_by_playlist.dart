@@ -225,6 +225,7 @@ class _PlayListSongsState extends State<PlayListSongs> {
       songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song);
+
     }
 
     SystemChrome.setSystemUIOverlayStyle(

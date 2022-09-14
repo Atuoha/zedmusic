@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class SongData extends ChangeNotifier {
@@ -63,7 +60,6 @@ class SongData extends ChangeNotifier {
 
   setCurrentSongIndex(songIndex) {
     currentSongIndex = songIndex;
-    print('SONG CURRENT ID: $currentSongIndex');
      notifyListeners();
   }
 
@@ -71,8 +67,6 @@ class SongData extends ChangeNotifier {
     songList = songs;
     notifyListeners();
   }
-
-
 
   final List<SongModel> _favoritesSongs = [];
 }

@@ -4,6 +4,7 @@ import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
 import '../broader_views/albums.dart';
+import '../broader_views/songs_by_album.dart';
 
 class Albums extends StatelessWidget {
   Albums({Key? key}) : super(key: key);
@@ -76,28 +77,39 @@ class Albums extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: albums.length,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
-                  child: Column(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: QueryArtworkWidget(
-                          id: albums[index].id,
-                          type: ArtworkType.ALBUM,
-                          nullArtworkWidget: const Icon(Icons.album, color:pColor),
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed(
+                    AlbumSongs.routeName,
+                    arguments: {
+                      'id': albums[index].id,
+                    },
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: QueryArtworkWidget(
+                            id: albums[index].id,
+                            type: ArtworkType.ALBUM,
+                            nullArtworkWidget: const Icon(
+                              Icons.album,
+                              color: pColor,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                       '${albums[index].album.substring(0,4)}...',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        const SizedBox(height: 10),
+                        Text(
+                          '${albums[index].album.substring(0, 4)}...',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

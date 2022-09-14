@@ -92,19 +92,19 @@ class _AuthScreenState extends State<AuthScreen> {
             switch (field) {
               case Field.password:
                 if (value!.isEmpty || value.length < 8) {
-                  return 'Password needs to be valid';
+                  return 'Password needs to be greater than 8 characters!';
                 }
                 break;
 
               case Field.username:
                 if (value!.isEmpty || value.length < 3) {
-                  return 'Username needs to be valid';
+                  return 'Username needs to be valid!';
                 }
                 break;
 
               case Field.phone:
                 if (value!.isEmpty || value.length < 8) {
-                  return 'Phone needs to be valid';
+                  return 'Phone number needs to be valid!';
                 }
                 break;
             }

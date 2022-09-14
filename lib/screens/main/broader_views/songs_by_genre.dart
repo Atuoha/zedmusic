@@ -170,7 +170,11 @@ class _GenreSongsState extends State<GenreSongs> {
                           id: genre.id,
                           type: ArtworkType.GENRE,
                           artworkFit: BoxFit.cover,
-                          nullArtworkWidget: const Icon(Icons.music_note, color:pColor,size:53,),
+                          nullArtworkWidget: const Icon(
+                            Icons.music_note,
+                            color: pColor,
+                            size: 63,
+                          ),
                           artworkBorder: BorderRadius.circular(20),
                         ),
                       ),
@@ -325,7 +329,9 @@ class _GenreSongsState extends State<GenreSongs> {
               ),
 
               // Bottom Player
-              BottomPlayer(songData: songData,)
+              BottomPlayer(
+                songData: songData,
+              )
             ],
           ),
         ),

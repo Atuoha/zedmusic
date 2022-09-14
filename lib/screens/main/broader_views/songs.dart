@@ -101,6 +101,7 @@ class _SongsViewState extends State<SongsView> {
       songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song);
+
     }
 
     SystemChrome.setSystemUIOverlayStyle(

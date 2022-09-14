@@ -5,6 +5,7 @@ import 'package:zedmusic/screens/main/broader_views/playlist.dart';
 import '../../../components/kText.dart';
 import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
+import '../broader_views/songs_by_playlist.dart';
 
 class Playlists extends StatelessWidget {
   Playlists({Key? key}) : super(key: key);
@@ -80,25 +81,33 @@ class Playlists extends StatelessWidget {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: playlists.length,
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.playlist_play_rounded,
-                          color: pColor,
-                          size: 33,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          playlists[index].playlist,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => Navigator.of(context).pushNamed(
+                      PlayListSongs.routeName,
+                      arguments: {
+                        'id': playlists[index].id,
+                      },
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: Column(
+                        children: [
+                          const Icon(
+                            Icons.playlist_play_rounded,
+                            color: pColor,
+                            size: 33,
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+                          Text(
+                            playlists[index].playlist,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
