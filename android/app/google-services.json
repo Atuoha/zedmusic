@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "27208989927-lha33s8eeufit08pitq3p3mil6ebr2ur.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.zedmusic",
+            "certificate_hash": "fac44a58ecf3847144cb49a604bbb9a4e69897c1"
+          }
+        },
+        {
           "client_id": "27208989927-sfme8nsntvkbol7eboa7glpr2in594n4.apps.googleusercontent.com",
           "client_type": 3
         }

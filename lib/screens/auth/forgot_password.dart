@@ -105,6 +105,7 @@ class _AuthScreenState extends State<ForgotPasswordScreen> {
 
                                       return null;
                                     },
+                                    autofocus: true,
                                     textInputAction: TextInputAction.done,
                                     decoration: InputDecoration(
                                       contentPadding:

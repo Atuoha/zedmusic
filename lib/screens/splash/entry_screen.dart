@@ -26,7 +26,6 @@ class _EntryScreenState extends State<EntryScreen> {
     } else {
       Timer(duration, _navigateToSplash);
     }
-    print(ifr);
   }
 
   _navigateToSplash() {

@@ -183,6 +183,7 @@ class _AuthScreenState extends State<AuthScreen> {
     } on FirebaseAuthException catch (e) {
       var error = 'An error occurred. Check credentials!';
       if (e.message != null) {
+
         error = e.message!;
       }
 
@@ -190,6 +191,8 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         isLoading = false;
       });
+    } catch(e){
+      print(e);
     }
   }
 
@@ -433,7 +436,11 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-/* DOCS:
+
+
+
+/*
+DOCS:
 https://firebase.google.com/docs/flutter/setup?platform=android
 https://firebase.google.com/docs/cli
 
@@ -442,4 +449,10 @@ https://pub.dev/packages/google_sign_in   OR facebook_signin for FACEBOOK
 https://pub.dev/packages/firebase_core/
 https://pub.dev/packages/firebase_auth/
 https://pub.dev/packages/cloud_firestore
+
+SHA FINGERPRINT
+PS C:\Flutter_Apps\zedmusic\android> ./gradlew signingReport
  */
+
+
+
