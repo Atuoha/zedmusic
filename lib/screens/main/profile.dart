@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zedmusic/components/kListTile.dart';
+import 'package:zedmusic/screens/auth/auth.dart';
 
 import '../../constants/colors.dart';
 
@@ -13,6 +17,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final _auth = FirebaseAuth.instance;
+
+  _logoutUser() {
+    _auth.signOut().then(
+          (value) => Navigator.of(context).pushNamed(
+            AuthScreen.routeName,
+          ),
+        );
+  }
+
   _editProfile() {
     // TODO: Edit Profile
     if (kDebugMode) {
@@ -115,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               padding: const EdgeInsets.all(5),
             ),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => _logoutUser(),
             child: const Text(
               'Confirm',
               style: TextStyle(

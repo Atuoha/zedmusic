@@ -40,6 +40,14 @@ class _AuthScreenState extends State<AuthScreen> {
     passwordController.addListener(() {
       setState(() {});
     });
+
+    // Checking if user if logged in or not
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        Navigator.of(context).pushNamed(BottomNav.routeName);
+      }
+    });
+
     super.initState();
   }
 
