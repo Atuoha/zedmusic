@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -7,6 +8,7 @@ import '../../components/kBackground.dart';
 import '../../constants/colors.dart';
 import 'package:is_first_run/is_first_run.dart';
 import '../auth/auth.dart';
+import '../main/bottom_nav.dart';
 
 class EntryScreen extends StatefulWidget {
   const EntryScreen({
@@ -35,8 +37,15 @@ class _EntryScreenState extends State<EntryScreen> {
 
   _navigateToAuthOrHome() {
     //Routing to AuthScreen or Home
-    //TODO: After Authentication, check if the user is authenticated and route to HomeScreen straight
-    Navigator.of(context).pushNamed(AuthScreen.routeName);
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        // home screen
+        Navigator.of(context).pushNamed(BottomNav.routeName);
+      } else {
+        // auth screen
+        Navigator.of(context).pushNamed(AuthScreen.routeName);
+      }
+    });
   }
 
   @override

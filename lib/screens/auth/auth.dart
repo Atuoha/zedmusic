@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -42,14 +43,12 @@ class _AuthScreenState extends State<AuthScreen> {
     super.initState();
   }
 
-
-  _changeAuthState(){
-    setState((){
+  _changeAuthState() {
+    setState(() {
       isLogin = !isLogin;
       emailController.text = "";
       passwordController.text = "";
     });
-
   }
 
   // loading fnc
@@ -183,7 +182,6 @@ class _AuthScreenState extends State<AuthScreen> {
     } on FirebaseAuthException catch (e) {
       var error = 'An error occurred. Check credentials!';
       if (e.message != null) {
-
         error = e.message!;
       }
 
@@ -191,8 +189,10 @@ class _AuthScreenState extends State<AuthScreen> {
       setState(() {
         isLoading = false;
       });
-    } catch(e){
-      print(e);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -217,7 +217,7 @@ class _AuthScreenState extends State<AuthScreen> {
           keyboardType: field == Field.email
               ? TextInputType.emailAddress
               : TextInputType.text,
-          autofocus: field == Field.email?true:false,
+          autofocus: field == Field.email ? true : false,
           controller: controller,
           validator: (value) {
             switch (field) {
@@ -339,10 +339,10 @@ class _AuthScreenState extends State<AuthScreen> {
                               isLogin
                                   ? const SizedBox.shrink()
                                   : kTextField(
-                                'Username',
-                                usernameController,
-                                Field.username,
-                              ),
+                                      'Username',
+                                      usernameController,
+                                      Field.username,
+                                    ),
 
                               kTextField(
                                 'Password',
@@ -436,9 +436,6 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 }
 
-
-
-
 /*
 DOCS:
 https://firebase.google.com/docs/flutter/setup?platform=android
@@ -453,6 +450,3 @@ https://pub.dev/packages/cloud_firestore
 SHA FINGERPRINT
 PS C:\Flutter_Apps\zedmusic\android> ./gradlew signingReport
  */
-
-
-
