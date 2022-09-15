@@ -18,7 +18,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<ForgotPasswordScreen> {
   final formKey = GlobalKey<FormState>();
-  final phoneNumberController = TextEditingController();
+  final emailController = TextEditingController();
   var isLoading = false;
 
   // loading fnc
@@ -83,7 +83,7 @@ class _AuthScreenState extends State<ForgotPasswordScreen> {
                               Column(
                                 children: [
                                   const Text(
-                                    'Phone Number',
+                                    'Email Address',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -92,11 +92,15 @@ class _AuthScreenState extends State<ForgotPasswordScreen> {
                                   ),
                                   const SizedBox(height: 10),
                                   TextFormField(
-                                    keyboardType: TextInputType.phone,
-                                    controller: phoneNumberController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: emailController,
                                     validator: (value) {
-                                      if (value!.isEmpty || value.length < 8) {
-                                        return 'Phone needs to be valid';
+                                      if (value!.isEmpty) {
+                                        return 'Email address can not be empty';
+                                      }
+
+                                      if(!value.contains('@')){
+                                        return 'Email address is not valid';
                                       }
 
                                       return null;
@@ -105,7 +109,7 @@ class _AuthScreenState extends State<ForgotPasswordScreen> {
                                     decoration: InputDecoration(
                                       contentPadding:
                                           const EdgeInsets.only(left: 5),
-                                      hintText: '+234',
+                                      hintText: 'user@gmail.com',
                                       filled: true,
                                       fillColor: Colors.white,
                                       focusedBorder: const OutlineInputBorder(

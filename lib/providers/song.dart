@@ -23,10 +23,8 @@ class SongData extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isSongInPlaylist(
-    int songId,
-    int playlistId,
-  ) {
+  bool isSongInPlaylist(int songId,
+      int playlistId,) {
     bool status = false;
     return status;
   }
@@ -35,7 +33,7 @@ class SongData extends ChangeNotifier {
     switch (isFav(song.id)) {
       case true:
         _favoritesSongs.removeWhere(
-          (songs) => songs.id == song.id,
+              (songs) => songs.id == song.id,
         );
         break;
       case false:
@@ -47,7 +45,7 @@ class SongData extends ChangeNotifier {
 
   bool isFav(int id) {
     return _favoritesSongs.any(
-      (song) => song.id == id,
+          (song) => song.id == id,
     );
   }
 
@@ -60,7 +58,7 @@ class SongData extends ChangeNotifier {
 
   setCurrentSongIndex(songIndex) {
     currentSongIndex = songIndex;
-     notifyListeners();
+    notifyListeners();
   }
 
   setSongs(List<SongModel> songs) {
@@ -69,4 +67,18 @@ class SongData extends ChangeNotifier {
   }
 
   final List<SongModel> _favoritesSongs = [];
+
+
+  // managing auth type
+  var authType = 0; // 0 will be for EMAIL AND PASSWORD which is default while 1 will be GOOGLE AUTH
+  updateAuthType() {
+    authType = 1; // 1 representing auth using GOOGLE
+    notifyListeners();
+  }
+
+  resetAuthType(){
+    authType = 0; // 0 representing auth using EMAIL AND PASSWORD
+    notifyListeners();
+  }
+
 }

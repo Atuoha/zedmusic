@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -20,7 +21,7 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-enum Field { email, password, phone }
+enum Field { email, password, username }
 
 class _AuthScreenState extends State<AuthScreen> {
   final _auth = FirebaseAuth.instance;
@@ -30,7 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final phoneNumberController = TextEditingController();
+  final usernameController = TextEditingController();
 
   @override
   void initState() {
@@ -50,7 +51,7 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
-
+  // snackbar for error message
   void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
@@ -68,12 +69,46 @@ class _AuthScreenState extends State<AuthScreen> {
     ));
   }
 
-  // submit form
-  _submitForm() {
+  // submit form for login and registration
+  _submitForm() async {
     var valid = formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
     if (valid) {
       try {
+        UserCredential credential;
+        switch (isLogin) {
+          case true:
+            // TODO: Implement Login
+            credential = await _auth.signInWithEmailAndPassword(
+              email: emailController.text,
+              password: passwordController.text.trim(),
+            );
+            isLoadingFnc();
+            break;
 
+          case false:
+            // TODO: Implement Register
+            credential = await _auth.createUserWithEmailAndPassword(
+              email: emailController.text,
+              password: passwordController.text.trim(),
+            );
+            // send username, email, and phone number to firestore
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(credential.user!.uid)
+                .set(
+              {
+                'username': usernameController.text.trim(),
+                'email': emailController.text.trim(),
+                'image': '',
+                'auth-type': 'email',
+              },
+            ).then((value){
+              isLoadingFnc();
+              // Provider.of<SongData>(context).resetAuthType();
+            });
+            break;
+        }
       } on FirebaseAuthException catch (e) {
         var error = 'An error occurred. Check credentials!';
         if (e.message != null) {
@@ -85,34 +120,13 @@ class _AuthScreenState extends State<AuthScreen> {
           isLoading = false;
         });
       }
-
-
-      switch (isLogin) {
-        case true:
-        // TODO: Implement Login
-          _auth.signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text.trim(),
-          );
-          isLoadingFnc();
-          break;
-
-        case false:
-        // TODO: Implement Register
-          _auth.createUserWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text.trim(),
-          );
-          isLoadingFnc();
-          break;
-      }
     } else {
       return null;
     }
   }
 
   // authenticate using Google
-  _googleAuth() async{
+  _googleAuth() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -126,17 +140,15 @@ class _AuthScreenState extends State<AuthScreen> {
       idToken: googleAuth?.idToken,
     );
 
-    try{
-
-    }on FirebaseAuthException catch (e){
-
-    }
+    try {} on FirebaseAuthException catch (e) {}
   }
 
   // custom widget for all textInput
-  Widget kTextField(String title,
-      TextEditingController controller,
-      Field field,) {
+  Widget kTextField(
+    String title,
+    TextEditingController controller,
+    Field field,
+  ) {
     return Column(
       children: [
         Text(
@@ -150,7 +162,7 @@ class _AuthScreenState extends State<AuthScreen> {
         const SizedBox(height: 10),
         TextFormField(
           keyboardType:
-          field == Field.phone ? TextInputType.phone : TextInputType.text,
+              field == Field.email ? TextInputType.emailAddress: TextInputType.text,
           controller: controller,
           validator: (value) {
             switch (field) {
@@ -170,40 +182,37 @@ class _AuthScreenState extends State<AuthScreen> {
                 }
                 break;
 
-              case Field.phone:
-                if (value!.isEmpty || value.length < 8) {
-                  return 'Phone number needs to be valid!';
+              case Field.username:
+                if (value!.isEmpty || value.length < 3) {
+                  return 'Username needs to be valid!';
                 }
                 break;
             }
 
             return null;
           },
-          textInputAction: isLogin
-              ? field == Field.password
-              ? TextInputAction.done
-              : TextInputAction.next
-              : field == Field.phone
-              ? TextInputAction.done
-              : TextInputAction.next,
+          textInputAction:  field == Field.password
+                  ? TextInputAction.done
+                  : TextInputAction.next,
+
           obscureText: field == Field.password ? obscure : false,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(left: 5),
-            hintText: field == Field.phone ? '+234' : null,
+            hintText: field == Field.username ? 'User' : field == Field.email ? 'user@gmail.com': '********',
             suffixIcon: passwordController.text.isNotEmpty
                 ? field == Field.password
-                ? IconButton(
-              onPressed: () {
-                setState(() {
-                  obscure = !obscure;
-                });
-              },
-              icon: Icon(
-                obscure ? Icons.visibility_off : Icons.visibility,
-                color: secondaryColor,
-              ),
-            )
-                : null
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            obscure = !obscure;
+                          });
+                        },
+                        icon: Icon(
+                          obscure ? Icons.visibility_off : Icons.visibility,
+                          color: secondaryColor,
+                        ),
+                      )
+                    : null
                 : null,
             filled: true,
             fillColor: Colors.white,
@@ -256,110 +265,109 @@ class _AuthScreenState extends State<AuthScreen> {
                 isLoading
                     ? const Loading()
                     : Form(
-                  key: formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        kTextField(
-                          'Email Address',
-                          emailController,
-                          Field.email,
-                        ),
-                        kTextField(
-                          'Password',
-                          passwordController,
-                          Field.password,
-                        ),
-                        isLogin
-                            ? const Text('')
-                            : kTextField(
-                          'Phone Number',
-                          phoneNumberController,
-                          Field.phone,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: btnBg,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.all(15),
-                          ),
-                          child: Text(
-                            isLogin ? 'Log in' : 'Sign up',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                          onPressed: () => _submitForm(),
-                        ),
-                        const SizedBox(height: 10),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.all(15),
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/google.png',
-                                  width: 18,
+                        key: formKey,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              isLogin
+                                  ? const SizedBox.shrink()
+                                  : kTextField(
+                                'Username',
+                                usernameController,
+                                Field.username,
+                              ),
+                              kTextField(
+                                'Email Address',
+                                emailController,
+                                Field.email,
+                              ),
+                              kTextField(
+                                'Password',
+                                passwordController,
+                                Field.password,
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: btnBg,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.all(15),
                                 ),
-                                const SizedBox(width: 15),
-                                Text(
-                                  isLogin
-                                      ? 'Log in using Google'
-                                      : 'Sign up using Google',
+                                child: Text(
+                                  isLogin ? 'Log in' : 'Sign up',
                                   style: const TextStyle(
-                                    color: googleBtn,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 18,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          onPressed: () => _googleAuth(),
-                        ),
-                        Row(
-                          mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: () =>
-                                  Navigator.of(context).pushNamed(
-                                    ForgotPasswordScreen.routeName,
+                                onPressed: () => _submitForm(),
+                              ),
+                              const SizedBox(height: 10),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
                                   ),
-                              child: const KRichText(
-                                firstText: 'Forgot',
-                                secondText: 'Password?',
+                                  padding: const EdgeInsets.all(15),
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/google.png',
+                                        width: 18,
+                                      ),
+                                      const SizedBox(width: 15),
+                                      Text(
+                                        isLogin
+                                            ? 'Log in using Google'
+                                            : 'Sign up using Google',
+                                        style: const TextStyle(
+                                          color: googleBtn,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                onPressed: () => _googleAuth(),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () =>
-                                  setState(() {
-                                    isLogin = !isLogin;
-                                  }),
-                              child: KRichText(
-                                firstText: isLogin ? 'Sign' : 'Log',
-                                secondText: isLogin ? 'up' : 'in',
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pushNamed(
+                                      ForgotPasswordScreen.routeName,
+                                    ),
+                                    child: const KRichText(
+                                      firstText: 'Forgot',
+                                      secondText: 'Password?',
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => setState(() {
+                                      isLogin = !isLogin;
+                                    }),
+                                    child: KRichText(
+                                      firstText: isLogin ? 'Sign' : 'Log',
+                                      secondText: isLogin ? 'up' : 'in',
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
               ],
             ),
           ),
@@ -368,3 +376,14 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 }
+
+/* DOCS:
+https://firebase.google.com/docs/flutter/setup?platform=android
+https://firebase.google.com/docs/cli
+
+PACKAGES:
+https://pub.dev/packages/google_sign_in   OR facebook_signin for FACEBOOK
+https://pub.dev/packages/firebase_core/
+https://pub.dev/packages/firebase_auth/
+https://pub.dev/packages/cloud_firestore
+ */
