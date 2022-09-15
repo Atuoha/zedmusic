@@ -1,14 +1,15 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import '../../components/kBackground.dart';
 import '../../components/kRichtext.dart';
 import '../../components/loading.dart';
 import '../../constants/colors.dart';
+import '../../providers/song.dart';
 import '../main/bottom_nav.dart';
 import 'forgot_password.dart';
 
@@ -41,6 +42,16 @@ class _AuthScreenState extends State<AuthScreen> {
     super.initState();
   }
 
+
+  _changeAuthState(){
+    setState((){
+      isLogin = !isLogin;
+      emailController.text = "";
+      passwordController.text = "";
+    });
+
+  }
+
   // loading fnc
   isLoadingFnc() {
     setState(() {
@@ -57,7 +68,7 @@ class _AuthScreenState extends State<AuthScreen> {
       content: Text(
         message,
         style: const TextStyle(
-          color: primaryColor,
+          color: Colors.white,
         ),
       ),
       backgroundColor: primaryColor,
@@ -103,16 +114,25 @@ class _AuthScreenState extends State<AuthScreen> {
                 'image': '',
                 'auth-type': 'email',
               },
-            ).then((value){
+            ).then((value) {
               isLoadingFnc();
-              // Provider.of<SongData>(context).resetAuthType();
+              // reset authtype
+              Provider.of<SongData>(context).resetAuthType();
             });
             break;
         }
       } on FirebaseAuthException catch (e) {
         var error = 'An error occurred. Check credentials!';
         if (e.message != null) {
-          error = e.message!;
+          if (e.code == 'user-not-found') {
+            error = "Email not recognised!";
+          } else if (e.code == 'account-exists-with-different-credential') {
+            error = "Email already in use!";
+          } else if (e.code == 'wrong-password') {
+            error = 'Email or Password Incorrect!';
+          } else {
+            error = e.code;
+          }
         }
 
         showSnackBar(error); // showSnackBar will show error if any
@@ -121,7 +141,7 @@ class _AuthScreenState extends State<AuthScreen> {
         });
       }
     } else {
-      return null;
+      return;
     }
   }
 
@@ -140,7 +160,37 @@ class _AuthScreenState extends State<AuthScreen> {
       idToken: googleAuth?.idToken,
     );
 
-    try {} on FirebaseAuthException catch (e) {}
+    try {
+      // send username, email, and phone number to firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(googleUser!.id)
+          .set(
+        {
+          'username': googleUser.displayName,
+          'email': googleUser.email,
+          'image': googleUser.photoUrl,
+          'auth-type': 'google',
+        },
+      ).then((value) {
+        isLoadingFnc();
+        // update authtype
+        Provider.of<SongData>(context).updateAuthType();
+      });
+
+      // sign in with credential
+      return FirebaseAuth.instance.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      var error = 'An error occurred. Check credentials!';
+      if (e.message != null) {
+        error = e.message!;
+      }
+
+      showSnackBar(error); // showSnackBar will show error if any
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   // custom widget for all textInput
@@ -161,8 +211,10 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         const SizedBox(height: 10),
         TextFormField(
-          keyboardType:
-              field == Field.email ? TextInputType.emailAddress: TextInputType.text,
+          keyboardType: field == Field.email
+              ? TextInputType.emailAddress
+              : TextInputType.text,
+          autofocus: field == Field.email?true:false,
           controller: controller,
           validator: (value) {
             switch (field) {
@@ -191,14 +243,17 @@ class _AuthScreenState extends State<AuthScreen> {
 
             return null;
           },
-          textInputAction:  field == Field.password
-                  ? TextInputAction.done
-                  : TextInputAction.next,
-
+          textInputAction: field == Field.password
+              ? TextInputAction.done
+              : TextInputAction.next,
           obscureText: field == Field.password ? obscure : false,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(left: 5),
-            hintText: field == Field.username ? 'User' : field == Field.email ? 'user@gmail.com': '********',
+            hintText: field == Field.username
+                ? 'User'
+                : field == Field.email
+                    ? 'user@gmail.com'
+                    : '********',
             suffixIcon: passwordController.text.isNotEmpty
                 ? field == Field.password
                     ? IconButton(
@@ -271,6 +326,13 @@ class _AuthScreenState extends State<AuthScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
+                              kTextField(
+                                'Email Address',
+                                emailController,
+                                Field.email,
+                              ),
+
+                              // field for registration only
                               isLogin
                                   ? const SizedBox.shrink()
                                   : kTextField(
@@ -278,11 +340,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 usernameController,
                                 Field.username,
                               ),
-                              kTextField(
-                                'Email Address',
-                                emailController,
-                                Field.email,
-                              ),
+
                               kTextField(
                                 'Password',
                                 passwordController,
@@ -354,9 +412,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: () => setState(() {
-                                      isLogin = !isLogin;
-                                    }),
+                                    onPressed: () => _changeAuthState(),
                                     child: KRichText(
                                       firstText: isLogin ? 'Sign' : 'Log',
                                       secondText: isLogin ? 'up' : 'in',
