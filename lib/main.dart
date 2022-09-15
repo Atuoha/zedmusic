@@ -20,24 +20,21 @@ Future<void> main() async {
     notificationColor: primaryColor,
     // androidNotificationIcon: 'assets/images/only_logo.png'
   );
-    WidgetsFlutterBinding.ensureInitialized();
-    FirebaseApp app = await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-    runApp(const MusicApp());
-    if (kDebugMode) {
-      print('Initialized default app $app');
-    }
-
-  runApp(const MusicApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  FirebaseApp app = await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    const MusicApp(),
+  );
 }
 
-class MusicApp extends StatefulWidget{
+class MusicApp extends StatefulWidget {
   const MusicApp({Key? key}) : super(key: key);
-  @override
-  State<MusicApp> createState()=> MusicAppState();
-}
 
+  @override
+  State<MusicApp> createState() => MusicAppState();
+}
 
 class MusicAppState extends State<MusicApp> {
   @override
@@ -47,7 +44,7 @@ class MusicAppState extends State<MusicApp> {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'Roboto'),
-        home:  const EntryScreen(),
+        home: const EntryScreen(),
         routes: routes,
       ),
     );
@@ -60,12 +57,10 @@ class MusicAppState extends State<MusicApp> {
  - FINDING A BETTER WAY TO MANAGE THE NUMBER OF SONGS IN A PLAYLIST
 */
 
-
 /*
   DISTURBING ISSUES:
   ABILITY FOR SONG TO GO TO NEXT ON BACKGROUND -
 
  */
-
 
 // TODO: AUTHENTICATION -username and password | Google Auth && SEARCH FNC

@@ -1,0 +1,15 @@
+
+/*
+DOCS:
+https://firebase.google.com/docs/flutter/setup?platform=android
+https://firebase.google.com/docs/cli
+
+PACKAGES:
+https://pub.dev/packages/google_sign_in   OR facebook_signin for FACEBOOK
+https://pub.dev/packages/firebase_core/
+https://pub.dev/packages/firebase_auth/
+https://pub.dev/packages/cloud_firestore
+
+SHA FINGERPRINT
+PS C:\Flutter_Apps\zedmusic\android> ./gradlew signingReport
+ */

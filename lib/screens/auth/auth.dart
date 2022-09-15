@@ -137,6 +137,8 @@ class _AuthScreenState extends State<AuthScreen> {
             error = "Email already in use!";
           } else if (e.code == 'wrong-password') {
             error = 'Email or Password Incorrect!';
+          } else if (e.code == 'network-request-failed') {
+            error = 'Network error!';
           } else {
             error = e.code;
           }
@@ -153,7 +155,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   // authenticate using Google
-  _googleAuth() async {
+  Future<UserCredential> _googleAuth() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -169,12 +171,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
     try {
       // send username, email, and phone number to firestore
+      var logCredential = await FirebaseAuth.instance.signInWithCredential(credential);
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(googleUser!.id)
+          .doc(logCredential.user!.uid)
           .set(
         {
-          'username': googleUser.displayName,
+          'username': googleUser!.displayName,
           'email': googleUser.email,
           'image': googleUser.photoUrl,
           'auth-type': 'google',
@@ -184,9 +187,6 @@ class _AuthScreenState extends State<AuthScreen> {
         // update authtype
         Provider.of<SongData>(context).updateAuthType();
       });
-
-      // sign in with credential
-      return FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       var error = 'An error occurred. Check credentials!';
       if (e.message != null) {
@@ -202,6 +202,8 @@ class _AuthScreenState extends State<AuthScreen> {
         print(e);
       }
     }
+    // sign in with credential¶
+    return FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   // custom widget for all textInput
@@ -237,7 +239,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
               case Field.email:
                 if (value!.isEmpty) {
-                  return 'Username needs to be valid!';
+                  return 'Email needs to be valid!';
                 }
 
                 if (!value.contains('@')) {
@@ -443,18 +445,3 @@ class _AuthScreenState extends State<AuthScreen> {
     );
   }
 }
-
-/*
-DOCS:
-https://firebase.google.com/docs/flutter/setup?platform=android
-https://firebase.google.com/docs/cli
-
-PACKAGES:
-https://pub.dev/packages/google_sign_in   OR facebook_signin for FACEBOOK
-https://pub.dev/packages/firebase_core/
-https://pub.dev/packages/firebase_auth/
-https://pub.dev/packages/cloud_firestore
-
-SHA FINGERPRINT
-PS C:\Flutter_Apps\zedmusic\android> ./gradlew signingReport
- */

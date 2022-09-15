@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zedmusic/components/kListTile.dart';
+import 'package:zedmusic/components/loading.dart';
 import 'package:zedmusic/screens/auth/auth.dart';
-
 import '../../constants/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -17,7 +17,36 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  var userDetails;
   final _auth = FirebaseAuth.instance;
+  final _firebase = FirebaseFirestore.instance;
+  final user = FirebaseAuth.instance.currentUser;
+  var isInit = true;
+  var isLoading = true;
+
+  _loadUser() async {
+    userDetails = await _firebase.collection('users').doc(user!.uid).get();
+    setState(() {
+      isLoading = false;
+    });
+    print('THIS BEARS THE NAME: ${userDetails['name']}');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (isInit) {
+      _loadUser();
+    }
+    super.didChangeDependencies();
+    setState(() {
+      isInit = false;
+    });
+  }
 
   _logoutUser() {
     _auth.signOut().then(
@@ -166,92 +195,115 @@ class _ProfileScreenState extends State<ProfileScreen> {
         left: 18.0,
         top: 60,
       ),
-      child: Column(
-        children: [
-          RichText(
-            text: const TextSpan(
-              text: 'Pro',
-              style: TextStyle(
-                fontWeight: FontWeight.w300,
-                color: Colors.white70,
-                fontSize: 24,
-              ),
-              children: [
-                TextSpan(
-                  text: 'file',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            RichText(
+              text: const TextSpan(
+                text: 'Pro',
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  color: Colors.white70,
+                  fontSize: 24,
                 ),
-              ],
+                children: [
+                  TextSpan(
+                    text: 'file',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Image.asset('assets/images/avatar.png'),
-          const SizedBox(height: 10),
-          const Text(
-            'Turkan Aliyeva',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 40),
-          KListTile(
-            title: 'Edit profile',
-            leadChild: const Icon(
-              CupertinoIcons.square_pencil,
-              size: 30,
-              color: ambientBg,
-            ),
-            action: _editProfile,
-            trailingChild: const Text(''),
-          ),
-          KListTile(
-            title: 'Settings',
-            leadChild: const Icon(
-              Icons.settings,
-              size: 30,
-              color: ambientBg,
-            ),
-            action: _settings,
-            trailingChild: const Text(''),
-          ),
-          KListTile(
-            title: 'Sound effects',
-            leadChild: const Icon(
-              Icons.volume_down_outlined,
-              size: 30,
-              color: ambientBg,
-            ),
-            action: _soundEffect,
-            trailingChild: const Text(''),
-          ),
-          KListTile(
-            title: 'About app',
-            leadChild: const Icon(
-              Icons.info_outline,
-              size: 30,
-              color: ambientBg,
-            ),
-            action: _about,
-            trailingChild: const Text(''),
-          ),
-          KListTile(
-            title: 'Log out',
-            leadChild: const Icon(
-              Icons.logout,
-              size: 30,
-              color: ambientBg,
-            ),
-            action: _logout,
-            trailingChild: const Text(''),
-          ),
-        ],
+            const SizedBox(height: 20),
+            isLoading
+                ? const Center(child: Loading())
+                : Column(
+                    children: [
+                      userDetails['image'] != ''
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(30),
+                              child: Image.network(userDetails['image'],width: 200,),
+                            )
+                          : Image.asset('assets/images/profile.png'),
+                      const SizedBox(height: 10),
+                      Text(
+                        userDetails['username'],
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        userDetails['email'],
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+                      KListTile(
+                        title: 'Edit profile',
+                        leadChild: const Icon(
+                          CupertinoIcons.square_pencil,
+                          size: 30,
+                          color: ambientBg,
+                        ),
+                        action: _editProfile,
+                        trailingChild: const Text(''),
+                      ),
+                      KListTile(
+                        title: 'Settings',
+                        leadChild: const Icon(
+                          Icons.settings,
+                          size: 30,
+                          color: ambientBg,
+                        ),
+                        action: _settings,
+                        trailingChild: const Text(''),
+                      ),
+                      KListTile(
+                        title: 'Sound effects',
+                        leadChild: const Icon(
+                          Icons.volume_down_outlined,
+                          size: 30,
+                          color: ambientBg,
+                        ),
+                        action: _soundEffect,
+                        trailingChild: const Text(''),
+                      ),
+                      KListTile(
+                        title: 'About app',
+                        leadChild: const Icon(
+                          Icons.info_outline,
+                          size: 30,
+                          color: ambientBg,
+                        ),
+                        action: _about,
+                        trailingChild: const Text(''),
+                      ),
+                      KListTile(
+                        title: 'Log out',
+                        leadChild: const Icon(
+                          Icons.logout,
+                          size: 30,
+                          color: ambientBg,
+                        ),
+                        action: _logout,
+                        trailingChild: const Text(''),
+                      ),
+                    ],
+                  ),
+          ],
+        ),
       ),
     );
   }
 }
+
