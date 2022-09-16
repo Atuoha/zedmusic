@@ -1,7 +1,8 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -205,20 +206,44 @@ class _EditProfileState extends State<EditProfile> {
     if (!valid) {
       return;
     }
-    // update email
-    await user!.updateEmail(emailController.text.trim());
-    //update password
-    if (updatePassword) {
-      await user!.updatePassword(passwordController.text.trim());
+
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('user_images')
+        .child('${user!.uid}.jpg');
+    File? file;
+    if (selectedImage != null) {
+      file = File(selectedImage!.path);
     }
 
-    // update credentials on store
-    _firebase.collection('users').doc(user!.uid).set({
-      'username': usernameController.text.trim(),
-      'email': emailController.text.trim(),
-      'auth-type': 'email',
-    });
-    isLoadingFnc();
+    try {
+      if (selectedImage != null) {
+        await storageRef.putFile(file!);
+      }
+      // download-link of the image
+      var downloadLink = await storageRef.getDownloadURL();
+
+      // update email
+      await user!.updateEmail(emailController.text.trim());
+
+      //update password
+      if (updatePassword) {
+        await user!.updatePassword(passwordController.text.trim());
+      }
+
+      // update credentials on store
+      _firebase.collection('users').doc(user!.uid).set({
+        'username': usernameController.text.trim(),
+        'email': emailController.text.trim(),
+        'auth-type': 'email',
+        'image': downloadLink
+      });
+      isLoadingFnc();
+    } on FirebaseException catch (e) {
+      showSnackBar('Error occurred! ${e.message}');
+    } catch (e) {
+      showSnackBar('Error occurred! $e');
+    }
   }
 
   @override
