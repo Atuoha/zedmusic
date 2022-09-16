@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:zedmusic/components/kListTile.dart';
 import 'package:zedmusic/components/loading.dart';
 import 'package:zedmusic/screens/auth/auth.dart';
+import 'package:zedmusic/screens/main/edit_profile.dart';
 import '../../constants/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -55,10 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _editProfile() {
-    // TODO: Edit Profile
-    if (kDebugMode) {
-      print('Edit Profile');
-    }
+    Navigator.of(context).pushNamed(EditProfile.routeName);
   }
 
   _settings() {

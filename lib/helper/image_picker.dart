@@ -164,12 +164,23 @@ class _ImageUploaderState extends State<ImageUploader> {
                         Positioned(
                           bottom: 10,
                           right: 10,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.camera_alt,
-                              size: 35,
-                              color: primaryColor,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black12.withOpacity(0.5),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.camera_alt,
+                                    size: 40,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         )
@@ -194,12 +205,23 @@ class _ImageUploaderState extends State<ImageUploader> {
                         Positioned(
                           bottom: 10,
                           right: 10,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.camera_alt,
-                              size: 35,
-                              color: primaryColor,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black12.withOpacity(0.5),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.camera_alt,
+                                    size: 40,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         )

@@ -2,14 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zedmusic/components/loading.dart';
 import 'package:zedmusic/screens/auth/auth.dart';
+import '../../components/kBackground.dart';
 import '../../constants/colors.dart';
 import '../../helper/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
   static const routeName = '/edit';
+
   const EditProfile({Key? key}) : super(key: key);
 
   @override
@@ -198,7 +201,17 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: primaryColor,
+        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+      ),
+    );
+    return Scaffold(
+        body: KBackground(
+            child: Padding(
       padding: const EdgeInsets.only(
         right: 18.0,
         left: 18.0,
@@ -289,6 +302,6 @@ class _EditProfileState extends State<EditProfile> {
           ],
         ),
       ),
-    );
+    ),),);
   }
 }
