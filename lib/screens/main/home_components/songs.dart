@@ -6,7 +6,7 @@ import '../../../components/loading.dart';
 import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
 import '../broader_views/songs.dart';
-import '../details/song_player.dart';
+import '../now_playing/song_player.dart';
 
 class Songs extends StatefulWidget {
   Songs({Key? key}) : super(key: key);

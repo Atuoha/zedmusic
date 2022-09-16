@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-import 'package:zedmusic/screens/main/details/song_player.dart';
+import 'package:zedmusic/screens/main/now_playing/song_player.dart';
 import '../../../components/bottomPlayer.dart';
 import '../../../components/kBackground.dart';
 import '../../../components/kText.dart';

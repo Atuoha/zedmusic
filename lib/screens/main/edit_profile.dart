@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -185,6 +187,16 @@ class _EditProfileState extends State<EditProfile> {
     ));
   }
 
+  // loading fnc
+  isLoadingFnc() {
+    setState(() {
+      isLoading = true;
+    });
+    Timer(const Duration(seconds: 5), () {
+      Navigator.of(context).pop();
+    });
+  }
+
   // submit form
   _updateProfile() async {
     var valid = formKey.currentState!.validate();
@@ -193,13 +205,20 @@ class _EditProfileState extends State<EditProfile> {
     if (!valid) {
       return;
     }
+    // update email
     await user!.updateEmail(emailController.text.trim());
-    await user!.updatePassword(passwordController.text.trim());
+    //update password
+    if (updatePassword) {
+      await user!.updatePassword(passwordController.text.trim());
+    }
+
+    // update credentials on store
     _firebase.collection('users').doc(user!.uid).set({
       'username': usernameController.text.trim(),
       'email': emailController.text.trim(),
       'auth-type': 'email',
     });
+    isLoadingFnc();
   }
 
   @override
@@ -270,11 +289,13 @@ class _EditProfileState extends State<EditProfile> {
                                     usernameController,
                                     Field.username,
                                   ),
-                                 updatePassword? kTextField(
-                                    'Password',
-                                    passwordController,
-                                    Field.password,
-                                  ): const SizedBox.shrink(),
+                                  updatePassword
+                                      ? kTextField(
+                                          'Password',
+                                          passwordController,
+                                          Field.password,
+                                        )
+                                      : const SizedBox.shrink(),
                                   Wrap(
                                     crossAxisAlignment:
                                         WrapCrossAlignment.center,

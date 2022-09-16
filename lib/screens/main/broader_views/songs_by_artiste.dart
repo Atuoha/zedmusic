@@ -11,7 +11,7 @@ import '../../../components/loading.dart';
 import '../../../components/searchbox.dart';
 import '../../../constants/colors.dart';
 import '../../../providers/song.dart';
-import '../details/song_player.dart';
+import '../now_playing/song_player.dart';
 
 class ArtisteSongs extends StatefulWidget {
   static const routeName = '/artistesongs';
