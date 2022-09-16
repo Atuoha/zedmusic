@@ -12,4 +12,14 @@ https://pub.dev/packages/cloud_firestore
 
 SHA FINGERPRINT
 PS C:\Flutter_Apps\zedmusic\android> ./gradlew signingReport
+
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+To Storage Rule
  */

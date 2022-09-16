@@ -208,7 +208,6 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   @override
   void initState() {
     // TODO: implement initState
-    _returnCurrentIndex();
     widget.player.play();
     super.initState();
   }
@@ -216,7 +215,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-
+    _returnCurrentIndex();
     super.didChangeDependencies();
   }
 
