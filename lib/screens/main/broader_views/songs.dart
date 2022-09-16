@@ -88,20 +88,21 @@ class _SongsViewState extends State<SongsView> {
       SongModel song,
       List<SongModel> songs,
     ) {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => SongPlayer(
-            song: song,
-            player: songData.player,
-            songs: songList,
-            songData: songData,
-          ),
-        ),
-      );
+      Navigator.of(context)
+          .push(
+            MaterialPageRoute(
+              builder: (context) => SongPlayer(
+                song: song,
+                player: songData.player,
+                songs: songList,
+                songData: songData,
+              ),
+            ),
+          )
+          .then((value) => setState(() {}));
       songData.setSongs(songs);
       songData.setPlayingSong(song);
       _playSong(song);
-
     }
 
     SystemChrome.setSystemUIOverlayStyle(

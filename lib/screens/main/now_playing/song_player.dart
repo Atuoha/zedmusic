@@ -36,17 +36,68 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   // this will be holding the current index of the music list array
   var currentSongIndex = 0;
 
+  bool isRepeatOne = false;
+  bool isShuffle = false;
+
   // Return current song index
   _returnCurrentIndex() {
     widget.songs.asMap().forEach((key, song) {
       if (song.id == widget.song.id) {
         currentSongIndex = key;
+
+        widget.player.playerStateStream.listen((state) {
+          switch (state.processingState) {
+            case ProcessingState.completed:
+              if (!isRepeatOne) {
+                if (widget.songData.songList.length > 1) {
+                  if (currentSongIndex < widget.songs.length - 1) {
+                    currentSongIndex += 1;
+                  }
+
+                  // current playing song
+                  setState(() {
+                    widget.song = widget.songs[key];
+                  });
+                  //setting playingSong on provider
+                  widget.songData.playingSong = widget.songData.songList[key];
+                  Timer(const Duration(seconds: 1), () {
+                    widget.songData.player.play();
+                  });
+                  widget.songData
+                      .setPlayingSong(widget.songData.songList[key + 1]);
+
+                  widget.songData.setIsPlaying(true);
+                  widget.songData.player.setAudioSource(
+                    AudioSource.uri(
+                      Uri.parse(widget.songData.songList[key + 1].uri!),
+                      tag: MediaItem(
+                        // Specify a unique ID for each media item:
+                        id: '${widget.songData.songList[key + 1].id}',
+                        // Metadata to display in the notification:
+                        artist: widget.songData.songList[key + 1].artist,
+                        duration: Duration(
+                          minutes: widget.songData.songList[key + 1].duration!,
+                        ),
+                        title: widget.songData.songList[key + 1].title,
+                        album: widget.songData.songList[key + 1].album,
+                        // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
+                      ),
+                    ),
+                  );
+                } else {
+                  // pausing a music if it's the only on the list when completed
+                  widget.songData.player.pause();
+                  widget.songData.setIsPlaying(false);
+                }
+              } else {
+                // repeating a music without incrementing the counter if isRepeatOne is active
+                widget.player.play();
+              }
+          }
+        });
       }
     });
   }
-
-  bool isRepeatOne = false;
-  bool isShuffle = false;
 
   // toggling isRepeat
   _toggleIsRepeat() {
@@ -94,6 +145,8 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   _skipNext() {
     if (currentSongIndex != widget.songs.length - 1) {
       currentSongIndex += 1;
+    } else {
+      currentSongIndex = 0;
     }
 
     setState(() {
@@ -163,57 +216,6 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    if (!isRepeatOne) {
-      widget.player.playerStateStream.listen((state) {
-        switch (state.processingState) {
-          case ProcessingState.completed:
-            if (!isRepeatOne) {
-              if (widget.songData.songList.length > 1) {
-                if (currentSongIndex != widget.songs.length - 1) {
-                  currentSongIndex += 1;
-                }
-
-                /* I subtracted 1 from the currentSongIndex. For a reason am still trying to figure out, the
-                  index adds extra 1 after the increment by 1
-                 */
-                setState(() {
-                  widget.song = widget.songs[currentSongIndex - 1];
-                });
-
-                widget.songData
-                    .setPlayingSong(widget.songs[currentSongIndex - 1]);
-                widget.player.play();
-                // widget.songData.setCurrentSongIndex(currentSongIndex);
-                widget.songData.setIsPlaying(true);
-                widget.songData.player.setAudioSource(
-                  AudioSource.uri(
-                    Uri.parse(widget.songs[currentSongIndex - 1].uri),
-                    tag: MediaItem(
-                      // Specify a unique ID for each media item:
-                      id: '${widget.songs[currentSongIndex - 1].id}',
-                      // Metadata to display in the notification:
-                      artist: widget.songs[currentSongIndex - 1].artist,
-                      duration: Duration(
-                        minutes: widget.songs[currentSongIndex - 1].duration!,
-                      ),
-                      title: widget.songs[currentSongIndex - 1].title,
-                      album: widget.songs[currentSongIndex - 1].album,
-                      // artUri: Uri.parse(widget.songs[currentSongIndex].uri!),
-                    ),
-                  ),
-                );
-              } else {
-                // pausing a music if it's the only on the list when completed
-                widget.songData.player.pause();
-                widget.songData.setIsPlaying(false);
-              }
-            }
-        }
-      });
-    } else {
-      // repeating a music without incrementing the counter if isRepeatOne is active
-      widget.player.play();
-    }
 
     super.didChangeDependencies();
   }
@@ -233,7 +235,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    var songData = Provider.of<SongData>(context,listen:false);
+    var songData = Provider.of<SongData>(context, listen: false);
 
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
