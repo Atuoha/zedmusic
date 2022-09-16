@@ -91,6 +91,7 @@ class _AuthScreenState extends State<AuthScreen> {
   _submitForm() async {
     var valid = formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
+    formKey.currentState!.save();
     if (valid) {
       try {
         UserCredential credential;

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       isLoading = false;
     });
-    print('THIS BEARS THE NAME: ${userDetails['name']}');
   }
 
   @override
@@ -226,7 +224,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       userDetails['image'] != ''
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(30),
-                              child: Image.network(userDetails['image'],width: 200,),
+                              child: Image.network(
+                                userDetails['image'],
+                                width: 200,
+                              ),
                             )
                           : Image.asset('assets/images/profile.png'),
                       const SizedBox(height: 10),
@@ -306,4 +307,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-
