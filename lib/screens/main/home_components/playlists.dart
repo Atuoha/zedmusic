@@ -85,7 +85,7 @@ class Playlists extends StatelessWidget {
                     onTap: () => Navigator.of(context).pushNamed(
                       PlayListSongs.routeName,
                       arguments: {
-                        'id': playlists[index].id,
+                        'playlist': playlists[index],
                       },
                     ),
                     child: Padding(

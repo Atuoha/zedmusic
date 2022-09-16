@@ -84,7 +84,7 @@ class Artistes extends StatelessWidget {
                   onTap: () => Navigator.of(context).pushNamed(
                     ArtisteSongs.routeName,
                     arguments: {
-                      'id': artistes[index].id,
+                      'artiste': artistes[index],
                     },
                   ),
                   child: Padding(

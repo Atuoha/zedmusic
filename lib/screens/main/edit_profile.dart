@@ -125,9 +125,13 @@ class _EditProfileState extends State<EditProfile> {
 
             return null;
           },
-          textInputAction: field == Field.password
-              ? TextInputAction.done
-              : TextInputAction.next,
+          textInputAction: !updatePassword
+              ? field == Field.username
+                  ? TextInputAction.done
+                  : TextInputAction.next
+              : field == Field.password
+                  ? TextInputAction.done
+                  : TextInputAction.next,
           obscureText: field == Field.password ? obscure : false,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(left: 5),
@@ -226,7 +230,7 @@ class _EditProfileState extends State<EditProfile> {
       // update email
       await user!.updateEmail(emailController.text.trim());
 
-      //update password
+      // update password
       if (updatePassword) {
         await user!.updatePassword(passwordController.text.trim());
       }
@@ -238,6 +242,8 @@ class _EditProfileState extends State<EditProfile> {
         'auth-type': 'email',
         'image': downloadLink
       });
+
+      // reset loading and pop out
       isLoadingFnc();
     } on FirebaseException catch (e) {
       showSnackBar('Error occurred! ${e.message}');

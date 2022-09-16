@@ -81,7 +81,7 @@ class Genres extends StatelessWidget {
                   onTap: () => Navigator.of(context).pushNamed(
                     GenreSongs.routeName,
                     arguments: {
-                      'id': genres[index].id,
+                      'genre': genres[index],
                     },
                   ),
                   child: Padding(
