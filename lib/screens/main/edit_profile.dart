@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:zedmusic/components/loading.dart';
-import 'package:zedmusic/screens/auth/auth.dart';
+import '../../components/circle_loader.dart';
 import '../../components/kBackground.dart';
 import '../../constants/colors.dart';
 import '../../helper/image_picker.dart';
@@ -34,6 +32,7 @@ class _EditProfileState extends State<EditProfile> {
   var isLoading = true;
   var obscure = true;
   XFile? selectedImage;
+  var updatePassword = false;
 
   // loading user
   _loadUser() async {
@@ -188,15 +187,19 @@ class _EditProfileState extends State<EditProfile> {
 
   // submit form
   _updateProfile() async {
-    if (passwordController.text.isEmpty) {
-      passwordController.text = '********';
-    }
     var valid = formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     formKey.currentState!.save();
     if (!valid) {
       return;
     }
+    await user!.updateEmail(emailController.text.trim());
+    await user!.updatePassword(passwordController.text.trim());
+    _firebase.collection('users').doc(user!.uid).set({
+      'username': usernameController.text.trim(),
+      'email': emailController.text.trim(),
+      'auth-type': 'email',
+    });
   }
 
   @override
@@ -210,98 +213,130 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
     return Scaffold(
-        body: KBackground(
-            child: Padding(
-      padding: const EdgeInsets.only(
-        right: 18.0,
-        left: 18.0,
-        top: 60,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            RichText(
-              text: const TextSpan(
-                text: 'Pro',
-                style: TextStyle(
-                  fontWeight: FontWeight.w300,
-                  color: Colors.white70,
-                  fontSize: 24,
-                ),
-                children: [
-                  TextSpan(
-                    text: 'file',
+      body: KBackground(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            right: 18.0,
+            left: 18.0,
+            top: 60,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                RichText(
+                  text: const TextSpan(
+                    text: 'Ed',
                     style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white70,
                       fontSize: 24,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            isLoading
-                ? const Center(child: Loading())
-                : Column(
                     children: [
-                      ImageUploader(
-                        selectedImage: _selectImage,
-                      ),
-                      const SizedBox(height: 10),
-                      Form(
-                        key: formKey,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              kTextField(
-                                'Email Address',
-                                emailController,
-                                Field.email,
-                              ),
-                              kTextField(
-                                'Username',
-                                usernameController,
-                                Field.username,
-                              ),
-                              kTextField(
-                                'Password',
-                                passwordController,
-                                Field.password,
-                              ),
-                              Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: ElevatedButton.icon(
-                                  icon: const Icon(Icons.check_circle),
-                                  style: ElevatedButton.styleFrom(
-                                    primary: btnBg,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    padding: const EdgeInsets.all(15),
-                                  ),
-                                  label: const Text(
-                                    'Submit',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  onPressed: () => _updateProfile(),
-                                ),
-                              ),
-                            ],
-                          ),
+                      TextSpan(
+                        text: 'it Profile',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontSize: 24,
                         ),
-                      )
+                      ),
                     ],
                   ),
-          ],
+                ),
+                const SizedBox(height: 20),
+                isLoading
+                    ? const Center(child: CircleLoading())
+                    : Column(
+                        children: [
+                          ImageUploader(
+                            selectedImage: _selectImage,
+                          ),
+                          const SizedBox(height: 20),
+                          Form(
+                            key: formKey,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 25.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  kTextField(
+                                    'Email Address',
+                                    emailController,
+                                    Field.email,
+                                  ),
+                                  kTextField(
+                                    'Username',
+                                    usernameController,
+                                    Field.username,
+                                  ),
+                                 updatePassword? kTextField(
+                                    'Password',
+                                    passwordController,
+                                    Field.password,
+                                  ): const SizedBox.shrink(),
+                                  Wrap(
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'Update password',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Checkbox(
+                                        checkColor: primaryColor,
+                                        activeColor: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        side: const BorderSide(
+                                          width: 1,
+                                          color: Colors.white,
+                                        ),
+                                        value: updatePassword,
+                                        onChanged: (value) => setState(() {
+                                          updatePassword = !updatePassword;
+                                        }),
+                                      ),
+                                    ],
+                                  ),
+                                  Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: ElevatedButton.icon(
+                                      icon: const Icon(Icons.check_circle),
+                                      style: ElevatedButton.styleFrom(
+                                        primary: btnBg,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                        ),
+                                        padding: const EdgeInsets.all(15),
+                                      ),
+                                      label: const Text(
+                                        'Submit',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      onPressed: () => _updateProfile(),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+              ],
+            ),
+          ),
         ),
       ),
-    ),),);
+    );
   }
 }

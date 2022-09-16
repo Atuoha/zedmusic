@@ -173,7 +173,7 @@ class _ImageUploaderState extends State<ImageUploader> {
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () =>avatarSource(),
                                   icon: const Icon(
                                     Icons.camera_alt,
                                     size: 40,
@@ -214,7 +214,7 @@ class _ImageUploaderState extends State<ImageUploader> {
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () =>avatarSource(),
                                   icon: const Icon(
                                     Icons.camera_alt,
                                     size: 40,

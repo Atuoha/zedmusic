@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zedmusic/components/kListTile.dart';
-import 'package:zedmusic/components/loading.dart';
 import 'package:zedmusic/screens/auth/auth.dart';
 import 'package:zedmusic/screens/main/edit_profile.dart';
+import '../../components/circle_loader.dart';
 import '../../constants/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -216,7 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             isLoading
-                ? const Center(child: Loading())
+                ? const Center(child: CircleLoading())
                 : Column(
                     children: [
                       userDetails['image'] != ''
