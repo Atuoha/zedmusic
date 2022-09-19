@@ -39,10 +39,10 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   bool isRepeatOne = false;
   bool isShuffle = false;
 
-  // Return current song index
-  _returnCurrentIndex() {
+  // handle songs
+  _handleSongs() {
     widget.songs.asMap().forEach((key, song) {
-      if (song.id == widget.song.id) {
+      if (song.id == widget.songData.playingSong.id) {
         currentSongIndex = key;
 
         widget.player.playerStateStream.listen((state) {
@@ -51,22 +51,25 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
               if (!isRepeatOne) {
                 if (widget.songData.songList.length > 1) {
                   if (currentSongIndex < widget.songs.length - 1) {
-                    currentSongIndex += 1;
+                    setState(() {
+                      currentSongIndex += 1;
+                    });
                   }
 
-                  // current playing song
-                  setState(() {
-                    widget.song = widget.songs[key];
+                  // set current playing song
+                  Timer(const Duration(seconds: 3), () {
+                    setState(() {
+                      widget.song = widget.songData.playingSong;
+                    });
                   });
+
                   //setting playingSong on provider
-                  widget.songData.playingSong = widget.songData.songList[key];
-                  Timer(const Duration(seconds: 1), () {
-                    widget.songData.player.play();
-                  });
                   widget.songData
                       .setPlayingSong(widget.songData.songList[key + 1]);
 
-                  widget.songData.setIsPlaying(true);
+                  widget.songData.setIsPlaying(true); // setting playing to true
+
+                  // setting audio-source
                   widget.songData.player.setAudioSource(
                     AudioSource.uri(
                       Uri.parse(widget.songData.songList[key + 1].uri!),
@@ -84,6 +87,11 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       ),
                     ),
                   );
+
+                  // playing song after a song
+                  Timer(const Duration(seconds: 1), () {
+                    widget.songData.player.play();
+                  });
                 } else {
                   // pausing a music if it's the only on the list when completed
                   widget.songData.player.pause();
@@ -215,7 +223,7 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    _returnCurrentIndex();
+    _handleSongs();
     super.didChangeDependencies();
   }
 

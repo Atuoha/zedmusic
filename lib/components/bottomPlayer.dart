@@ -26,16 +26,16 @@ class _BottomPlayerState extends State<BottomPlayer> {
       if (song.id == widget.songData.playingSong.id) {
         currentSongIndex = key;
 
-
         widget.songData.player.playerStateStream.listen((state) {
           switch (state.processingState) {
             case ProcessingState.completed:
               if (widget.songData.songList.length > 1) {
                 if (key < widget.songData.songList.length - 1) {
-                  widget.songData.playingSong = widget.songData.songList[key];
                   Timer(const Duration(seconds: 1), () {
                     widget.songData.player.play();
                   });
+
+                  // setting playing song on provider
                   widget.songData
                       .setPlayingSong(widget.songData.songList[key + 1]);
 
