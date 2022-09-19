@@ -370,7 +370,9 @@ class _SongPlayerState extends State<SongPlayer> with WidgetsBindingObserver {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => songData.toggleIsFav(widget.song),
+                      onTap: () => setState(() {
+                        songData.toggleIsFav(widget.song);
+                      }),
                       child: Icon(
                         songData.isFav(widget.song.id)
                             ? Icons.favorite
